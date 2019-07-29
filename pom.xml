@@ -59,8 +59,8 @@
             <url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
-            <id>sonatype</id>
-            <url>https://oss.sonatype.org/content/groups/public/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
 
@@ -77,6 +77,12 @@
             <artifactId>spigot</artifactId>
             <version>1.14.3-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ipsk</groupId>
+            <artifactId>MattUtils</artifactId>
+            <version>f43a42ce2a</version>
         </dependency>
     </dependencies>
 </project>

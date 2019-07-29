@@ -18,7 +18,6 @@ import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_14_R1.World;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -38,13 +37,14 @@ public class PetFox extends EntityFox implements PetEntity {
 
     public PetFox(EntityTypes<Entity> entityEntityTypes, World world) {
         super(EntityTypes.FOX, world);
+        collides = false;
     }
 
     public PetFox(World world, Player owner) {
         super(EntityTypes.FOX, world);
         this.attachedToPlayer = true;
         this.owner = owner;
-        inventory = Bukkit.getServer().createInventory(owner, InventoryType.CHEST);
+        inventory = Bukkit.getServer().createInventory(owner, 27);
 
         clearPathfinders();
 
@@ -54,12 +54,14 @@ public class PetFox extends EntityFox implements PetEntity {
         setPersistent();
         setAge(-24000);
 
+        System.out.println(isCollidable());
+
         setFoxType(Type.SNOW);
 
-        goalSelector.a(0, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
-        goalSelector.a(1, new PathfinderGoalRandomStrollLand(this, 1.3));
-        goalSelector.a(2, new PathfinderGoalFollowPlayer(this, this.owner, 1.5));
-        goalSelector.a(3, new PathfinderGoalPickUpItems(this, inventory, 1.5, owner));
+        goalSelector.a(0, new PathfinderGoalFollowPlayer(this, this.owner, 1.5));
+        goalSelector.a(2, new PathfinderGoalPickUpItems(this, inventory, 1.5, owner));
+        goalSelector.a(4, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
+        goalSelector.a(5, new PathfinderGoalRandomStrollLand(this, 1.2));
 
     }
 

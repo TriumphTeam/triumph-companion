@@ -3,13 +3,21 @@ package me.mattstudios.triumphpets.pet.goals;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static me.mattstudios.triumphpets.util.Utils.distance;
+import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
 
 public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
@@ -17,8 +25,12 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     private EntityInsentient petEntity;
     private Player player;
     private NavigationAbstract navigation;
-    private Item trackedItem;
     private Inventory inventory;
+
+    private Item trackedItem;
+    private boolean tracking;
+    private long startTrackingTimer;
+    private List<Item> forgotItems;
 
     private int controller = 0;
 
@@ -28,20 +40,45 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         this.navigation = petEntity.getNavigation();
         this.speed = speed;
         this.inventory = inventory;
+
+        this.tracking = false;
+        this.startTrackingTimer = 0;
+        this.forgotItems = new ArrayList<>();
     }
 
     @Override
     public void c() {
 
-        if (trackedItem == null || trackedItem.isDead()) return;
+        player.sendMessage("Tracking: " + tracking);
 
-        if (distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) < 1.5) {
-            inventory.addItem(trackedItem.getItemStack());
-            trackedItem.remove();
+        if (trackedItem == null || trackedItem.isDead() || forgotItems.contains(trackedItem)) {
+            if (tracking) tracking = false;
+            trackedItem = null;
+            startTrackingTimer = 0;
+            return;
         }
 
-        navigation.a(trackedItem.getLocation().getX(), trackedItem.getLocation().getY(), trackedItem.getLocation().getZ(), speed);
-        
+        if (startTrackingTimer != 0 && getSecondsDifference(startTrackingTimer) > 5) {
+            forgotItems.add(trackedItem);
+            startTrackingTimer = 0;
+            petEntity.getBukkitEntity().getLocation().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.getBukkitEntity().getLocation(), 10, .5, .5, .5, 0);
+        }
+
+        if (distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) <= 1.5) {
+            trackedItem.getWorld().playSound(trackedItem.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
+            inventory.addItem(trackedItem.getItemStack());
+            trackedItem.remove();
+        } else {
+            if (!tracking) {
+                startTrackingTimer = System.currentTimeMillis();
+                tracking = true;
+            }
+
+            System.out.println(navigation.j());
+
+            navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
+        }
+
     }
 
     @Override
@@ -54,16 +91,20 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             return false;
         }
 
-        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(10, 10, 10)) {
+        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(10, 5, 10)) {
             if (!(foundEntity instanceof Item)) continue;
 
+            Item item = (Item) foundEntity;
+
+            if (forgotItems.contains(item)) continue;
+
             if (trackedItem == null || trackedItem.isDead()) {
-                trackedItem = (Item) foundEntity;
+                trackedItem = item;
                 continue;
             }
 
             if (distance(foundEntity.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
-                trackedItem = (Item) foundEntity;
+                trackedItem = item;
             }
 
         }
