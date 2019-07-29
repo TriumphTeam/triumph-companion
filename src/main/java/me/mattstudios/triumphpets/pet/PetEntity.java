@@ -4,8 +4,6 @@ import org.bukkit.inventory.Inventory;
 
 public interface PetEntity {
 
-    void tick();
-
     Inventory getInventory();
 
 }

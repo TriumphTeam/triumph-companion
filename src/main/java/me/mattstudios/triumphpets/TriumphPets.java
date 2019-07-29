@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets;
 
+import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.PetRegistry;
 import me.mattstudios.triumphpets.pet.pets.PetFox;
 import org.bukkit.Location;
@@ -10,7 +11,7 @@ import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TriumphPets extends JavaPlugin implements CommandExecutor, Listener {
@@ -34,8 +35,8 @@ public final class TriumphPets extends JavaPlugin implements CommandExecutor, Li
     }
 
     @EventHandler
-    public void on(PlayerInteractEntityEvent event) {
-        event.getPlayer().sendMessage(event.getRightClicked().getUniqueId().toString());
+    public void on(EntityTargetLivingEntityEvent event) {
+        if (event.getTarget() instanceof PetEntity) event.setCancelled(true);
     }
 
     @Override

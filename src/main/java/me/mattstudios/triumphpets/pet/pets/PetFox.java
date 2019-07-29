@@ -20,6 +20,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
 import java.util.EnumMap;
@@ -49,12 +51,15 @@ public class PetFox extends EntityFox implements PetEntity {
         setCustomName(new ChatMessage("Foxy"));
         setCustomNameVisible(true);
         setCanPickupLoot(false);
+        setPersistent();
         setAge(-24000);
+
+        setFoxType(Type.SNOW);
 
         goalSelector.a(0, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
         goalSelector.a(1, new PathfinderGoalRandomStrollLand(this, 1.3));
         goalSelector.a(2, new PathfinderGoalFollowPlayer(this, this.owner, 1.5));
-        goalSelector.a(3, new PathfinderGoalPickUpItems(this, owner, 1.5));
+        goalSelector.a(3, new PathfinderGoalPickUpItems(this, inventory, 1.5, owner));
 
     }
 
@@ -76,7 +81,8 @@ public class PetFox extends EntityFox implements PetEntity {
     /**
      * Plays breed heart animation (just the particle).
      */
-    public void pet() {
+    private void pet() {
+        owner.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 1));
         world.broadcastEntityEffect(this, (byte) 18);
     }
 
