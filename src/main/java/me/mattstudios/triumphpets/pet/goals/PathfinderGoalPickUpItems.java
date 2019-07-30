@@ -29,6 +29,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     private Item trackedItem;
     private boolean isTracking;
     private long startTime;
+    private final double PICK_DIST = 1.5;
 
     private int controller = 0;
 
@@ -44,11 +45,12 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         startTime = 0;
     }
 
-    @Override
-    public void c() {
+    private void searchItem() {
 
-        player.sendMessage("Tracking: " + isTracking + (trackedItem == null || trackedItem.isDead() ? "" : " - " + trackedItem.getName()));
-        player.sendMessage("Time: " + getSecondsDifference(startTime));
+        if (controller % 20 == 0) {
+            player.sendMessage("Tracking: " + isTracking);
+            player.sendMessage("Time: " + getSecondsDifference(startTime));
+        }
 
 
         if (trackedItem == null || trackedItem.isDead() || memory.getForgetList().contains(trackedItem)) {
@@ -56,20 +58,15 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             return;
         }
 
-        if (isTracking && startTime != 0) {
-            if (getSecondsDifference(startTime) >= 5) {
-                memory.getForgetList().add(trackedItem);
-                petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
-            }
+        if ((isTracking && startTime != 0) && getSecondsDifference(startTime) >= 5) {
+            memory.getForgetList().add(trackedItem);
+            petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
         }
 
         double dist = distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ));
 
-        if (dist <= 1.5) {
-            trackedItem.getWorld().playSound(trackedItem.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
-            inventory.addItem(trackedItem.getItemStack());
-            trackedItem.remove();
-
+        if (dist <= PICK_DIST) {
+            pickItem(trackedItem);
             resetTracker();
         } else {
             if (!isTracking) startTracking();
@@ -81,11 +78,27 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     @Override
     public boolean a() {
 
-        c();
+        searchItem();
 
+        pickCloseItem();
+        getItemToTrack();
+
+        if (trackedItem != null && trackedItem.isDead()) trackedItem = null;
+
+        return false;
+    }
+
+    private void pickCloseItem() {
+        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(1.5, 1.5, 1.5)) {
+            if (!(foundEntity instanceof Item)) continue;
+            pickItem((Item) foundEntity);
+        }
+    }
+
+    private void getItemToTrack() {
         if (controller == 0 || controller % 20 != 0) {
             controller++;
-            return false;
+            return;
         }
 
         for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(10, 5, 10)) {
@@ -100,16 +113,14 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
                 continue;
             }
 
-            if (distance(foundEntity.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
+            double foundDist = distance(item.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ));
+            if (foundDist < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
                 trackedItem = item;
             }
 
         }
 
-        if (trackedItem != null && trackedItem.isDead()) trackedItem = null;
-
         controller = 0;
-        return false;
     }
 
     private void startTracking() {
@@ -121,6 +132,12 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         trackedItem = null;
         isTracking = false;
         startTime = 0;
+    }
+
+    private void pickItem(Item item) {
+        item.getWorld().playSound(item.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
+        inventory.addItem(item.getItemStack());
+        item.remove();
     }
 
 }
