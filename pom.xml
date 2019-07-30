@@ -82,7 +82,7 @@
         <dependency>
             <groupId>com.github.ipsk</groupId>
             <artifactId>MattUtils</artifactId>
-            <version>f43a42ce2a</version>
+            <version>e0d71ee828</version>
         </dependency>
     </dependencies>
 </project>

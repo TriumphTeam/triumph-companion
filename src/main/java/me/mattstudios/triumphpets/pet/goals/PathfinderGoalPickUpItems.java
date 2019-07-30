@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets.pet.goals;
 
+import me.mattstudios.triumphpets.pet.components.Memory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
@@ -13,9 +14,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static me.mattstudios.triumphpets.util.Utils.distance;
 import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
 
@@ -26,56 +24,55 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     private Player player;
     private NavigationAbstract navigation;
     private Inventory inventory;
+    private Memory memory;
 
     private Item trackedItem;
-    private boolean tracking;
-    private long startTrackingTimer;
-    private List<Item> forgotItems;
+    private boolean isTracking;
+    private long startTime;
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, double speed, Player player) {
+    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, Memory memory, double speed, Player player) {
         this.petEntity = entity;
         this.player = player;
-        this.navigation = petEntity.getNavigation();
         this.speed = speed;
         this.inventory = inventory;
+        this.memory = memory;
 
-        this.tracking = false;
-        this.startTrackingTimer = 0;
-        this.forgotItems = new ArrayList<>();
+        navigation = petEntity.getNavigation();
+        isTracking = false;
+        startTime = 0;
     }
 
     @Override
     public void c() {
 
-        player.sendMessage("Tracking: " + tracking);
+        player.sendMessage("Tracking: " + isTracking + (trackedItem == null || trackedItem.isDead() ? "" : " - " + trackedItem.getName()));
+        player.sendMessage("Time: " + getSecondsDifference(startTime));
 
-        if (trackedItem == null || trackedItem.isDead() || forgotItems.contains(trackedItem)) {
-            if (tracking) tracking = false;
-            trackedItem = null;
-            startTrackingTimer = 0;
+
+        if (trackedItem == null || trackedItem.isDead() || memory.getForgetList().contains(trackedItem)) {
+            resetTracker();
             return;
         }
 
-        if (startTrackingTimer != 0 && getSecondsDifference(startTrackingTimer) > 5) {
-            forgotItems.add(trackedItem);
-            startTrackingTimer = 0;
-            petEntity.getBukkitEntity().getLocation().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.getBukkitEntity().getLocation(), 10, .5, .5, .5, 0);
+        if (isTracking && startTime != 0) {
+            if (getSecondsDifference(startTime) >= 5) {
+                memory.getForgetList().add(trackedItem);
+                petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
+            }
         }
 
-        if (distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) <= 1.5) {
+        double dist = distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ));
+
+        if (dist <= 1.5) {
             trackedItem.getWorld().playSound(trackedItem.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
             inventory.addItem(trackedItem.getItemStack());
             trackedItem.remove();
+
+            resetTracker();
         } else {
-            if (!tracking) {
-                startTrackingTimer = System.currentTimeMillis();
-                tracking = true;
-            }
-
-            System.out.println(navigation.j());
-
+            if (!isTracking) startTracking();
             navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
         }
 
@@ -96,7 +93,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
             Item item = (Item) foundEntity;
 
-            if (forgotItems.contains(item)) continue;
+            if (memory.getForgetList().contains(item)) continue;
 
             if (trackedItem == null || trackedItem.isDead()) {
                 trackedItem = item;
@@ -113,6 +110,17 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
         controller = 0;
         return false;
+    }
+
+    private void startTracking() {
+        isTracking = true;
+        startTime = System.currentTimeMillis();
+    }
+
+    private void resetTracker() {
+        trackedItem = null;
+        isTracking = false;
+        startTime = 0;
     }
 
 }

@@ -28,6 +28,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.13-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.23" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:1.14.3-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.github.ipsk:MattUtils:f43a42ce2a" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ipsk:MattUtils:e0d71ee828" level="project" />
   </component>
 </module>
