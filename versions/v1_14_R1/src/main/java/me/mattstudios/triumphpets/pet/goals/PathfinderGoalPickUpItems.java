@@ -45,14 +45,38 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         startTime = 0;
     }
 
-    private void searchItem() {
+    /**
+     * Main ticking class for the PathfinderGoal.
+     *
+     * @return idk tbh..
+     */
+    @Override
+    public boolean a() {
 
-        if (controller % 20 == 0) {
-            player.sendMessage("Tracking: " + isTracking);
-            player.sendMessage("Time: " + getSecondsDifference(startTime));
+        getItemToTrack();
+        pickCloseItem();
+
+        followItem();
+
+        if (trackedItem != null && trackedItem.isDead()) trackedItem = null;
+
+        return true;
+    }
+
+    /**
+     * Picks up the items that are close.
+     */
+    private void pickCloseItem() {
+        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(PICK_DIST, PICK_DIST, PICK_DIST)) {
+            if (!(foundEntity instanceof Item)) continue;
+            pickItem((Item) foundEntity);
         }
+    }
 
-
+    /**
+     * Makes pet follow the closest item.
+     */
+    private void followItem() {
         if (trackedItem == null || trackedItem.isDead() || memory.getForgetList().contains(trackedItem)) {
             resetTracker();
             return;
@@ -63,38 +87,13 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
         }
 
-        double dist = distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ));
-
-        if (dist <= PICK_DIST) {
-            pickItem(trackedItem);
-            resetTracker();
-        } else {
-            if (!isTracking) startTracking();
-            navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
-        }
-
+        if (!isTracking) startTracking();
+        navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
     }
 
-    @Override
-    public boolean a() {
-
-        searchItem();
-
-        pickCloseItem();
-        getItemToTrack();
-
-        if (trackedItem != null && trackedItem.isDead()) trackedItem = null;
-
-        return false;
-    }
-
-    private void pickCloseItem() {
-        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(1.5, 1.5, 1.5)) {
-            if (!(foundEntity instanceof Item)) continue;
-            pickItem((Item) foundEntity);
-        }
-    }
-
+    /**
+     * Gets the closes item for the pet to track.
+     */
     private void getItemToTrack() {
         if (controller == 0 || controller % 20 != 0) {
             controller++;
@@ -113,8 +112,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
                 continue;
             }
 
-            double foundDist = distance(item.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ));
-            if (foundDist < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
+            if (distance(item.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
                 trackedItem = item;
             }
 
@@ -123,17 +121,28 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         controller = 0;
     }
 
+    /**
+     * Starts tracking the item.
+     */
     private void startTracking() {
         isTracking = true;
         startTime = System.currentTimeMillis();
     }
 
+    /**
+     * Resets the item tracker to track a new one.
+     */
     private void resetTracker() {
         trackedItem = null;
         isTracking = false;
         startTime = 0;
     }
 
+    /**
+     * Picks the item given to it.
+     *
+     * @param item The item to pick up.
+     */
     private void pickItem(Item item) {
         item.getWorld().playSound(item.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
         inventory.addItem(item.getItemStack());

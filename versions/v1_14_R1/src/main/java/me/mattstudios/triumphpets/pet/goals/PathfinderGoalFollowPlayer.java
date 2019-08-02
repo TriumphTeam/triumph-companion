@@ -4,6 +4,7 @@ import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 
 import static me.mattstudios.triumphpets.util.Utils.distance2d;
@@ -16,8 +17,6 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     private Player owner;
     private NavigationAbstract navigation;
 
-    private int controller = 0;
-
     public PathfinderGoalFollowPlayer(EntityInsentient petEntity, Player owner, double movementSpeed) {
         this.petEntity = petEntity;
         this.owner = owner;
@@ -28,7 +27,11 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     @Override
     public void c() {
         Location location = owner.getLocation().clone();
-        navigation.a(location.getX(), location.getY(), location.getZ(), movementSpeed);
+
+        if (petEntity.isInWater()) petEntity.setSwimming(true);
+        else petEntity.setSwimming(false);
+
+        navigation.a(((CraftPlayer) owner).getHandle(), movementSpeed);
     }
 
     @Override
@@ -36,15 +39,13 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
         Location location = owner.getLocation().clone();
         double dist = distance2d(location.getX(), petEntity.locX, location.getZ(), petEntity.locZ);
 
-        if (dist > 7) {
+        if (dist > 9) {
             if (dist > 20) {
                 petEntity.setPosition(location.getX(), getSafeY(location), location.getZ());
             }
 
             c();
         }
-
-        controller = 0;
 
         return false;
     }

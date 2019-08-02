@@ -1,13 +1,12 @@
 package me.mattstudios.triumphpets;
 
-import me.mattstudios.triumphpets.pet.PetEntity;
-import me.mattstudios.triumphpets.pet.PetRegistry;
-import me.mattstudios.triumphpets.pet.pets.PetFox;
+import me.mattstudios.triumphpets.pet.EntityController_1_14_R1;
+import me.mattstudios.triumphpets.pet.EntityRegistry_1_14_R1;
+import me.mattstudios.triumphpets.pet.PetController;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -16,17 +15,19 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public final class TriumphPets extends JavaPlugin implements CommandExecutor, Listener {
 
-    //private HashMap<Player, PetEntity> pets = new HashMap<>();
+    private PetController petController;
 
     @Override
     public void onLoad() {
-        PetRegistry.registerEntities();
+        EntityRegistry_1_14_R1.registerEntities();
     }
 
     @Override
     public void onEnable() {
         this.getCommand("pet").setExecutor(this);
         getServer().getPluginManager().registerEvents(this, this);
+
+        petController = new EntityController_1_14_R1();
     }
 
     @Override
@@ -36,7 +37,7 @@ public final class TriumphPets extends JavaPlugin implements CommandExecutor, Li
 
     @EventHandler
     public void on(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() instanceof PetEntity) event.setCancelled(true);
+        if (event.getTarget() instanceof PetController) event.setCancelled(true);
     }
 
     @Override
@@ -45,10 +46,7 @@ public final class TriumphPets extends JavaPlugin implements CommandExecutor, Li
         Player player = (Player) sender;
 
         Location loc = player.getLocation();
-        PetFox petFox = new PetFox(((CraftWorld) player.getWorld()).getHandle(), player);
-        petFox.setPositionRotation(loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch());
-        //pets.put(player, petFox);
-        ((CraftWorld) loc.getWorld()).getHandle().addEntity(petFox);
+        petController.spawnPet(loc, player);
 
         return false;
     }

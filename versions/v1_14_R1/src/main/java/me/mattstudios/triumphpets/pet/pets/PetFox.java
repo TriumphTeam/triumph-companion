@@ -1,6 +1,5 @@
 package me.mattstudios.triumphpets.pet.pets;
 
-import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.components.Memory;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalFollowPlayer;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalPickUpItems;
@@ -13,6 +12,7 @@ import net.minecraft.server.v1_14_R1.EntityLiving;
 import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.EnumHand;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
+import net.minecraft.server.v1_14_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_14_R1.PathfinderGoalLookAtPlayer;
 import net.minecraft.server.v1_14_R1.PathfinderGoalRandomStrollLand;
 import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
@@ -31,7 +31,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.TreeMap;
 
-public class PetFox extends EntityFox implements PetEntity {
+public class PetFox extends EntityFox {
 
     private Player owner;
 
@@ -63,8 +63,9 @@ public class PetFox extends EntityFox implements PetEntity {
 
         goalSelector.a(0, new PathfinderGoalPickUpItems(this, inventory, memory, 1.5, owner));
         goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, 1.5));
-        goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
+        goalSelector.a(6, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 2f));
         goalSelector.a(7, new PathfinderGoalRandomStrollLand(this, 1.2));
+        goalSelector.a(10, new PathfinderGoalFloat(this));
 
     }
 
