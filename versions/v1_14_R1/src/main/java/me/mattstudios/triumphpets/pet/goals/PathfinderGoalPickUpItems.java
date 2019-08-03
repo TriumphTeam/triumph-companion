@@ -27,9 +27,9 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     private Memory memory;
 
     private Item trackedItem;
-    private boolean isTracking;
     private long startTime;
-    private final double PICK_DIST = 1.5;
+    private final double PICK_DIST;
+    private final int SEARCH_DISTANCE;
 
     private int controller = 0;
 
@@ -40,8 +40,9 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         this.inventory = inventory;
         this.memory = memory;
 
+        PICK_DIST = 1.5;
+        SEARCH_DISTANCE = 15;
         navigation = petEntity.getNavigation();
-        isTracking = false;
         startTime = 0;
     }
 
@@ -82,12 +83,12 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             return;
         }
 
-        if ((isTracking && startTime != 0) && getSecondsDifference(startTime) >= 5) {
+        if ((memory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= 5) {
             memory.getForgetList().add(trackedItem);
             petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
         }
 
-        if (!isTracking) startTracking();
+        if (!memory.isTracking()) startTracking();
         navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
     }
 
@@ -95,12 +96,14 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * Gets the closes item for the pet to track.
      */
     private void getItemToTrack() {
+        //makes it run only once every 1 second.
         if (controller == 0 || controller % 20 != 0) {
             controller++;
             return;
         }
+        controller = 0;
 
-        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(10, 5, 10)) {
+        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(SEARCH_DISTANCE, 5, SEARCH_DISTANCE)) {
             if (!(foundEntity instanceof Item)) continue;
 
             Item item = (Item) foundEntity;
@@ -117,15 +120,13 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             }
 
         }
-
-        controller = 0;
     }
 
     /**
      * Starts tracking the item.
      */
     private void startTracking() {
-        isTracking = true;
+        memory.setTracking(true);
         startTime = System.currentTimeMillis();
     }
 
@@ -134,7 +135,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      */
     private void resetTracker() {
         trackedItem = null;
-        isTracking = false;
+        memory.setTracking(false);
         startTime = 0;
     }
 

@@ -1,54 +1,101 @@
 package me.mattstudios.triumphpets;
 
+import co.aikar.commands.PaperCommandManager;
+import me.mattstudios.triumphpets.commands.TestCMD;
+import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.EntityController_1_14_R1;
-import me.mattstudios.triumphpets.pet.EntityRegistry_1_14_R1;
 import me.mattstudios.triumphpets.pet.PetController;
-import org.bukkit.Location;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
+import me.mattstudios.triumphpets.pet.PetRegistry_1_14_R1;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class TriumphPets extends JavaPlugin implements CommandExecutor, Listener {
+import java.util.stream.Stream;
+
+import static me.mattstudios.utils.MessageUtils.info;
+import static me.mattstudios.utils.NmsUtils.getServerVersion;
+
+public final class TriumphPets extends JavaPlugin {
+
+    private PaperCommandManager commandManager;
 
     private PetController petController;
 
     @Override
     public void onLoad() {
-        EntityRegistry_1_14_R1.registerEntities();
+        setUpNms();
     }
 
     @Override
     public void onEnable() {
-        this.getCommand("pet").setExecutor(this);
-        getServer().getPluginManager().registerEvents(this, this);
 
-        petController = new EntityController_1_14_R1();
+        commandManager = new PaperCommandManager(this);
+        registerCommands();
+
+        registerListeners();
+
     }
 
     @Override
     public void onDisable() {
-
+        petController.removeAll();
     }
 
-    @EventHandler
-    public void on(EntityTargetLivingEntityEvent event) {
-        if (event.getTarget() instanceof PetController) event.setCancelled(true);
+    /**
+     * Gets the interface to control all the pets.
+     * @return The pet controller.
+     */
+    public PetController getPetController() {
+        return petController;
     }
 
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        Player player = (Player) sender;
-
-        Location loc = player.getLocation();
-        petController.spawnPet(loc, player);
-
-        return false;
+    /**
+     * Registers all commands used in the plugin.
+     */
+    private void registerCommands() {
+        Stream.of(
+                new TestCMD(this)
+        ).forEach(commandManager::registerCommand);
     }
+
+    /**
+     * Registers all event listeners used by the plugin.
+     */
+    private void registerListeners() {
+        Stream.of(
+                new PetListener(this)
+        ).forEach(this::register);
+    }
+
+    /**
+     * Sets up the NMS classes, registering the pets and getting pet controller.
+     */
+    private void setUpNms() {
+        String version = getServerVersion();
+        switch (version) {
+
+            case "v1_12_R2":
+                System.out.println("soon 1.12");
+                break;
+
+            case "v1_13_R1":
+                System.out.println("soon 1.13");
+                break;
+
+            default:
+                if (!version.equalsIgnoreCase("v1_14_R1")) info("Might not support.");
+                petController = new EntityController_1_14_R1();
+                PetRegistry_1_14_R1.registerEntities();
+                break;
+        }
+    }
+
+    /**
+     * Used for better bulk registering listeners.
+     * @param listener The listener to register.
+     */
+    private void register(Listener listener) {
+        getServer().getPluginManager().registerEvents(listener, this);
+    }
+
 
 }
