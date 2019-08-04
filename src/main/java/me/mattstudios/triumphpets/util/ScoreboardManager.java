@@ -61,11 +61,8 @@ public class ScoreboardManager {
     private String getTeamName() {
         int number = gen();
         while (true) {
-            if (petTeams.containsValue("TP-" + number)) {
-                number = gen();
-                continue;
-            }
-            return "TP-" + number;
+            if (petTeams.containsValue("TP-" + number)) number = gen();
+            else return "TP-" + number;
         }
     }
 

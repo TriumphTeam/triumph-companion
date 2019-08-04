@@ -1,7 +1,8 @@
-package me.mattstudios.triumphpets.pet;
+package me.mattstudios.triumphpets.pet.nms.v1_14_R1;
 
 import me.mattstudios.triumphpets.TriumphPets;
-import me.mattstudios.triumphpets.pet.pets.PetFox;
+import me.mattstudios.triumphpets.pet.PetController;
+import me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets.PetFox;
 import me.mattstudios.triumphpets.util.ScoreboardManager;
 import net.minecraft.server.v1_14_R1.EntityFox;
 import org.bukkit.Bukkit;

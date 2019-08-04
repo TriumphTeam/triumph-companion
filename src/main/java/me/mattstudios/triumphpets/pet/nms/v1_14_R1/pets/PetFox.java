@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet.pets;
+package me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets;
 
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalFollowPlayer;

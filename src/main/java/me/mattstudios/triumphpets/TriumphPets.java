@@ -3,9 +3,9 @@ package me.mattstudios.triumphpets;
 import co.aikar.commands.PaperCommandManager;
 import me.mattstudios.triumphpets.commands.TestCMD;
 import me.mattstudios.triumphpets.listeners.PetListener;
-import me.mattstudios.triumphpets.pet.EntityController_1_14_R1;
 import me.mattstudios.triumphpets.pet.PetController;
-import me.mattstudios.triumphpets.pet.PetRegistry_1_14_R1;
+import me.mattstudios.triumphpets.pet.nms.v1_14_R1.EntityController_1_14_R1;
+import me.mattstudios.triumphpets.pet.nms.v1_14_R1.PetRegistry_1_14_R1;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 

@@ -1,6 +1,6 @@
-package me.mattstudios.triumphpets.pet;
+package me.mattstudios.triumphpets.pet.nms.v1_14_R1;
 
-import me.mattstudios.triumphpets.pet.pets.PetFox;
+import me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets.PetFox;
 import net.minecraft.server.v1_14_R1.Entity;
 import net.minecraft.server.v1_14_R1.EntityTypes;
 import net.minecraft.server.v1_14_R1.EnumCreatureType;
