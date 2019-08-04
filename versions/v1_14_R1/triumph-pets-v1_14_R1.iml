@@ -20,6 +20,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:1.14.3-R0.1-SNAPSHOT" level="project" />
     <orderEntry type="module" module-name="triumph-pets-common" scope="PROVIDED" />
+    <orderEntry type="module" module-name="triumph-pets-plugin" scope="PROVIDED" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-paper:0.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-bukkit:0.5.0-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: co.aikar:acf-core:0.5.0-SNAPSHOT" level="project" />

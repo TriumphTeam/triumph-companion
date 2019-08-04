@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.pet.goals;
 
-import me.mattstudios.triumphpets.pet.components.Memory;
+import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
@@ -17,17 +17,17 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     private EntityInsentient petEntity;
     private Player owner;
     private NavigationAbstract navigation;
-    private Memory memory;
+    private PetMemory petMemory;
 
     private int followDistance;
     private int tpDistance;
 
-    public PathfinderGoalFollowPlayer(EntityInsentient petEntity, Player owner, Memory memory, double MOVEMENT_SPEED) {
+    public PathfinderGoalFollowPlayer(EntityInsentient petEntity, Player owner, PetMemory petMemory, double MOVEMENT_SPEED) {
         this.petEntity = petEntity;
         this.owner = owner;
         this.navigation = petEntity.getNavigation();
         this.MOVEMENT_SPEED = MOVEMENT_SPEED;
-        this.memory = memory;
+        this.petMemory = petMemory;
 
         followDistance = 10;
         tpDistance = 20;
@@ -36,7 +36,7 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     @Override
     public boolean a() {
 
-        if (memory.isTracking()) followDistance = 15;
+        if (petMemory.isTracking()) followDistance = 15;
         else followDistance = 10;
 
         Location location = owner.getLocation().clone();

@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.pet.pets;
 
-import me.mattstudios.triumphpets.pet.components.Memory;
+import me.mattstudios.triumphpets.pet.components.PetMemory;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalFollowPlayer;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalPickUpItems;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalRandomWalkAround;
@@ -31,58 +31,65 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.TreeMap;
 
+import static me.mattstudios.utils.MessageUtils.color;
+
 public class PetFox extends EntityFox {
 
     private Player owner;
 
     private String name;
-    private String type;
     private Inventory inventory;
-    private Memory memory;
+    private PetMemory petMemory;
 
     @SuppressWarnings("unused")
     public PetFox(EntityTypes<Entity> entityEntityTypes, World world) {
         super(EntityTypes.FOX, world);
     }
 
-    public PetFox(World world, Player owner) {
+    public PetFox(World world, Player owner, String name, boolean baby, Type type) {
         super(EntityTypes.FOX, world);
         this.owner = owner;
+        this.name = name;
         inventory = Bukkit.getServer().createInventory(owner, 27);
 
         clearPathfinders();
 
-        setCustomName(new ChatMessage("Foxy"));
+        setCustomName(new ChatMessage(color(name)));
         setCustomNameVisible(true);
         setCanPickupLoot(false);
         setPersistent();
-        setAge(-24000);
 
-        ageLocked = true;
+        if (baby) {
+            setAge(-24000);
+            ageLocked = true;
+        }
+
         collides = false;
 
-        memory = new Memory();
+        petMemory = new PetMemory();
 
-        setFoxType(Type.SNOW);
+        setFoxType(type);
 
-        goalSelector.a(0, new PathfinderGoalPickUpItems(this, inventory, memory, 1.5, owner));
-        goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, memory, 1.5));
-        goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, memory, 1.2));
+        goalSelector.a(0, new PathfinderGoalPickUpItems(this, inventory, petMemory, 1.5, owner));
+        goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
+        goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, petMemory, 1.2));
 
         goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
         goalSelector.a(10, new PathfinderGoalFloat(this));
 
     }
 
-    /**
-     * Opens the pet inventory.
-     */
-    private void openInventory() {
-        owner.openInventory(inventory);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**
      * Method to get the pet's inventory.
+     *
      * @return The pets inventory.
      */
     public Inventory getInventory() {
@@ -91,10 +98,27 @@ public class PetFox extends EntityFox {
 
     /**
      * Get's the pet's internal memory.
+     *
      * @return The memory.
      */
-    public Memory getMemory() {
-        return memory;
+    public PetMemory getPetMemory() {
+        return petMemory;
+    }
+
+    /**
+     * Detects the right click on the entity.
+     *
+     * @param entity   The pet.
+     * @param enumhand The player clicking it.
+     * @return That..
+     */
+    @Override
+    public boolean a(EntityHuman entity, EnumHand enumhand) {
+        if (enumhand.equals(EnumHand.MAIN_HAND) && entity.getBukkitEntity().equals(owner)) {
+            if (owner.isSneaking()) pet();
+            else openInventory();
+        }
+        return super.a(entity, enumhand);
     }
 
     /**
@@ -106,18 +130,10 @@ public class PetFox extends EntityFox {
     }
 
     /**
-     * Detects the right click on the entity.
-     * @param entity The pet.
-     * @param enumhand The player clicking it.
-     * @return That..
+     * Opens the pet inventory.
      */
-    @Override
-    public boolean a(EntityHuman entity, EnumHand enumhand) {
-        if (enumhand.equals(EnumHand.MAIN_HAND) && entity.getBukkitEntity().equals(owner)) {
-            if (owner.isSneaking()) pet();
-            else openInventory();
-        }
-        return super.a(entity, enumhand);
+    private void openInventory() {
+        owner.openInventory(inventory);
     }
 
     /**

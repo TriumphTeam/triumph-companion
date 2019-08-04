@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.pet.goals;
 
-import me.mattstudios.triumphpets.pet.components.Memory;
+import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
@@ -16,17 +16,17 @@ public class PathfinderGoalRandomWalkAround extends PathfinderGoal {
     private double movementSpeed;
     private EntityInsentient petEntity;
     private NavigationAbstract navigation;
-    private Memory memory;
+    private PetMemory petMemory;
 
     private Random random;
     private int chance;
     private int controller;
 
-    public PathfinderGoalRandomWalkAround(EntityInsentient petEntity, Memory memory, double movementSpeed) {
+    public PathfinderGoalRandomWalkAround(EntityInsentient petEntity, PetMemory petMemory, double movementSpeed) {
         this.petEntity = petEntity;
         this.navigation = petEntity.getNavigation();
         this.movementSpeed = movementSpeed;
-        this.memory = memory;
+        this.petMemory = petMemory;
 
         chance = 25;
         controller = 0;
@@ -36,7 +36,7 @@ public class PathfinderGoalRandomWalkAround extends PathfinderGoal {
     @Override
     public boolean a() {
 
-        if (memory.isTracking()) return false;
+        if (petMemory.isTracking()) return false;
 
         // Makes it run only once every 2 seconds.
         if (controller == 0 || controller % 40 != 0) {

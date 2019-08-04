@@ -1,7 +1,9 @@
 package me.mattstudios.triumphpets.pet;
 
+import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.pet.pets.PetFox;
 import me.mattstudios.triumphpets.util.ScoreboardManager;
+import net.minecraft.server.v1_14_R1.EntityFox;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
@@ -14,6 +16,7 @@ import java.util.UUID;
 
 public class EntityController_1_14_R1 implements PetController {
 
+    TriumphPets pluigin;
     private Map<UUID, UUID> spawnedPets;
     private ScoreboardManager scoreboardManager;
 
@@ -52,7 +55,7 @@ public class EntityController_1_14_R1 implements PetController {
      */
     @Override
     public void spawnPet(Location location, Player player) {
-        PetFox petFox = new PetFox(((CraftWorld) player.getWorld()).getHandle(), player);
+        PetFox petFox = new PetFox(((CraftWorld) player.getWorld()).getHandle(), player, "&cFoxy", true, EntityFox.Type.RED);
         petFox.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         ((CraftWorld) player.getWorld()).getHandle().addEntity(petFox);
         scoreboardManager.manageTeamCollision(petFox.getBukkitEntity(), player);

@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.pet.goals;
 
-import me.mattstudios.triumphpets.pet.components.Memory;
+import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
@@ -24,7 +24,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     private Player player;
     private NavigationAbstract navigation;
     private Inventory inventory;
-    private Memory memory;
+    private PetMemory petMemory;
 
     private Item trackedItem;
     private long startTime;
@@ -33,12 +33,12 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, Memory memory, double speed, Player player) {
+    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, PetMemory petMemory, double speed, Player player) {
         this.petEntity = entity;
         this.player = player;
         this.speed = speed;
         this.inventory = inventory;
-        this.memory = memory;
+        this.petMemory = petMemory;
 
         PICK_DIST = 1.5;
         SEARCH_DISTANCE = 15;
@@ -78,17 +78,17 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * Makes pet follow the closest item.
      */
     private void followItem() {
-        if (trackedItem == null || trackedItem.isDead() || memory.getForgetList().contains(trackedItem)) {
+        if (trackedItem == null || trackedItem.isDead() || petMemory.getForgetList().contains(trackedItem)) {
             resetTracker();
             return;
         }
 
-        if ((memory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= 5) {
-            memory.getForgetList().add(trackedItem);
+        if ((petMemory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= 5) {
+            petMemory.getForgetList().add(trackedItem);
             petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
         }
 
-        if (!memory.isTracking()) startTracking();
+        if (!petMemory.isTracking()) startTracking();
         navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
     }
 
@@ -108,7 +108,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
             Item item = (Item) foundEntity;
 
-            if (memory.getForgetList().contains(item)) continue;
+            if (petMemory.getForgetList().contains(item)) continue;
 
             if (trackedItem == null || trackedItem.isDead()) {
                 trackedItem = item;
@@ -126,7 +126,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * Starts tracking the item.
      */
     private void startTracking() {
-        memory.setTracking(true);
+        petMemory.setTracking(true);
         startTime = System.currentTimeMillis();
     }
 
@@ -135,7 +135,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      */
     private void resetTracker() {
         trackedItem = null;
-        memory.setTracking(false);
+        petMemory.setTracking(false);
         startTime = 0;
     }
 
