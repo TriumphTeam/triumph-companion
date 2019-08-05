@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent;
-import org.bukkit.event.player.PlayerInteractAtEntityEvent;
 
 public class PetListener implements Listener {
 
@@ -26,11 +25,6 @@ public class PetListener implements Listener {
     @EventHandler
     public void onPetDamage(EntityDamageEvent event) {
         if (plugin.getPetController().isPetEntity(event.getEntity().getUniqueId())) event.setCancelled(true);
-    }
-
-    @EventHandler
-    public void on(PlayerInteractAtEntityEvent event) {
-
     }
 
 }

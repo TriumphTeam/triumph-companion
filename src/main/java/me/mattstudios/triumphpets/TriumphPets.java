@@ -22,7 +22,7 @@ public final class TriumphPets extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        setUpNms();
+        registerNmsPets();
     }
 
     @Override
@@ -32,6 +32,8 @@ public final class TriumphPets extends JavaPlugin {
         registerCommands();
 
         registerListeners();
+
+        setUpNms();
 
     }
 
@@ -67,12 +69,11 @@ public final class TriumphPets extends JavaPlugin {
     }
 
     /**
-     * Sets up the NMS classes, registering the pets and getting pet controller.
+     * Registers pet's based on the NMS version
      */
-    private void setUpNms() {
+    private void registerNmsPets() {
         String version = getServerVersion();
         switch (version) {
-
             case "v1_12_R2":
                 System.out.println("soon 1.12");
                 break;
@@ -83,8 +84,28 @@ public final class TriumphPets extends JavaPlugin {
 
             default:
                 if (!version.equalsIgnoreCase("v1_14_R1")) info("Might not support.");
-                petController = new EntityController_1_14_R1();
                 PetRegistry_1_14_R1.registerEntities();
+                break;
+        }
+    }
+
+    /**
+     * Sets up the NMS classes, registering the pets and getting pet controller.
+     */
+    private void setUpNms() {
+        String version = getServerVersion();
+        switch (version) {
+            case "v1_12_R2":
+                System.out.println("soon 1.12");
+                break;
+
+            case "v1_13_R1":
+                System.out.println("soon 1.13");
+                break;
+
+            default:
+                if (!version.equalsIgnoreCase("v1_14_R1")) info("Might not support.");
+                petController = new EntityController_1_14_R1(this);
                 break;
         }
     }

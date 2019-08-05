@@ -2,6 +2,7 @@ package me.mattstudios.triumphpets.pet.nms.v1_14_R1;
 
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.pet.PetController;
+import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets.PetFox;
 import me.mattstudios.triumphpets.util.ScoreboardManager;
 import net.minecraft.server.v1_14_R1.EntityFox;
@@ -17,11 +18,13 @@ import java.util.UUID;
 
 public class EntityController_1_14_R1 implements PetController {
 
-    TriumphPets pluigin;
-    private Map<UUID, UUID> spawnedPets;
+    private TriumphPets plugin;
+    private Map<UUID, PetEntity> spawnedPets;
     private ScoreboardManager scoreboardManager;
 
-    public EntityController_1_14_R1() {
+    public EntityController_1_14_R1(TriumphPets plugin) {
+        this.plugin = plugin;
+
         spawnedPets = new HashMap<>();
         scoreboardManager = new ScoreboardManager();
     }
@@ -32,8 +35,8 @@ public class EntityController_1_14_R1 implements PetController {
     public void removeAll() {
         scoreboardManager.removeAll();
         for (UUID uuid : spawnedPets.keySet()) {
-            if (Bukkit.getServer().getEntity(spawnedPets.get(uuid)) == null) continue;
-            Objects.requireNonNull(Bukkit.getServer().getEntity(spawnedPets.get(uuid))).remove();
+            if (Bukkit.getServer().getEntity(spawnedPets.get(uuid).getEntity().getUniqueId()) == null) continue;
+            Objects.requireNonNull(Bukkit.getServer().getEntity(spawnedPets.get(uuid).getEntity().getUniqueId())).remove();
         }
     }
 
@@ -44,8 +47,13 @@ public class EntityController_1_14_R1 implements PetController {
      * @return True if it is a pet, false if it is not.
      */
     public boolean isPetEntity(UUID entityUuid) {
-        if (spawnedPets == null || spawnedPets.isEmpty()) return false;
-        return spawnedPets.containsValue(entityUuid);
+        if (spawnedPets == null || spawnedPets.isEmpty() || entityUuid == null) return false;
+
+        for (UUID uuid : spawnedPets.keySet()) {
+            if (spawnedPets.get(uuid).getEntity().getUniqueId().equals(entityUuid)) return true;
+        }
+
+        return false;
     }
 
     /**
@@ -56,11 +64,11 @@ public class EntityController_1_14_R1 implements PetController {
      */
     @Override
     public void spawnPet(Location location, Player player) {
-        PetFox petFox = new PetFox(((CraftWorld) player.getWorld()).getHandle(), player, "&cFoxy", true, EntityFox.Type.RED);
+        PetFox petFox = new PetFox(plugin, ((CraftWorld) player.getWorld()).getHandle(), player, "&cFoxy", true, EntityFox.Type.RED);
         petFox.setPositionRotation(location.getX(), location.getY(), location.getZ(), location.getYaw(), location.getPitch());
         ((CraftWorld) player.getWorld()).getHandle().addEntity(petFox);
         scoreboardManager.manageTeamCollision(petFox.getBukkitEntity(), player);
-        spawnedPets.put(player.getUniqueId(), petFox.getUniqueID());
+        spawnedPets.put(player.getUniqueId(), petFox);
     }
 
 }

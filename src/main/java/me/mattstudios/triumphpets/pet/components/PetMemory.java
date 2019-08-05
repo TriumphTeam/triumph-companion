@@ -1,24 +1,29 @@
 package me.mattstudios.triumphpets.pet.components;
 
+import me.mattstudios.triumphpets.TriumphPets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class PetMemory {
+
+    private TriumphPets plugin;
 
     private boolean tracking;
 
     private List<Item> forgetList;
     private List<Item> personalBlackList;
 
-    public PetMemory() {
+    public PetMemory(TriumphPets plugin) {
+        this.plugin = plugin;
         tracking = false;
 
         forgetList = new ArrayList<>();
         personalBlackList = new ArrayList<>();
+
+        periodicallyClearForget();
     }
 
     public boolean isTracking() {
@@ -37,15 +42,13 @@ public class PetMemory {
         return personalBlackList;
     }
 
-    /**
-     * I don't like getting the plugin instance like that but.. welp.. will change later.
-     */
     private void periodicallyClearForget() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(
-                Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("TriumphPets")),
-                () -> forgetList.clear(),
-                18000L,
-                18000L
-        );
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("cleaning..");
+                forgetList.clear();
+            }
+        }, 18000L, 18000L);
     }
 }

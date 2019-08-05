@@ -1,5 +1,8 @@
 package me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets;
 
+import me.mattstudios.triumphpets.TriumphPets;
+import me.mattstudios.triumphpets.pet.PetEntity;
+import me.mattstudios.triumphpets.pet.components.PetInventory;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalFollowPlayer;
 import me.mattstudios.triumphpets.pet.goals.PathfinderGoalPickUpItems;
@@ -17,9 +20,7 @@ import net.minecraft.server.v1_14_R1.PathfinderGoalFloat;
 import net.minecraft.server.v1_14_R1.PathfinderGoalLookAtPlayer;
 import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
 import net.minecraft.server.v1_14_R1.World;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -33,24 +34,26 @@ import java.util.TreeMap;
 
 import static me.mattstudios.utils.MessageUtils.color;
 
-public class PetFox extends EntityFox {
+public class PetFox extends EntityFox implements PetEntity {
+
+    private TriumphPets plugin;
 
     private Player owner;
 
     private String name;
-    private Inventory inventory;
     private PetMemory petMemory;
+    private PetInventory petInventory;
 
     @SuppressWarnings("unused")
     public PetFox(EntityTypes<Entity> entityEntityTypes, World world) {
         super(EntityTypes.FOX, world);
     }
 
-    public PetFox(World world, Player owner, String name, boolean baby, Type type) {
+    public PetFox(TriumphPets plugin, World world, Player owner, String name, boolean baby, Type type) {
         super(EntityTypes.FOX, world);
         this.owner = owner;
         this.name = name;
-        inventory = Bukkit.getServer().createInventory(owner, 27);
+        this.plugin = plugin;
 
         clearPathfinders();
 
@@ -58,6 +61,7 @@ public class PetFox extends EntityFox {
         setCustomNameVisible(true);
         setCanPickupLoot(false);
         setPersistent();
+        setFoxType(type);
 
         if (baby) {
             setAge(-24000);
@@ -66,17 +70,20 @@ public class PetFox extends EntityFox {
 
         collides = false;
 
-        petMemory = new PetMemory();
+        petMemory = new PetMemory(plugin);
+        petInventory = new PetInventory(plugin, this.owner, 1);
 
-        setFoxType(type);
-
-        goalSelector.a(0, new PathfinderGoalPickUpItems(this, inventory, petMemory, 1.5, owner));
+        goalSelector.a(0, new PathfinderGoalPickUpItems(this, petInventory.getInventory(), petMemory, 1.5, owner));
         goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
         goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, petMemory, 1.2));
 
         goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));
         goalSelector.a(10, new PathfinderGoalFloat(this));
 
+    }
+
+    public org.bukkit.entity.Entity getEntity() {
+        return getBukkitEntity();
     }
 
     public void setName(String name) {
@@ -92,8 +99,8 @@ public class PetFox extends EntityFox {
      *
      * @return The pets inventory.
      */
-    public Inventory getInventory() {
-        return inventory;
+    public PetInventory getPetInventory() {
+        return petInventory;
     }
 
     /**
@@ -133,7 +140,7 @@ public class PetFox extends EntityFox {
      * Opens the pet inventory.
      */
     private void openInventory() {
-        owner.openInventory(inventory);
+        owner.openInventory(petInventory.getInventory());
     }
 
     /**
