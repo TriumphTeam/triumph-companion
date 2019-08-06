@@ -12,11 +12,15 @@ public class PetInventory {
 
     public PetInventory(TriumphPets plugin, Player owner, int level) {
         this.plugin = plugin;
-
         inventory = Bukkit.getServer().createInventory(owner, level * 9);
     }
 
     public Inventory getInventory() {
         return inventory;
+    }
+
+    public void testSave() {
+        plugin.getConfig().set("test.inv", inventory);
+        plugin.saveConfig();
     }
 }

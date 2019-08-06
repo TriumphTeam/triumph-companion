@@ -28,6 +28,8 @@ public final class TriumphPets extends JavaPlugin {
     @Override
     public void onEnable() {
 
+        saveDefaultConfig();
+
         commandManager = new PaperCommandManager(this);
         registerCommands();
 

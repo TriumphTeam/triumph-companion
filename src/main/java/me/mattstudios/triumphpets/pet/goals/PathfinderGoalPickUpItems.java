@@ -1,9 +1,12 @@
 package me.mattstudios.triumphpets.pet.goals;
 
+import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
+import me.mattstudios.triumphpets.pet.PetType;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
 import net.minecraft.server.v1_14_R1.PathfinderGoal;
+import org.bukkit.Bukkit;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
@@ -21,7 +24,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private double speed;
     private EntityInsentient petEntity;
-    private Player player;
+    private Player owner;
     private NavigationAbstract navigation;
     private Inventory inventory;
     private PetMemory petMemory;
@@ -33,9 +36,9 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, PetMemory petMemory, double speed, Player player) {
+    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, PetMemory petMemory, double speed, Player owner) {
         this.petEntity = entity;
-        this.player = player;
+        this.owner = owner;
         this.speed = speed;
         this.inventory = inventory;
         this.petMemory = petMemory;
@@ -145,6 +148,11 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * @param item The item to pick up.
      */
     private void pickItem(Item item) {
+        PetPickUpItemEvent event = new PetPickUpItemEvent(PetType.PET_FOX, item.getItemStack(), owner);
+        Bukkit.getPluginManager().callEvent(event);
+
+        if (event.isCancelled()) return;
+
         item.getWorld().playSound(item.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
         inventory.addItem(item.getItemStack());
         item.remove();

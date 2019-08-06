@@ -45,10 +45,9 @@ public class ScoreboardManager {
 
         Team team = scoreboard.getTeam(teamName) == null ? scoreboard.registerNewTeam(teamName) : scoreboard.getTeam(teamName);
 
-        assert team != null;
         team.addEntry(player.getUniqueId().toString());
         team.addEntry(pet.getUniqueId().toString());
-        team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.NEVER);
+        team.setOption(Team.Option.COLLISION_RULE, Team.OptionStatus.FOR_OTHER_TEAMS);
 
         petTeams.put(player.getUniqueId(), teamName);
     }

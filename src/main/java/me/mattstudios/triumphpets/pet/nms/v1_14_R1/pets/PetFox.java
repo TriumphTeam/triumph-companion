@@ -33,6 +33,7 @@ import java.util.LinkedHashSet;
 import java.util.TreeMap;
 
 import static me.mattstudios.utils.MessageUtils.color;
+import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
 
 public class PetFox extends EntityFox implements PetEntity {
 
@@ -43,6 +44,9 @@ public class PetFox extends EntityFox implements PetEntity {
     private String name;
     private PetMemory petMemory;
     private PetInventory petInventory;
+
+    private long petTime;
+    private final int PET_COOLDOWN = 15;
 
     @SuppressWarnings("unused")
     public PetFox(EntityTypes<Entity> entityEntityTypes, World world) {
@@ -72,6 +76,7 @@ public class PetFox extends EntityFox implements PetEntity {
 
         petMemory = new PetMemory(plugin);
         petInventory = new PetInventory(plugin, this.owner, 1);
+        petTime = 0;
 
         goalSelector.a(0, new PathfinderGoalPickUpItems(this, petInventory.getInventory(), petMemory, 1.5, owner));
         goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
@@ -132,8 +137,11 @@ public class PetFox extends EntityFox implements PetEntity {
      * Plays breed heart animation (just the particle).
      */
     private void pet() {
+        petInventory.testSave();
+        if (petTime != 0 && getSecondsDifference(petTime) < PET_COOLDOWN) return;
         owner.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 600, 1));
         world.broadcastEntityEffect(this, (byte) 18);
+        petTime = System.currentTimeMillis();
     }
 
     /**
