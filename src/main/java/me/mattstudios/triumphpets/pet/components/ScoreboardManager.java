@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.util;
+package me.mattstudios.triumphpets.pet.components;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;

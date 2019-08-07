@@ -38,4 +38,16 @@ public class TestCMD extends BaseCommand {
         plugin.getPetController().spawnPet(player.getLocation(), player);
     }
 
+    @Subcommand("give")
+    @CommandPermission("triumphpets.spawn")
+    public void give(Player player) {
+        plugin.getSqLiteManager().add(player);
+    }
+
+    @Subcommand("test")
+    @CommandPermission("triumphpets.spawn")
+    public void test(Player player) {
+
+    }
+
 }

@@ -4,6 +4,10 @@ import me.mattstudios.triumphpets.TriumphPets;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+
+import static me.mattstudios.triumphpets.util.Utils.decodeItem;
+import static me.mattstudios.triumphpets.util.Utils.encodeItem;
 
 public class PetInventory {
 
@@ -20,7 +24,11 @@ public class PetInventory {
     }
 
     public void testSave() {
-        plugin.getConfig().set("test.inv", inventory);
-        plugin.saveConfig();
+        ItemStack[] itemStacks = inventory.getContents();
+        for (int i = 0; i < itemStacks.length; i++) {
+            String encoded = encodeItem(itemStacks[i]);
+            System.out.println("slot: "+i + " | " + encoded);
+            System.out.println("slot: "+i + " | " + decodeItem(encoded));
+        }
     }
 }

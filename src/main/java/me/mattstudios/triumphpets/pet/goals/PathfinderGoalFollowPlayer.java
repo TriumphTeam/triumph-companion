@@ -29,7 +29,7 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
         this.MOVEMENT_SPEED = MOVEMENT_SPEED;
         this.petMemory = petMemory;
 
-        followDistance = 10;
+        followDistance = 7;
         tpDistance = 20;
     }
 
@@ -37,7 +37,7 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     public boolean a() {
 
         if (petMemory.isTracking()) followDistance = 15;
-        else followDistance = 10;
+        else followDistance = 7;
 
         Location location = owner.getLocation().clone();
         double dist = distance2d(location.getX(), petEntity.locX, location.getZ(), petEntity.locZ);

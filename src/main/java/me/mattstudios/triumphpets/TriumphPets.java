@@ -1,11 +1,13 @@
 package me.mattstudios.triumphpets;
 
 import co.aikar.commands.PaperCommandManager;
+import me.mattstudios.triumphpets.commands.CMDPets;
 import me.mattstudios.triumphpets.commands.TestCMD;
+import me.mattstudios.triumphpets.data.SQLiteManager;
 import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.PetController;
-import me.mattstudios.triumphpets.pet.nms.v1_14_R1.EntityController_1_14_R1;
-import me.mattstudios.triumphpets.pet.nms.v1_14_R1.PetRegistry_1_14_R1;
+import me.mattstudios.triumphpets.pet.nms.v1_14_r1.EntityController_1_14_R1;
+import me.mattstudios.triumphpets.pet.nms.v1_14_r1.PetRegistry_1_14_R1;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -19,6 +21,7 @@ public final class TriumphPets extends JavaPlugin {
     private PaperCommandManager commandManager;
 
     private PetController petController;
+    private SQLiteManager sqLiteManager;
 
     @Override
     public void onLoad() {
@@ -27,7 +30,6 @@ public final class TriumphPets extends JavaPlugin {
 
     @Override
     public void onEnable() {
-
         saveDefaultConfig();
 
         commandManager = new PaperCommandManager(this);
@@ -37,6 +39,7 @@ public final class TriumphPets extends JavaPlugin {
 
         setUpNms();
 
+        sqLiteManager = new SQLiteManager(this);
     }
 
     @Override
@@ -46,10 +49,15 @@ public final class TriumphPets extends JavaPlugin {
 
     /**
      * Gets the interface to control all the pets.
+     *
      * @return The pet controller.
      */
     public PetController getPetController() {
         return petController;
+    }
+
+    public SQLiteManager getSqLiteManager() {
+        return sqLiteManager;
     }
 
     /**
@@ -57,7 +65,8 @@ public final class TriumphPets extends JavaPlugin {
      */
     private void registerCommands() {
         Stream.of(
-                new TestCMD(this)
+                new TestCMD(this),
+                new CMDPets()
         ).forEach(commandManager::registerCommand);
     }
 
@@ -114,6 +123,7 @@ public final class TriumphPets extends JavaPlugin {
 
     /**
      * Used for better bulk registering listeners.
+     *
      * @param listener The listener to register.
      */
     private void register(Listener listener) {

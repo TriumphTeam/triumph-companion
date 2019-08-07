@@ -35,8 +35,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-chat:1.13-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.yaml:snakeyaml:1.23" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.spigotmc:spigot:1.14.3-R0.1-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: com.github.ipsk:MattUtils:43570a777f" level="project" />
-    <orderEntry type="library" name="Maven: com.zaxxer:HikariCP:3.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: com.github.ipsk:MattUtils:220b85ae5f" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: org.xerial:sqlite-jdbc:3.28.0" level="project" />
   </component>
 </module>

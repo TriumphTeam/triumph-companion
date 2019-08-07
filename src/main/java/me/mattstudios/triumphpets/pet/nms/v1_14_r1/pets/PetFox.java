@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet.nms.v1_14_R1.pets;
+package me.mattstudios.triumphpets.pet.nms.v1_14_r1.pets;
 
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.pet.PetEntity;
@@ -78,7 +78,7 @@ public class PetFox extends EntityFox implements PetEntity {
         petInventory = new PetInventory(plugin, this.owner, 1);
         petTime = 0;
 
-        goalSelector.a(0, new PathfinderGoalPickUpItems(this, petInventory.getInventory(), petMemory, 1.5, owner));
+        goalSelector.a(0, new PathfinderGoalPickUpItems(this, this, owner, 1.5));
         goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
         goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, petMemory, 1.2));
 

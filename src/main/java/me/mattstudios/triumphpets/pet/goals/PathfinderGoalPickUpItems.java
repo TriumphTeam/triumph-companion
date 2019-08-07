@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.pet.goals;
 
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
+import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.PetType;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
@@ -23,7 +24,7 @@ import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
 public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private double speed;
-    private EntityInsentient petEntity;
+    private EntityInsentient entityInsentient;
     private Player owner;
     private NavigationAbstract navigation;
     private Inventory inventory;
@@ -36,17 +37,18 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(EntityInsentient entity, Inventory inventory, PetMemory petMemory, double speed, Player owner) {
-        this.petEntity = entity;
+    public PathfinderGoalPickUpItems(EntityInsentient entityInsentient, PetEntity petEntity, Player owner, double speed) {
+        this.entityInsentient = entityInsentient;
         this.owner = owner;
         this.speed = speed;
-        this.inventory = inventory;
-        this.petMemory = petMemory;
 
+        inventory = petEntity.getPetInventory().getInventory();
+        petMemory = petEntity.getPetMemory();
+        navigation = entityInsentient.getNavigation();
+
+        startTime = 0;
         PICK_DIST = 1.5;
         SEARCH_DISTANCE = 15;
-        navigation = petEntity.getNavigation();
-        startTime = 0;
     }
 
     /**
@@ -71,7 +73,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * Picks up the items that are close.
      */
     private void pickCloseItem() {
-        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(PICK_DIST, PICK_DIST, PICK_DIST)) {
+        for (Entity foundEntity : entityInsentient.getBukkitEntity().getNearbyEntities(PICK_DIST, PICK_DIST, PICK_DIST)) {
             if (!(foundEntity instanceof Item)) continue;
             pickItem((Item) foundEntity);
         }
@@ -88,7 +90,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
         if ((petMemory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= 5) {
             petMemory.getForgetList().add(trackedItem);
-            petEntity.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, petEntity.locX, petEntity.locY, petEntity.locZ, 50, .5, .5, .5, 0);
+            entityInsentient.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, entityInsentient.locX, entityInsentient.locY, entityInsentient.locZ, 50, .5, .5, .5, 0);
         }
 
         if (!petMemory.isTracking()) startTracking();
@@ -106,7 +108,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         }
         controller = 0;
 
-        for (Entity foundEntity : petEntity.getBukkitEntity().getNearbyEntities(SEARCH_DISTANCE, 5, SEARCH_DISTANCE)) {
+        for (Entity foundEntity : entityInsentient.getBukkitEntity().getNearbyEntities(SEARCH_DISTANCE, 5, SEARCH_DISTANCE)) {
             if (!(foundEntity instanceof Item)) continue;
 
             Item item = (Item) foundEntity;
@@ -118,7 +120,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
                 continue;
             }
 
-            if (distance(item.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ)) < distance(trackedItem.getLocation().toVector(), new Vector(petEntity.locX, petEntity.locY, petEntity.locZ))) {
+            if (distance(item.getLocation().toVector(), new Vector(entityInsentient.locX, entityInsentient.locY, entityInsentient.locZ)) < distance(trackedItem.getLocation().toVector(), new Vector(entityInsentient.locX, entityInsentient.locY, entityInsentient.locZ))) {
                 trackedItem = item;
             }
 
