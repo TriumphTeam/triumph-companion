@@ -4,9 +4,9 @@ import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.components.PetInventory;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
-import me.mattstudios.triumphpets.pet.goals.PathfinderGoalFollowPlayer;
-import me.mattstudios.triumphpets.pet.goals.PathfinderGoalPickUpItems;
-import me.mattstudios.triumphpets.pet.goals.PathfinderGoalRandomWalkAround;
+import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalFollowPlayer;
+import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalPickUpItems;
+import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalRandomWalkAround;
 import net.minecraft.server.v1_14_R1.BehaviorController;
 import net.minecraft.server.v1_14_R1.ChatMessage;
 import net.minecraft.server.v1_14_R1.Entity;
@@ -130,6 +130,7 @@ public class PetFox extends EntityFox implements PetEntity {
             if (owner.isSneaking()) pet();
             else openInventory();
         }
+
         return super.a(entity, enumhand);
     }
 

@@ -19,15 +19,7 @@ public class Queries {
             "CREATE TABLE IF NOT EXISTS `tp_pet_inventory`(\n" +
                     "  `inv_id` INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "  `pet_id` INTEGER, \n" +
+                    "  `inventory TEXT,` \n" +
                     "  FOREIGN KEY (`pet_id`) REFERENCES `tp_pets` (`pet_id`)" +
-                    ");";
-
-    public static final String SQLITE_CREATE_INVENTORY_ITEMS =
-            "CREATE TABLE IF NOT EXISTS `tp_inv_items`(\n" +
-                    "  `items_id` INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
-                    "  `inv_id` INTEGER,\n" +
-                    "  `itemstack` VARCHAR(255),\n" +
-                    "  `slot` TINYINT, \n" +
-                    "  FOREIGN KEY (`inv_id`) REFERENCES `tp_pet_inventory` (`inv_id`)" +
                     ");";
 }

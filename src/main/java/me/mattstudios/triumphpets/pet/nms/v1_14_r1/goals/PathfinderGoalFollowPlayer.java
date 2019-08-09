@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet.goals;
+package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;

@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet.goals;
+package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
 import me.mattstudios.triumphpets.pet.PetEntity;
@@ -102,11 +102,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      */
     private void getItemToTrack() {
         //makes it run only once every 1 second.
-        if (controller == 0 || controller % 20 != 0) {
-            controller++;
-            return;
-        }
-        controller = 0;
+        if (!shouldRun()) return;
 
         for (Entity foundEntity : entityInsentient.getBukkitEntity().getNearbyEntities(SEARCH_DISTANCE, 5, SEARCH_DISTANCE)) {
             if (!(foundEntity instanceof Item)) continue;
@@ -150,7 +146,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
      * @param item The item to pick up.
      */
     private void pickItem(Item item) {
-        PetPickUpItemEvent event = new PetPickUpItemEvent(PetType.PET_FOX, item.getItemStack(), owner);
+        PetPickUpItemEvent event = new PetPickUpItemEvent(PetType.PET_FOX_SNOW, item.getItemStack(), owner);
         Bukkit.getPluginManager().callEvent(event);
 
         if (event.isCancelled()) return;
@@ -158,6 +154,15 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         item.getWorld().playSound(item.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
         inventory.addItem(item.getItemStack());
         item.remove();
+    }
+
+    private boolean shouldRun() {
+        if (controller != 20) {
+            controller++;
+            return false;
+        }
+        controller = 0;
+        return true;
     }
 
 }
