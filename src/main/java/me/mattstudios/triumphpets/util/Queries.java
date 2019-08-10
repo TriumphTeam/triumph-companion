@@ -19,7 +19,7 @@ public class Queries {
             "CREATE TABLE IF NOT EXISTS `tp_pet_inventory`(\n" +
                     "  `inv_id` INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "  `pet_id` INTEGER, \n" +
-                    "  `inventory TEXT,` \n" +
+                    "  `inventory` TEXT, \n" +
                     "  FOREIGN KEY (`pet_id`) REFERENCES `tp_pets` (`pet_id`)" +
                     ");";
 }

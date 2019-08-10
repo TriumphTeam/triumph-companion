@@ -27,13 +27,13 @@ public class CMDPet extends BaseCommand {
     @Default
     @Subcommand("help")
     @CommandPermission("triumphpets.help")
-    public void onHelp(Player player) {
+    public void help(Player player) {
         player.sendMessage("HELP");
     }
 
     @Subcommand("spawn")
     @CommandPermission("triumphpets.spawn")
-    public void onSpawn(Player player) {
+    public void spawn(Player player) {
         plugin.getPetController().spawnPet(player.getLocation(), player);
     }
 

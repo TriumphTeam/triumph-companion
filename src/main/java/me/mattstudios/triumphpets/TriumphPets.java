@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets;
 
 import co.aikar.commands.PaperCommandManager;
+import me.mattstudios.triumphpets.commands.CMDGive;
 import me.mattstudios.triumphpets.commands.CMDList;
 import me.mattstudios.triumphpets.commands.CMDPet;
 import me.mattstudios.triumphpets.data.SQLiteManager;
@@ -40,7 +41,6 @@ public final class TriumphPets extends JavaPlugin {
         setUpNms();
 
         sqLiteManager = new SQLiteManager(this);
-
     }
 
     @Override
@@ -67,7 +67,8 @@ public final class TriumphPets extends JavaPlugin {
     private void registerCommands() {
         Stream.of(
                 new CMDPet(this),
-                new CMDList(this)
+                new CMDList(this),
+                new CMDGive(this)
         ).forEach(commandManager::registerCommand);
     }
 

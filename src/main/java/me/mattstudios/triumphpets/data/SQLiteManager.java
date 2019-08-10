@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets.data;
 
+import com.zaxxer.hikari.HikariDataSource;
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.data.petdata.PetData;
 import me.mattstudios.triumphpets.pet.PetType;
@@ -8,7 +9,6 @@ import org.bukkit.entity.Player;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class SQLiteManager {
 
     private TriumphPets plugin;
 
-    private Connection connection;
+    private HikariDataSource hikari;
     private Map<String, List<PetData>> petsData;
 
     public SQLiteManager(TriumphPets plugin) {
@@ -35,7 +35,6 @@ public class SQLiteManager {
         petsData = new HashMap<>();
 
         createDB();
-        connect();
         createTables();
 
         cacheData();
@@ -45,7 +44,7 @@ public class SQLiteManager {
         return petsData.getOrDefault(player.getUniqueId().toString(), null);
     }
 
-    public void add(Player player) {
+    /*public void add(Player player) {
         try {
             if (connection.isClosed()) connect();
 
@@ -61,7 +60,7 @@ public class SQLiteManager {
         } catch (SQLException e) {
             info(color(TAG + "&cAn error occurred creating database tables!"));
         }
-    }
+    }*/
 
     private void createDB() {
         try {
@@ -71,35 +70,44 @@ public class SQLiteManager {
                 if (!dbFile.createNewFile()) info(color(TAG + "&cCouldn't create file."));
                 else info(color(TAG + "&aDatabase created successfully!"));
             }
+
+            connect();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     private void connect() {
-        try {
-            connection = DriverManager.getConnection("jdbc:sqlite:" + plugin.getDataFolder() + "/tp-data.db");
-        } catch (SQLException e) {
-            info(color(TAG + "&cAn error occurred trying to connect to the database!"));
-            e.printStackTrace();
-        }
+        hikari = new HikariDataSource();
+        hikari.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder() + "/tp-data.db");
+        hikari.setPoolName("TriumphPets");
     }
 
     private void createTables() {
+        Connection connection = null;
         try {
-            if (connection.isClosed()) connect();
+            connection = hikari.getConnection();
 
             connection.prepareStatement(SQLITE_CREATE_PETS).execute();
             connection.prepareStatement(SQLITE_CREATE_PET_INVENTORY).execute();
         } catch (SQLException e) {
             info(color(TAG + "&cAn error occurred creating database tables!"));
             e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private void cacheData() {
+        Connection connection = null;
         try {
-            if (connection.isClosed()) connect();
+            connection = hikari.getConnection();
 
             ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM `tp_pets`;");
 
@@ -124,7 +132,15 @@ public class SQLiteManager {
 
         } catch (SQLException e) {
             info(color(TAG + "&cAn error occurred caching the pets data!"));
+        } finally {
+        if (connection != null) {
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
+    }
     }
 
 }
