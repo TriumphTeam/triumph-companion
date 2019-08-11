@@ -71,7 +71,6 @@ public class SQLiteManager {
                 else info(color(TAG + "&aDatabase created successfully!"));
             }
 
-
             connect();
         } catch (IOException e) {
             e.printStackTrace();

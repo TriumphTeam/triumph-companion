@@ -5,6 +5,8 @@ import me.mattstudios.triumphpets.commands.CMDGive;
 import me.mattstudios.triumphpets.commands.CMDList;
 import me.mattstudios.triumphpets.commands.CMDPet;
 import me.mattstudios.triumphpets.data.SQLiteManager;
+import me.mattstudios.triumphpets.gui.GuiHandler;
+import me.mattstudios.triumphpets.listeners.GuiListener;
 import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.PetController;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.EntityController_1_14_R1;
@@ -23,6 +25,7 @@ public final class TriumphPets extends JavaPlugin {
 
     private PetController petController;
     private SQLiteManager sqLiteManager;
+    private GuiHandler guiHandler;
 
     @Override
     public void onLoad() {
@@ -41,6 +44,7 @@ public final class TriumphPets extends JavaPlugin {
         setUpNms();
 
         sqLiteManager = new SQLiteManager(this);
+        guiHandler = new GuiHandler(this);
     }
 
     @Override
@@ -61,6 +65,14 @@ public final class TriumphPets extends JavaPlugin {
         return sqLiteManager;
     }
 
+    public GuiHandler getGuiHandler() {
+        return guiHandler;
+    }
+
+    public PaperCommandManager getCommandManager() {
+        return commandManager;
+    }
+
     /**
      * Registers all commands used in the plugin.
      */
@@ -77,7 +89,8 @@ public final class TriumphPets extends JavaPlugin {
      */
     private void registerListeners() {
         Stream.of(
-                new PetListener(this)
+                new PetListener(this),
+                new GuiListener(this)
         ).forEach(this::register);
     }
 

@@ -6,11 +6,7 @@ import co.aikar.commands.annotation.CommandPermission;
 import co.aikar.commands.annotation.Default;
 import co.aikar.commands.annotation.Subcommand;
 import me.mattstudios.triumphpets.TriumphPets;
-import me.mattstudios.triumphpets.data.petdata.PetData;
-import me.mattstudios.triumphpets.pet.PetType;
 import org.bukkit.entity.Player;
-
-import static me.mattstudios.triumphpets.util.Utils.getCustomSkull;
 
 @CommandAlias("pet")
 public class CMDList extends BaseCommand {
@@ -31,11 +27,11 @@ public class CMDList extends BaseCommand {
     @CommandAlias("pets")
     @CommandPermission("triumphpets.help")
     public void onHelp(Player player) {
-        for (PetData petData : plugin.getSqLiteManager().getPets(player)) {
+        /*for (PetData petData : plugin.getSqLiteManager().getPets(player)) {
             player.sendMessage("pet: " + petData.getPetName());
-        }
+        }*/
 
-        player.getInventory().addItem(getCustomSkull(PetType.PET_FOX_SNOW.getTexture()));
+        plugin.getGuiHandler().getTiersGui().open(player);
     }
 
 }

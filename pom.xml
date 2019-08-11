@@ -86,12 +86,13 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>3.3.1</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>log4j</groupId>
-            <artifactId>log4j</artifactId>
-            <version>1.2.17</version>
+            <groupId>com.github.stefvanschie.inventoryframework</groupId>
+            <artifactId>IF</artifactId>
+            <version>0.5.8</version>
         </dependency>
 
     </dependencies>
@@ -119,7 +120,11 @@
                     <relocations>
                         <relocation>
                             <pattern>co.aikar.commands</pattern>
-                            <shadedPattern>me.mattstudios.acf</shadedPattern> <!-- Replace this -->
+                            <shadedPattern>me.mattstudios.triumphpets.acf</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.github.stefvanschie.inventoryframework</pattern>
+                            <shadedPattern>me.mattstudios.triumphpets.inventoryframework</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -130,6 +135,7 @@
                             <goal>shade</goal>
                         </goals>
                         <configuration>
+                            <minimizeJar>true</minimizeJar>
                             <outputDirectory>${project.build.directory}/unshaded</outputDirectory>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                         </configuration>

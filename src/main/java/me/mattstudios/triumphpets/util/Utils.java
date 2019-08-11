@@ -110,12 +110,12 @@ public class Utils {
         return yamlConfiguration.getItemStack("item");
     }
 
-    public static ItemStack getCustomSkull(byte[] texture) {
+    public static ItemStack getCustomSkull(String texture) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
 
         SkullMeta headMeta = (SkullMeta) head.getItemMeta();
         GameProfile profile = new GameProfile(UUID.randomUUID(), null);
-        profile.getProperties().put("textures", new Property("textures", new String(texture)));
+        profile.getProperties().put("textures", new Property("textures", texture));
         Field profileField;
 
         try {
