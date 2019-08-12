@@ -4,13 +4,13 @@ import me.mattstudios.triumphpets.TriumphPets;
 
 public class GuiHandler {
 
-    private TiersGui tiersGui;
+    private GuiTiers guiTiers;
 
     public GuiHandler(TriumphPets plugin) {
-        tiersGui = new TiersGui(plugin);
+        guiTiers = new GuiTiers(plugin);
     }
 
-    public TiersGui getTiersGui() {
-        return tiersGui;
+    public GuiTiers getGuiTiers() {
+        return guiTiers;
     }
 }

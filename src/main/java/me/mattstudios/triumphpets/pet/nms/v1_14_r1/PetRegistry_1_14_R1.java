@@ -30,6 +30,7 @@ public enum PetRegistry_1_14_R1 {
 
     /**
      * Gets the entity ID of the entity to register.
+     *
      * @return The ID.
      */
     private int getEntityId() {
@@ -38,6 +39,7 @@ public enum PetRegistry_1_14_R1 {
 
     /**
      * Gets the entity type passed in the constructor.
+     *
      * @return The entitytypes.
      */
     private EntityTypes.a<?> getEntityTypes() {
@@ -46,8 +48,9 @@ public enum PetRegistry_1_14_R1 {
 
     /**
      * Register the entity in the world.
+     *
      * @param entityRegistry The registry to be used.
-     * @param <T> Fuck if I know.
+     * @param <T>            Fuck if I know.
      */
     private static <T extends Entity> void registerPet(PetRegistry_1_14_R1 entityRegistry) {
         String entityId = String.valueOf(entityRegistry.getEntityId());

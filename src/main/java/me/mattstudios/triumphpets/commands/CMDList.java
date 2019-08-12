@@ -31,7 +31,7 @@ public class CMDList extends BaseCommand {
             player.sendMessage("pet: " + petData.getPetName());
         }*/
 
-        plugin.getGuiHandler().getTiersGui().open(player);
+        plugin.getGuiHandler().getGuiTiers().open(player);
     }
 
 }

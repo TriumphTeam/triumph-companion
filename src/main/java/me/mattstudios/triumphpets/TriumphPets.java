@@ -6,7 +6,6 @@ import me.mattstudios.triumphpets.commands.CMDList;
 import me.mattstudios.triumphpets.commands.CMDPet;
 import me.mattstudios.triumphpets.data.SQLiteManager;
 import me.mattstudios.triumphpets.gui.GuiHandler;
-import me.mattstudios.triumphpets.listeners.GuiListener;
 import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.PetController;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.EntityController_1_14_R1;
@@ -89,8 +88,7 @@ public final class TriumphPets extends JavaPlugin {
      */
     private void registerListeners() {
         Stream.of(
-                new PetListener(this),
-                new GuiListener(this)
+                new PetListener(this)
         ).forEach(this::register);
     }
 
