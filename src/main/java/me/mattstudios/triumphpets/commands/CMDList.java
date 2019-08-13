@@ -26,11 +26,7 @@ public class CMDList extends BaseCommand {
     @Subcommand("list")
     @CommandAlias("pets")
     @CommandPermission("triumphpets.help")
-    public void onHelp(Player player) {
-        /*for (PetData petData : plugin.getSqLiteManager().getPets(player)) {
-            player.sendMessage("pet: " + petData.getPetName());
-        }*/
-
+    public void list(Player player) {
         plugin.getGuiHandler().getGuiTiers().open(player);
     }
 

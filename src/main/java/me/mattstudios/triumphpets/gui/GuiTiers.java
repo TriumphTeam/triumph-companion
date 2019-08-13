@@ -53,7 +53,7 @@ public class GuiTiers {
         ItemStack itemStack = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
         emptyItemStack(itemStack);
 
-        setUpTierData();
+        setUpTierData(player);
 
         contentPane.addItem(new GuiItem(TIER_1, event -> event.getWhoClicked().sendMessage("Tier 1 pets")));
         contentPane.addItem(new GuiItem(itemStack));
@@ -62,7 +62,7 @@ public class GuiTiers {
         contentPane.addItem(new GuiItem(TIER_3, event -> event.getWhoClicked().sendMessage("yah boy 3")));
     }
 
-    private void setUpTierData() {
+    private void setUpTierData(Player player) {
         ItemMeta itemMeta = TIER_1.getItemMeta();
         List<String> lore = new ArrayList<>();
 
@@ -71,7 +71,7 @@ public class GuiTiers {
         lore.add(color(" "));
         lore.add(color("&7See your current tier 1 Pets!"));
         lore.add(color(" "));
-        lore.add(color("&7Pets: &c0"));
+        lore.add(color("&7Pets: &f" + plugin.getPetDataHandler().getPets(player.getUniqueId().toString(), (short) 1).size()));
         lore.add(color(" "));
         itemMeta.setLore(lore);
 
@@ -84,7 +84,7 @@ public class GuiTiers {
         lore.add(color(" "));
         lore.add(color("&7See your current tier 2 Pets!"));
         lore.add(color(" "));
-        lore.add(color("&7Pets: &c0"));
+        lore.add(color("&7Pets: &b" + plugin.getPetDataHandler().getPets(player.getUniqueId().toString(), (short) 2).size()));
         lore.add(color(" "));
         itemMeta.setLore(lore);
 
@@ -97,7 +97,7 @@ public class GuiTiers {
         lore.add(color(" "));
         lore.add(color("&7See your current tier 3 Pets!"));
         lore.add(color(" "));
-        lore.add(color("&7Pets: &c0"));
+        lore.add(color("&7Pets: &3" + plugin.getPetDataHandler().getPets(player.getUniqueId().toString(), (short) 3).size()));
         lore.add(color(" "));
         itemMeta.setLore(lore);
 

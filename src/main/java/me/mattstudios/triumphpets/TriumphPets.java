@@ -4,7 +4,7 @@ import co.aikar.commands.PaperCommandManager;
 import me.mattstudios.triumphpets.commands.CMDGive;
 import me.mattstudios.triumphpets.commands.CMDList;
 import me.mattstudios.triumphpets.commands.CMDPet;
-import me.mattstudios.triumphpets.data.SQLiteManager;
+import me.mattstudios.triumphpets.data.PetDataHandler;
 import me.mattstudios.triumphpets.gui.GuiHandler;
 import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.PetController;
@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.stream.Stream;
 
+import static me.mattstudios.triumphpets.util.CommandCompletions.registerCommandCompletions;
 import static me.mattstudios.utils.MessageUtils.info;
 import static me.mattstudios.utils.NmsUtils.getServerVersion;
 
@@ -23,7 +24,7 @@ public final class TriumphPets extends JavaPlugin {
     private PaperCommandManager commandManager;
 
     private PetController petController;
-    private SQLiteManager sqLiteManager;
+    private PetDataHandler petDataHandler;
     private GuiHandler guiHandler;
 
     @Override
@@ -36,13 +37,14 @@ public final class TriumphPets extends JavaPlugin {
         saveDefaultConfig();
 
         commandManager = new PaperCommandManager(this);
+        registerCommandCompletions(this);
         registerCommands();
 
         registerListeners();
 
         setUpNms();
 
-        sqLiteManager = new SQLiteManager(this);
+        petDataHandler = new PetDataHandler(this);
         guiHandler = new GuiHandler(this);
     }
 
@@ -60,8 +62,8 @@ public final class TriumphPets extends JavaPlugin {
         return petController;
     }
 
-    public SQLiteManager getSqLiteManager() {
-        return sqLiteManager;
+    public PetDataHandler getPetDataHandler() {
+        return petDataHandler;
     }
 
     public GuiHandler getGuiHandler() {

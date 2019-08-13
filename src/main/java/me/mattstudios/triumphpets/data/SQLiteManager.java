@@ -4,7 +4,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.data.petdata.PetData;
 import me.mattstudios.triumphpets.pet.PetType;
-import org.bukkit.entity.Player;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,45 +21,18 @@ import static me.mattstudios.triumphpets.util.Utils.TAG;
 import static me.mattstudios.utils.MessageUtils.color;
 import static me.mattstudios.utils.MessageUtils.info;
 
-public class SQLiteManager {
+class SQLiteManager {
 
     private TriumphPets plugin;
 
     private HikariDataSource hikari;
-    private Map<String, List<PetData>> petsData;
 
-    public SQLiteManager(TriumphPets plugin) {
+    SQLiteManager(TriumphPets plugin) {
         this.plugin = plugin;
-
-        petsData = new HashMap<>();
 
         createDB();
         createTables();
-
-        cacheData();
     }
-
-    public List<PetData> getPets(Player player) {
-        return petsData.getOrDefault(player.getUniqueId().toString(), null);
-    }
-
-    /*public void add(Player player) {
-        try {
-            if (connection.isClosed()) connect();
-
-            String test = "INSERT INTO tp_pets(`owner_uuid`, `pet_type`, `pet_name`, `baby`, `tier`) " +
-                    "VALUES ('" + player.getUniqueId().toString() + "', " +
-                    "'" + PetType.PET_FOX_SNOW.name() + "', " +
-                    "'Foxy', " +
-                    "true, " +
-                    "1);";
-
-            connection.prepareStatement(test).executeUpdate();
-
-        } catch (SQLException e) {
-            info(color(TAG + "&cAn error occurred creating database tables!"));
-        }
-    }*/
 
     private void createDB() {
         try {
@@ -104,8 +76,9 @@ public class SQLiteManager {
         }
     }
 
-    private void cacheData() {
+    Map<String, List<PetData>> cacheData() {
         Connection connection = null;
+        Map<String, List<PetData>> petsData = new HashMap<>();
         try {
             connection = hikari.getConnection();
 
@@ -114,6 +87,7 @@ public class SQLiteManager {
             while (resultSet.next()) {
                 int petId = resultSet.getInt("pet_id");
                 String ownerUuid = resultSet.getString("owner_uuid");
+                System.out.println(ownerUuid);
                 String petName = resultSet.getString("pet_name");
                 PetType petType = PetType.valueOf(resultSet.getString("pet_type"));
                 boolean baby = resultSet.getBoolean("baby");
@@ -133,14 +107,15 @@ public class SQLiteManager {
         } catch (SQLException e) {
             info(color(TAG + "&cAn error occurred caching the pets data!"));
         } finally {
-        if (connection != null) {
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
             }
         }
-    }
-    }
 
+        return petsData;
+    }
 }
