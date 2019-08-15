@@ -1,7 +1,11 @@
 package me.mattstudios.triumphpets.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.*;
+import co.aikar.commands.annotation.CommandAlias;
+import co.aikar.commands.annotation.CommandPermission;
+import co.aikar.commands.annotation.Default;
+import co.aikar.commands.annotation.Dependency;
+import co.aikar.commands.annotation.Subcommand;
 import me.mattstudios.triumphpets.TriumphPets;
 import org.bukkit.entity.Player;
 

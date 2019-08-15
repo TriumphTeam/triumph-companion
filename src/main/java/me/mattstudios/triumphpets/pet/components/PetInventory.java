@@ -33,12 +33,5 @@ public class PetInventory {
         String test = encodeInventory(inventory);
         System.out.println(test);
         System.out.println(Arrays.toString(decodeInventory(owner, test).getContents()));
-
-        /*ItemStack[] itemStacks = inventory.getContents();
-        for (int i = 0; i < itemStacks.length; i++) {
-            String encoded = encodeItem(itemStacks[i]);
-            System.out.println("slot: "+i + " | " + encoded);
-            System.out.println("slot: "+i + " | " + decodeItem(encoded));
-        }*/
     }
 }

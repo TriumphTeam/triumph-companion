@@ -1,9 +1,9 @@
 package me.mattstudios.triumphpets.data;
 
-import com.zaxxer.hikari.HikariDataSource;
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.data.petdata.PetData;
 import me.mattstudios.triumphpets.pet.PetType;
+import org.sqlite.SQLiteDataSource;
 
 import java.io.File;
 import java.io.IOException;
@@ -25,7 +25,7 @@ class SQLiteManager {
 
     private TriumphPets plugin;
 
-    private HikariDataSource hikari;
+    private SQLiteDataSource dataSource;
 
     SQLiteManager(TriumphPets plugin) {
         this.plugin = plugin;
@@ -50,15 +50,14 @@ class SQLiteManager {
     }
 
     private void connect() {
-        hikari = new HikariDataSource();
-        hikari.setJdbcUrl("jdbc:sqlite:" + plugin.getDataFolder() + "/tp-data.db");
-        hikari.setPoolName("TriumphPets");
+        dataSource = new SQLiteDataSource();
+        dataSource.setUrl("jdbc:sqlite:" + plugin.getDataFolder() + "/tp-data.db");
     }
 
     private void createTables() {
         Connection connection = null;
         try {
-            connection = hikari.getConnection();
+            connection = dataSource.getConnection();
 
             connection.prepareStatement(SQLITE_CREATE_PETS).execute();
             connection.prepareStatement(SQLITE_CREATE_PET_INVENTORY).execute();
@@ -80,14 +79,13 @@ class SQLiteManager {
         Connection connection = null;
         Map<String, List<PetData>> petsData = new HashMap<>();
         try {
-            connection = hikari.getConnection();
+            connection = dataSource.getConnection();
 
             ResultSet resultSet = connection.createStatement().executeQuery("SELECT * FROM `tp_pets`;");
 
             while (resultSet.next()) {
                 int petId = resultSet.getInt("pet_id");
                 String ownerUuid = resultSet.getString("owner_uuid");
-                System.out.println(ownerUuid);
                 String petName = resultSet.getString("pet_name");
                 PetType petType = PetType.valueOf(resultSet.getString("pet_type"));
                 boolean baby = resultSet.getBoolean("baby");
