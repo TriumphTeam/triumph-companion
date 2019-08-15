@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.files;
 
-public final class Configs {
+public final class ConfigPath {
 
     public static final String ITEM_SEARCH_DISTANCE = "global.item-search-distance";
     public static final String ITEM_TRACK_TICKS = "global.item-track-ticks";
