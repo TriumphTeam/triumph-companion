@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.pet.components;
 
 import me.mattstudios.triumphpets.TriumphPets;
+import me.mattstudios.triumphpets.files.Configs;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Item;
 
@@ -43,12 +44,6 @@ public class PetMemory {
     }
 
     private void periodicallyClearForget() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
-            @Override
-            public void run() {
-                System.out.println("cleaning..");
-                forgetList.clear();
-            }
-        }, 18000L, 18000L);
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> forgetList.clear(), plugin.getConfig().getInt(Configs.FORGET_LIST_TIME) * 20L, plugin.getConfig().getInt(Configs.FORGET_LIST_TIME) * 20L);
     }
 }

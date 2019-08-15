@@ -1,9 +1,8 @@
 package me.mattstudios.triumphpets.pet;
 
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 public interface PetController {
 
@@ -18,10 +17,10 @@ public interface PetController {
     /**
      * Checks weather or not the entity that is being tracked is a pet or not.
      *
-     * @param entityUuid The entity UUID.
+     * @param entity The entity to check.
      * @return True if it is a pet, false if it is not.
      */
-    boolean isPetEntity(UUID entityUuid);
+    boolean isPet(Entity entity);
 
     /**
      * Removes all the teams created in process and all the pet entities spawned.

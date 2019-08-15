@@ -7,30 +7,13 @@ import me.mattstudios.triumphpets.pet.components.PetMemory;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalFollowPlayer;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalPickUpItems;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals.PathfinderGoalRandomWalkAround;
-import net.minecraft.server.v1_14_R1.BehaviorController;
-import net.minecraft.server.v1_14_R1.ChatMessage;
-import net.minecraft.server.v1_14_R1.Entity;
-import net.minecraft.server.v1_14_R1.EntityFox;
-import net.minecraft.server.v1_14_R1.EntityHuman;
-import net.minecraft.server.v1_14_R1.EntityLiving;
-import net.minecraft.server.v1_14_R1.EntityTypes;
-import net.minecraft.server.v1_14_R1.EnumHand;
-import net.minecraft.server.v1_14_R1.PathfinderGoal;
-import net.minecraft.server.v1_14_R1.PathfinderGoalFloat;
-import net.minecraft.server.v1_14_R1.PathfinderGoalLookAtPlayer;
-import net.minecraft.server.v1_14_R1.PathfinderGoalSelector;
-import net.minecraft.server.v1_14_R1.World;
+import net.minecraft.server.v1_14_R1.*;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.lang.reflect.Field;
-import java.util.EnumMap;
-import java.util.EnumSet;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.TreeMap;
+import java.util.*;
 
 import static me.mattstudios.utils.MessageUtils.color;
 import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
@@ -78,8 +61,8 @@ public class PetFox extends EntityFox implements PetEntity {
         petInventory = new PetInventory(plugin, this.owner, 1);
         petTime = 0;
 
-        goalSelector.a(0, new PathfinderGoalPickUpItems(this, this, owner, 1.5));
-        goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
+        goalSelector.a(0, new PathfinderGoalPickUpItems(this.plugin, this, this, owner, 1.5));
+        goalSelector.a(1, new PathfinderGoalFollowPlayer(this.plugin, this, this.owner, petMemory, 1.5));
         goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, petMemory, 1.2));
 
         goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));

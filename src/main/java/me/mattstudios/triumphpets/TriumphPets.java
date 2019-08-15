@@ -13,11 +13,13 @@ import me.mattstudios.triumphpets.pet.nms.v1_14_r1.PetRegistry_1_14_R1;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
 import java.util.stream.Stream;
 
 import static me.mattstudios.triumphpets.util.CommandCompletions.registerCommandCompletions;
 import static me.mattstudios.utils.MessageUtils.info;
 import static me.mattstudios.utils.NmsUtils.getServerVersion;
+import static me.mattstudios.utils.YamlUtils.copyDefaults;
 
 public final class TriumphPets extends JavaPlugin {
 
@@ -34,7 +36,8 @@ public final class TriumphPets extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        saveDefaultConfig();
+
+        saveMainConfig();
 
         commandManager = new PaperCommandManager(this);
         registerCommandCompletions(this);
@@ -72,6 +75,11 @@ public final class TriumphPets extends JavaPlugin {
 
     public PaperCommandManager getCommandManager() {
         return commandManager;
+    }
+
+    private void saveMainConfig() {
+        saveDefaultConfig();
+        copyDefaults(getClassLoader().getResourceAsStream("config.yml"), new File(getDataFolder().getPath(), "config.yml"));
     }
 
     /**

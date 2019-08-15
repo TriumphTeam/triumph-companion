@@ -1,11 +1,7 @@
 package me.mattstudios.triumphpets.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandCompletion;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Dependency;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.pet.PetType;
 import org.bukkit.entity.Player;
@@ -24,7 +20,6 @@ public class CMDGive extends BaseCommand {
     @CommandPermission("triumphpets.spawn")
     @CommandCompletion("@players @pet_types @range:1-3")
     public void give(Player player, String playerName, PetType petType, int tier) {
-
         player.sendMessage(player.getUniqueId().toString());
         player.sendMessage(playerName);
         player.sendMessage(petType.name());

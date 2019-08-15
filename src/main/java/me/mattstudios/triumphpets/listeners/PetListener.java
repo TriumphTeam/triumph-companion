@@ -19,12 +19,12 @@ public class PetListener implements Listener {
     public void onWolfTargetPet(EntityTargetLivingEntityEvent event) {
         if (!event.getEntityType().equals(EntityType.WOLF)) return;
         if (event.getTarget() == null) return;
-        if (plugin.getPetController().isPetEntity(event.getTarget().getUniqueId())) event.setCancelled(true);
+        if (plugin.getPetController().isPet(event.getTarget())) event.setCancelled(true);
     }
 
     @EventHandler
     public void onPetDamage(EntityDamageEvent event) {
-        if (plugin.getPetController().isPetEntity(event.getEntity().getUniqueId())) event.setCancelled(true);
+        if (plugin.getPetController().isPet(event.getEntity())) event.setCancelled(true);
     }
 
 }

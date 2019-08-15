@@ -28,7 +28,7 @@ public class PathfinderGoalRandomWalkAround extends PathfinderGoal {
         this.movementSpeed = movementSpeed;
         this.petMemory = petMemory;
 
-        chance = 25;
+        chance = 15;
         controller = 0;
         random = new Random();
     }
@@ -64,7 +64,7 @@ public class PathfinderGoalRandomWalkAround extends PathfinderGoal {
     }
 
     private boolean shouldRun() {
-        if (controller != 20) {
+        if (controller <= 20) {
             controller++;
             return false;
         }

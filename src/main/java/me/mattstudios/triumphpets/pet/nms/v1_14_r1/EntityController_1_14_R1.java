@@ -9,6 +9,8 @@ import net.minecraft.server.v1_14_R1.EntityFox;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.v1_14_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_14_R1.entity.CraftEntity;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -43,17 +45,11 @@ public class EntityController_1_14_R1 implements PetController {
     /**
      * Checks weather or not the entity that is being tracked is a pet or not.
      *
-     * @param entityUuid The entity UUID.
+     * @param entity The entity to check.
      * @return True if it is a pet, false if it is not.
      */
-    public boolean isPetEntity(UUID entityUuid) {
-        if (spawnedPets == null || spawnedPets.isEmpty() || entityUuid == null) return false;
-
-        for (UUID uuid : spawnedPets.keySet()) {
-            if (spawnedPets.get(uuid).getEntity().getUniqueId().equals(entityUuid)) return true;
-        }
-
-        return false;
+    public boolean isPet(Entity entity) {
+        return ((CraftEntity) entity).getHandle() instanceof PetEntity;
     }
 
     /**

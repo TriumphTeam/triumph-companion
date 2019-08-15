@@ -1,11 +1,7 @@
 package me.mattstudios.triumphpets.commands;
 
 import co.aikar.commands.BaseCommand;
-import co.aikar.commands.annotation.CommandAlias;
-import co.aikar.commands.annotation.CommandPermission;
-import co.aikar.commands.annotation.Default;
-import co.aikar.commands.annotation.Dependency;
-import co.aikar.commands.annotation.Subcommand;
+import co.aikar.commands.annotation.*;
 import me.mattstudios.triumphpets.TriumphPets;
 import org.bukkit.entity.Player;
 
@@ -36,5 +32,4 @@ public class CMDPet extends BaseCommand {
     public void spawn(Player player) {
         plugin.getPetController().spawnPet(player.getLocation(), player);
     }
-
 }

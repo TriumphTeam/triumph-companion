@@ -1,5 +1,7 @@
 package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
+import me.mattstudios.triumphpets.TriumphPets;
+import me.mattstudios.triumphpets.files.Configs;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
 import net.minecraft.server.v1_14_R1.EntityInsentient;
 import net.minecraft.server.v1_14_R1.NavigationAbstract;
@@ -13,7 +15,8 @@ import static me.mattstudios.triumphpets.util.Utils.getSafeY;
 
 public class PathfinderGoalFollowPlayer extends PathfinderGoal {
 
-    private final double MOVEMENT_SPEED;
+    private TriumphPets plugin;
+
     private EntityInsentient petEntity;
     private Player owner;
     private NavigationAbstract navigation;
@@ -22,22 +25,25 @@ public class PathfinderGoalFollowPlayer extends PathfinderGoal {
     private int followDistance;
     private int tpDistance;
 
-    public PathfinderGoalFollowPlayer(EntityInsentient petEntity, Player owner, PetMemory petMemory, double MOVEMENT_SPEED) {
+    private final double MOVEMENT_SPEED;
+
+    public PathfinderGoalFollowPlayer(TriumphPets plugin, EntityInsentient petEntity, Player owner, PetMemory petMemory, double MOVEMENT_SPEED) {
+        this.plugin = plugin;
         this.petEntity = petEntity;
         this.owner = owner;
         this.navigation = petEntity.getNavigation();
         this.MOVEMENT_SPEED = MOVEMENT_SPEED;
         this.petMemory = petMemory;
 
-        followDistance = 7;
-        tpDistance = 20;
+        followDistance = this.plugin.getConfig().getInt(Configs.FOLLOW_DISTANCE);
+        tpDistance = this.plugin.getConfig().getInt(Configs.TELEPORT_DISTANCE);
     }
 
     @Override
     public boolean a() {
 
         if (petMemory.isTracking()) followDistance = 15;
-        else followDistance = 7;
+        else followDistance = plugin.getConfig().getInt(Configs.FOLLOW_DISTANCE);
 
         Location location = owner.getLocation().clone();
         double dist = distance2d(location.getX(), petEntity.locX, location.getZ(), petEntity.locZ);

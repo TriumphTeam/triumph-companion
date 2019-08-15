@@ -1,0 +1,24 @@
+
+# Global settings that affects all pets.
+global:
+  # Distance in blocks in which pets should search for items (keep this low)
+  # Default 15
+  item-search-distance: 15
+  # How many ticks should be waited to search for a new item, lower number - faster - worse performance.
+  # Default 20 (1 second)
+  item-track-ticks: 20
+  # Distance in blocks in which pet's pick up items close by, making it smaller than 1.5 might make the pet not reach it.
+  # Default 1.5
+  item-pick-distance: 1.5
+  # After how many seconds without being able to reach an item, the pet should forget about it.
+  # Default 5 seconds
+  item-forget-time: 5
+  # How often in seconds pet's forget list should be cleared.
+  # Default 900 (15 minutes)
+  forget-list-time: 900
+  # Distance in blocks in which the pet should follow player.
+  # Default 7
+  follow-distance: 7
+  # Distance in blocks which the pet will teleport to the player.
+  # Default 20
+  teleport-distance: 20

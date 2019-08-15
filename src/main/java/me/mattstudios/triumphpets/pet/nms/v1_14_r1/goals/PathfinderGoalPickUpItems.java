@@ -1,6 +1,8 @@
 package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
+import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
+import me.mattstudios.triumphpets.files.Configs;
 import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.PetType;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
@@ -32,12 +34,15 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private Item trackedItem;
     private long startTime;
+
     private final double PICK_DIST;
     private final int SEARCH_DISTANCE;
+    private final int FORGET_TIME;
+    private final int ITEM_TRACK_TICKS;
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(EntityInsentient entityInsentient, PetEntity petEntity, Player owner, double speed) {
+    public PathfinderGoalPickUpItems(TriumphPets plugin, EntityInsentient entityInsentient, PetEntity petEntity, Player owner, double speed) {
         this.entityInsentient = entityInsentient;
         this.owner = owner;
         this.speed = speed;
@@ -47,8 +52,11 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         navigation = entityInsentient.getNavigation();
 
         startTime = 0;
-        PICK_DIST = 1.5;
-        SEARCH_DISTANCE = 15;
+
+        PICK_DIST = plugin.getConfig().getDouble(Configs.ITEM_PICK_DISTANCE);
+        SEARCH_DISTANCE = plugin.getConfig().getInt(Configs.ITEM_SEARCH_DISTANCE);
+        FORGET_TIME = plugin.getConfig().getInt(Configs.ITEM_FORGET_TIME);
+        ITEM_TRACK_TICKS = plugin.getConfig().getInt(Configs.ITEM_TRACK_TICKS);
     }
 
     /**
@@ -88,8 +96,8 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
             return;
         }
 
-        if ((petMemory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= 5) {
-            petMemory.getForgetList().add(trackedItem);
+        if ((petMemory.isTracking() && startTime != 0) && getSecondsDifference(startTime) >= FORGET_TIME) {
+            forget(trackedItem);
             entityInsentient.getBukkitEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, entityInsentient.locX, entityInsentient.locY, entityInsentient.locZ, 50, .5, .5, .5, 0);
         }
 
@@ -97,11 +105,15 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         navigation.a(((CraftEntity) trackedItem).getHandle(), speed);
     }
 
+    private void forget(Item item) {
+        petMemory.getForgetList().add(item);
+    }
+
     /**
      * Gets the closes item for the pet to track.
      */
     private void getItemToTrack() {
-        //makes it run only once every 1 second.
+        // makes it run only once every 1 second.
         if (!shouldRun()) return;
 
         for (Entity foundEntity : entityInsentient.getBukkitEntity().getNearbyEntities(SEARCH_DISTANCE, 5, SEARCH_DISTANCE)) {
@@ -149,7 +161,10 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
         PetPickUpItemEvent event = new PetPickUpItemEvent(PetType.PET_FOX_SNOW, item.getItemStack(), owner);
         Bukkit.getPluginManager().callEvent(event);
 
-        if (event.isCancelled()) return;
+        if (event.isCancelled()) {
+            forget(item);
+            return;
+        }
 
         item.getWorld().playSound(item.getLocation(), Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f);
         inventory.addItem(item.getItemStack());
@@ -157,7 +172,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
     }
 
     private boolean shouldRun() {
-        if (controller != 20) {
+        if (controller <= ITEM_TRACK_TICKS) {
             controller++;
             return false;
         }
