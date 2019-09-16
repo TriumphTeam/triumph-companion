@@ -2,7 +2,7 @@ package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
 import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
-import me.mattstudios.triumphpets.files.ConfigPath;
+import me.mattstudios.triumphpets.files.PathUtil;
 import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.PetType;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
@@ -53,10 +53,10 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
         startTime = 0;
 
-        PICK_DIST = plugin.getConfig().getDouble(ConfigPath.ITEM_PICK_DISTANCE);
-        SEARCH_DISTANCE = plugin.getConfig().getInt(ConfigPath.ITEM_SEARCH_DISTANCE);
-        FORGET_TIME = plugin.getConfig().getInt(ConfigPath.ITEM_FORGET_TIME);
-        ITEM_TRACK_TICKS = plugin.getConfig().getInt(ConfigPath.ITEM_TRACK_TICKS);
+        PICK_DIST = plugin.getConfig().getDouble(PathUtil.ITEM_PICK_DISTANCE);
+        SEARCH_DISTANCE = plugin.getConfig().getInt(PathUtil.ITEM_SEARCH_DISTANCE);
+        FORGET_TIME = plugin.getConfig().getInt(PathUtil.ITEM_FORGET_TIME);
+        ITEM_TRACK_TICKS = plugin.getConfig().getInt(PathUtil.ITEM_TRACK_TICKS);
     }
 
     /**

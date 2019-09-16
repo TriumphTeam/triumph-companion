@@ -1,9 +1,11 @@
 package me.mattstudios.triumphpets;
 
 import co.aikar.commands.PaperCommandManager;
+import me.mattstudios.mf.base.CommandManager;
 import me.mattstudios.triumphpets.commands.CMDGive;
 import me.mattstudios.triumphpets.commands.CMDList;
 import me.mattstudios.triumphpets.commands.CMDPet;
+import me.mattstudios.triumphpets.commands.CommandTest;
 import me.mattstudios.triumphpets.data.PetDataHandler;
 import me.mattstudios.triumphpets.gui.GuiHandler;
 import me.mattstudios.triumphpets.listeners.PetListener;
@@ -42,6 +44,14 @@ public final class TriumphPets extends JavaPlugin {
         commandManager = new PaperCommandManager(this);
         registerCommandCompletions(this);
         registerCommands();
+
+        CommandManager cm = new CommandManager(this);
+        cm.register(new CommandTest());
+        /*cm.getParameterHandler().register(World.class, (arg, type) -> {
+            World world = Bukkit.getWorld(String.valueOf(arg));
+            if (world != null) return world;
+            throw new InvalidArgumentException("Your custom error message!");
+        });*/
 
         registerListeners();
 

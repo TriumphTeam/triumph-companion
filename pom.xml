@@ -31,7 +31,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-
         <repository>
             <id>papermc</id>
             <url>https://papermc.io/repo/repository/maven-public/</url>
@@ -88,6 +87,13 @@
             <version>0.5.8</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>me.mattstudios.utils</groupId>
+            <artifactId>matts-framework</artifactId>
+            <version>1.0.1-BETA</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 
@@ -98,7 +104,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
+                <version>3.8.1</version>
                 <configuration>
                     <source>${java.version}</source>
                     <target>${java.version}</target>
@@ -140,6 +146,9 @@
             <resource>
                 <directory>src/main/resources</directory>
                 <filtering>true</filtering>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
             </resource>
         </resources>
     </build>
