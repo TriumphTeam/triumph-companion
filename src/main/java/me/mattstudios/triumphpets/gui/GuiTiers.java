@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static me.mattstudios.triumphpets.util.Utils.getCustomSkull;
-import static me.mattstudios.utils.MessageUtils.color;
+import static me.mattstudios.mattscore.utils.MessageUtils.color;
 
 public class GuiTiers {
 

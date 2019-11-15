@@ -4,4 +4,3 @@ main: me.mattstudios.triumphpets.TriumphPets
 api-version: 1.13
 
 commands:
-  pet:

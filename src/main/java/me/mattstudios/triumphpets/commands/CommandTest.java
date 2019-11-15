@@ -2,21 +2,15 @@ package me.mattstudios.triumphpets.commands;
 
 import me.mattstudios.mf.annotations.Command;
 import me.mattstudios.mf.annotations.Default;
-import me.mattstudios.mf.annotations.SubCommand;
 import me.mattstudios.mf.base.CommandBase;
-import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
-@Command("commandtest")
+@Command("testtp")
 public class CommandTest extends CommandBase {
 
     @Default
-    public void defaultCommand(CommandSender commandSender) {
-        commandSender.sendMessage("Hello!");
-    }
-
-    @SubCommand("test")
-    public void testSubCommand(CommandSender commandSender) {
-        commandSender.sendMessage("Test!");
+    public void test(Player player, Player test) {
+        player.teleport(test);
     }
 
 }

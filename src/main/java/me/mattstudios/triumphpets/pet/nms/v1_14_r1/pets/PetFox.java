@@ -15,8 +15,8 @@ import org.bukkit.potion.PotionEffectType;
 import java.lang.reflect.Field;
 import java.util.*;
 
-import static me.mattstudios.utils.MessageUtils.color;
-import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
+import static me.mattstudios.mattscore.utils.MessageUtils.color;
+import static me.mattstudios.mattscore.utils.TimeUtils.getSecondsDifference;
 
 public class PetFox extends EntityFox implements PetEntity {
 
@@ -61,8 +61,8 @@ public class PetFox extends EntityFox implements PetEntity {
         petInventory = new PetInventory(plugin, this.owner, 1);
         petTime = 0;
 
-        goalSelector.a(0, new PathfinderGoalPickUpItems(this.plugin, this, this, owner, 1.5));
-        goalSelector.a(1, new PathfinderGoalFollowPlayer(this.plugin, this, this.owner, petMemory, 1.5));
+        goalSelector.a(0, new PathfinderGoalPickUpItems(this, this, owner, 1.5));
+        goalSelector.a(1, new PathfinderGoalFollowPlayer(this, this.owner, petMemory, 1.5));
         goalSelector.a(6, new PathfinderGoalRandomWalkAround(this, petMemory, 1.2));
 
         goalSelector.a(7, new PathfinderGoalLookAtPlayer(this, EntityHuman.class, 5f));

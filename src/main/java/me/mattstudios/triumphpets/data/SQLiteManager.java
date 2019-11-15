@@ -15,11 +15,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static me.mattstudios.mattscore.utils.MessageUtils.color;
+import static me.mattstudios.mattscore.utils.MessageUtils.info;
 import static me.mattstudios.triumphpets.util.Queries.SQLITE_CREATE_PETS;
 import static me.mattstudios.triumphpets.util.Queries.SQLITE_CREATE_PET_INVENTORY;
 import static me.mattstudios.triumphpets.util.Utils.TAG;
-import static me.mattstudios.utils.MessageUtils.color;
-import static me.mattstudios.utils.MessageUtils.info;
 
 class SQLiteManager {
 

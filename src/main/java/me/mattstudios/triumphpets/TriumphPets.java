@@ -1,57 +1,47 @@
 package me.mattstudios.triumphpets;
 
-import co.aikar.commands.PaperCommandManager;
-import me.mattstudios.mf.base.CommandManager;
+import me.mattstudios.mattscore.MattPlugin;
+import me.mattstudios.mattscore.locale.Locales;
 import me.mattstudios.triumphpets.commands.CMDGive;
-import me.mattstudios.triumphpets.commands.CMDList;
+import me.mattstudios.triumphpets.commands.CMDGives;
 import me.mattstudios.triumphpets.commands.CMDPet;
 import me.mattstudios.triumphpets.commands.CommandTest;
+import me.mattstudios.triumphpets.commands.ListCommand;
+import me.mattstudios.triumphpets.commands.PetsCommand;
+import me.mattstudios.triumphpets.configuration.MainConfig;
+import me.mattstudios.triumphpets.configuration.MessageConfig;
 import me.mattstudios.triumphpets.data.PetDataHandler;
 import me.mattstudios.triumphpets.gui.GuiHandler;
 import me.mattstudios.triumphpets.listeners.PetListener;
 import me.mattstudios.triumphpets.pet.PetController;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.EntityController_1_14_R1;
 import me.mattstudios.triumphpets.pet.nms.v1_14_r1.PetRegistry_1_14_R1;
-import org.bukkit.event.Listener;
-import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.File;
 import java.util.stream.Stream;
 
-import static me.mattstudios.triumphpets.util.CommandCompletions.registerCommandCompletions;
-import static me.mattstudios.utils.MessageUtils.info;
-import static me.mattstudios.utils.NmsUtils.getServerVersion;
-import static me.mattstudios.utils.YamlUtils.copyDefaults;
+import static me.mattstudios.mattscore.utils.MessageUtils.info;
+import static me.mattstudios.mattscore.utils.NmsUtils.getServerVersion;
 
-public final class TriumphPets extends JavaPlugin {
-
-    private PaperCommandManager commandManager;
+public final class TriumphPets extends MattPlugin {
 
     private PetController petController;
     private PetDataHandler petDataHandler;
     private GuiHandler guiHandler;
 
     @Override
-    public void onLoad() {
+    public void onPluginLoad() {
         registerNmsPets();
     }
 
     @Override
-    public void onEnable() {
+    public void onPluginEnable() {
 
-        saveMainConfig();
+        getConfig().load(MainConfig.class);
+        getLocaleHandler().setLocale(Locales.EN_EN);
+        getLocale().load(MessageConfig.class, Locales.EN_EN);
+        System.out.println(getLocale().get(MessageConfig.STORAGE_METHOD));
 
-        commandManager = new PaperCommandManager(this);
-        registerCommandCompletions(this);
         registerCommands();
-
-        CommandManager cm = new CommandManager(this);
-        cm.register(new CommandTest());
-        /*cm.getParameterHandler().register(World.class, (arg, type) -> {
-            World world = Bukkit.getWorld(String.valueOf(arg));
-            if (world != null) return world;
-            throw new InvalidArgumentException("Your custom error message!");
-        });*/
 
         registerListeners();
 
@@ -59,10 +49,12 @@ public final class TriumphPets extends JavaPlugin {
 
         petDataHandler = new PetDataHandler(this);
         guiHandler = new GuiHandler(this);
+
+
     }
 
     @Override
-    public void onDisable() {
+    public void onPluginDisable() {
         petController.removeAll();
     }
 
@@ -83,24 +75,18 @@ public final class TriumphPets extends JavaPlugin {
         return guiHandler;
     }
 
-    public PaperCommandManager getCommandManager() {
-        return commandManager;
-    }
-
-    private void saveMainConfig() {
-        saveDefaultConfig();
-        copyDefaults(getClassLoader().getResourceAsStream("config.yml"), new File(getDataFolder().getPath(), "config.yml"));
-    }
-
     /**
      * Registers all commands used in the plugin.
      */
     private void registerCommands() {
         Stream.of(
+                new PetsCommand(this),
+                new ListCommand(this),
                 new CMDPet(this),
-                new CMDList(this),
-                new CMDGive(this)
-        ).forEach(commandManager::registerCommand);
+                new CMDGive(this),
+                new CMDGives(this),
+                new CommandTest()
+        ).forEach(this::registerCommand);
     }
 
     /**
@@ -109,7 +95,7 @@ public final class TriumphPets extends JavaPlugin {
     private void registerListeners() {
         Stream.of(
                 new PetListener(this)
-        ).forEach(this::register);
+        ).forEach(this::registerListener);
     }
 
     /**
@@ -153,15 +139,5 @@ public final class TriumphPets extends JavaPlugin {
                 break;
         }
     }
-
-    /**
-     * Used for better bulk registering listeners.
-     *
-     * @param listener The listener to register.
-     */
-    private void register(Listener listener) {
-        getServer().getPluginManager().registerEvents(listener, this);
-    }
-
 
 }

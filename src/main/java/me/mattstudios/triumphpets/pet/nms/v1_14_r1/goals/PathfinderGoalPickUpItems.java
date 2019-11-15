@@ -1,8 +1,6 @@
 package me.mattstudios.triumphpets.pet.nms.v1_14_r1.goals;
 
-import me.mattstudios.triumphpets.TriumphPets;
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent;
-import me.mattstudios.triumphpets.files.PathUtil;
 import me.mattstudios.triumphpets.pet.PetEntity;
 import me.mattstudios.triumphpets.pet.PetType;
 import me.mattstudios.triumphpets.pet.components.PetMemory;
@@ -21,7 +19,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.util.Vector;
 
 import static me.mattstudios.triumphpets.util.Utils.distance;
-import static me.mattstudios.utils.TimeUtils.getSecondsDifference;
+import static me.mattstudios.mattscore.utils.TimeUtils.getSecondsDifference;
 
 public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
@@ -42,7 +40,7 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
     private int controller = 0;
 
-    public PathfinderGoalPickUpItems(TriumphPets plugin, EntityInsentient entityInsentient, PetEntity petEntity, Player owner, double speed) {
+    public PathfinderGoalPickUpItems(EntityInsentient entityInsentient, PetEntity petEntity, Player owner, double speed) {
         this.entityInsentient = entityInsentient;
         this.owner = owner;
         this.speed = speed;
@@ -53,10 +51,10 @@ public class PathfinderGoalPickUpItems extends PathfinderGoal {
 
         startTime = 0;
 
-        PICK_DIST = plugin.getConfig().getDouble(PathUtil.ITEM_PICK_DISTANCE);
-        SEARCH_DISTANCE = plugin.getConfig().getInt(PathUtil.ITEM_SEARCH_DISTANCE);
-        FORGET_TIME = plugin.getConfig().getInt(PathUtil.ITEM_FORGET_TIME);
-        ITEM_TRACK_TICKS = plugin.getConfig().getInt(PathUtil.ITEM_TRACK_TICKS);
+        PICK_DIST = 1.5;
+        SEARCH_DISTANCE = 15;
+        FORGET_TIME = 5;
+        ITEM_TRACK_TICKS = 20;
     }
 
     /**
