@@ -1,3 +1,14 @@
 
-\.idea/
-\target/
+.idea/
+
+.gradle/
+
+build/
+
+gradle/
+
+*.iml
+
+build.gradle
+gradlew
+gradlew.bat
