@@ -1,4 +1,4 @@
 name: TriumphPets
-version: @version
+version: @version@
 main: me.mattstudios.triumphpets.TriumphPets
 api-version: 1.13

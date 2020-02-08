@@ -12,6 +12,8 @@ class TriumphPets : MattPlugin() {
 
         registerCommands(PetCommand(this))
 
+
+
     }
 
 }

@@ -1,0 +1,4 @@
+rootProject.name = 'triumph-pets'
+
+include 'common'
+include 'version1_15'
