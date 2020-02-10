@@ -3,7 +3,9 @@ package me.mattstudios.triumphpets
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils
 import me.mattstudios.triumphpets.commands.PetCommand
+import me.mattstudios.triumphpets.listeners.PetListener
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.PetUtils
 import org.apache.commons.lang.StringUtils
 import java.util.stream.Stream
@@ -13,14 +15,23 @@ import java.util.stream.Stream
  */
 class TriumphPets : MattPlugin() {
 
+    lateinit var petManager: PetManager
+
     override fun onPluginEnable() {
 
         setupLocale()
 
         startUpMessage()
 
-        registerCommands(PetCommand(this))
+        petManager = PetManager(this)
 
+        registerCommands(PetCommand(this))
+        registerListeners(PetListener(this))
+
+    }
+
+    override fun onPluginDisable() {
+        petManager.petController.removeAll()
     }
 
     private fun setupLocale() {

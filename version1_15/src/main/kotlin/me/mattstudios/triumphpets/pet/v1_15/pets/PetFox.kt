@@ -6,7 +6,6 @@ import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
-import me.mattstudios.triumphpets.pet.v1_15.goals.ClearGoal.clearPathfinders
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalFollowPlayer
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalPickUpItems
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalRandomWalkAround
@@ -17,6 +16,7 @@ import net.minecraft.server.v1_15_R1.EntityTypes
 import net.minecraft.server.v1_15_R1.EnumHand
 import net.minecraft.server.v1_15_R1.PathfinderGoalFloat
 import net.minecraft.server.v1_15_R1.PathfinderGoalLookAtPlayer
+import net.minecraft.server.v1_15_R1.PathfinderGoalSelector
 import net.minecraft.server.v1_15_R1.World
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -36,7 +36,8 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
     private val PET_COOLDOWN = 15
 
     init {
-        clearPathfinders(this)
+        // Clears the goal selector
+        goalSelector = PathfinderGoalSelector(if (world.methodProfiler != null) world.methodProfiler else null)
 
         customName = ChatMessage(color(name))
         customNameVisible = true
