@@ -16,18 +16,30 @@ class PetMemory(private val plugin: MattPlugin) {
     private val forgetList = mutableListOf<Item>()
     private val personalBlackList = mutableListOf<ItemStack>()
 
+    /**
+     * Makes it so it can clear the forget list periodically
+     */
     init {
         periodicallyClearForget()
     }
 
+    /**
+     * Forgets an item
+     */
     fun forgetItem(item: Item) {
         forgetList.add(item)
     }
 
-    fun isForgotten(item: Item): Boolean {
-        return forgetList.contains(item)
+    /**
+     * Checks if the item in question is forgotten or not
+     */
+    fun isForgotten(item: Item?): Boolean {
+        return if (item == null) true else forgetList.contains(item)
     }
 
+    /**
+     * Every 15 minutes clears the forgotten list
+     */
     private fun periodicallyClearForget() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable { forgetList.clear() }, 18000L, 18000L)
     }

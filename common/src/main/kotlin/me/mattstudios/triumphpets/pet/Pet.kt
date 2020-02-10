@@ -10,12 +10,24 @@ import org.bukkit.entity.Player
  */
 interface Pet {
 
+    /**
+     * Gets the pet memory
+     */
     fun getMemory(): PetMemory
 
+    /**
+     * Gets the pet inventory
+     */
     fun getInventory(): PetInventory
 
+    /**
+     * Gets the pet owner
+     */
     fun getOwner(): Player
 
+    /**
+     * Gets the pet bukkit entity
+     */
     fun getEntity(): Entity
 
 }

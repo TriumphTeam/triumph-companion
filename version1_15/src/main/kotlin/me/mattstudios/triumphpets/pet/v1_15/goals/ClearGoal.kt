@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet_1_15_r1.goal
+package me.mattstudios.triumphpets.pet.v1_15.goals
 
 import net.minecraft.server.v1_15_R1.BehaviorController
 import net.minecraft.server.v1_15_R1.EntityInsentient

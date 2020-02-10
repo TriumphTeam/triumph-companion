@@ -4,7 +4,7 @@ import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
-import me.mattstudios.triumphpets.pet_1_15_r1.EntityController_1_14
+import me.mattstudios.triumphpets.pet.v1_15.EntityController
 import org.bukkit.entity.Player
 
 /**
@@ -17,7 +17,7 @@ class PetCommand(private val plugin: TriumphPets) : CommandBase() {
     @Default
     fun help(player: Player) {
 
-        EntityController_1_14().spawnPet(plugin, player.location, player)
+        EntityController().spawnPet(plugin, player.location, player)
 
     }
 

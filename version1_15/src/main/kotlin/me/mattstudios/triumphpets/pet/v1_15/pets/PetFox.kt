@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet_1_15_r1.pets
+package me.mattstudios.triumphpets.pet.v1_15.pets
 
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
@@ -6,9 +6,10 @@ import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
-import me.mattstudios.triumphpets.pet_1_15_r1.goal.ClearGoal.clearPathfinders
-import me.mattstudios.triumphpets.pet_1_15_r1.goal.PathfinderGoalFollowPlayer
-import me.mattstudios.triumphpets.pet_1_15_r1.goal.PathfinderGoalPickUpItems
+import me.mattstudios.triumphpets.pet.v1_15.goals.ClearGoal.clearPathfinders
+import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalFollowPlayer
+import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalPickUpItems
+import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalRandomWalkAround
 import net.minecraft.server.v1_15_R1.ChatMessage
 import net.minecraft.server.v1_15_R1.EntityFox
 import net.minecraft.server.v1_15_R1.EntityHuman
@@ -29,7 +30,7 @@ import org.bukkit.potion.PotionEffectType
 class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, name: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
 
     private val petMemory: PetMemory = PetMemory(plugin)
-    private val petInventory = PetInventory(owner, 1)
+    private val petInventory = PetInventory(plugin, name, owner, 1)
 
     private var petPetTime: Long = 0
     private val PET_COOLDOWN = 15
@@ -51,6 +52,7 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
 
         goalSelector.a(0, PathfinderGoalPickUpItems(this, this, 1.5))
         goalSelector.a(1, PathfinderGoalFollowPlayer(this, this, 1.5))
+        goalSelector.a(5, PathfinderGoalRandomWalkAround(this, this, 1.5))
 
         goalSelector.a(7, PathfinderGoalLookAtPlayer(this, EntityHuman::class.java, 5f))
         goalSelector.a(10, PathfinderGoalFloat(this))
@@ -64,12 +66,34 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
     }
 
     /**
+     * Gets the inventory
+     */
+    override fun getInventory(): PetInventory {
+        return petInventory
+    }
+
+    /**
+     * Gets the pets memory
+     */
+    override fun getMemory(): PetMemory {
+        return petMemory
+    }
+
+    /**
+     * Gets the pet's owner
+     */
+    override fun getOwner(): Player {
+        return owner
+    }
+
+    /**
      * Detects the right click on the entity
      */
     override fun a(entity: EntityHuman, enumhand: EnumHand): Boolean {
         if (enumhand == EnumHand.MAIN_HAND && entity.bukkitEntity == owner) {
-            if (owner.isSneaking) pet() else openInventory()
+            if (owner.isSneaking) pet() else petInventory.open()
         }
+
         return super.a(entity, enumhand)
     }
 
@@ -85,23 +109,4 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
         petPetTime = System.currentTimeMillis()
     }
 
-    /**
-     * Opens the pet inventory.
-     */
-    private fun openInventory() {
-        //owner.openInventory(petInventory.getInventory())
-    }
-
-    override fun getInventory(): PetInventory {
-        return petInventory
-    }
-
-
-    override fun getMemory(): PetMemory {
-        return petMemory
-    }
-
-    override fun getOwner(): Player {
-        return owner
-    }
 }
