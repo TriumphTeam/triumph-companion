@@ -97,10 +97,9 @@ class PathfinderGoalPickUpItems(private val pet: Pet, private val petInsentient:
 
         for (foundEntity in pet.getEntity().getNearbyEntities(SEARCH_DISTANCE.toDouble(), 5.0, SEARCH_DISTANCE.toDouble())) {
             if (foundEntity !is Item) continue
-
-            if (petMemory.isForgotten(foundEntity)) continue
-
             if (petInventory.isFull(foundEntity)) continue
+            if (petMemory.isForgotten(foundEntity)) continue
+            if (petMemory.isFiltered(foundEntity.itemStack.type)) continue
 
             if (trackedItem == null || trackedItem?.isDead == true) {
                 trackedItem = foundEntity
@@ -130,6 +129,7 @@ class PathfinderGoalPickUpItems(private val pet: Pet, private val petInsentient:
 
         // If the inventory is full can't pick up
         if (petInventory.isFull(item)) return
+        if (petMemory.isFiltered(item.itemStack.type)) return
 
         // plays pick up sound, adds item to the inventory, and removes the item entity
         item.world.playSound(item.location, Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f)

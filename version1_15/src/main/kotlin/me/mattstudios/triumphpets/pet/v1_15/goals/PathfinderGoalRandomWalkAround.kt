@@ -17,7 +17,7 @@ class PathfinderGoalRandomWalkAround(private val pet: Pet, private val petInsent
 
     private val navigation = petInsentient.navigation
 
-    private val chance = 10
+    private val chance = 5
     private var controller = 0
     private val random: Random = Random()
 

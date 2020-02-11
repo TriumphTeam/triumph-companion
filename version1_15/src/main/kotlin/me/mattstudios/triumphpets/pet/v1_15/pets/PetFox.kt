@@ -30,7 +30,7 @@ import org.bukkit.potion.PotionEffectType
 class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, name: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
 
     private val petMemory: PetMemory = PetMemory(plugin)
-    private val petInventory = PetInventory(plugin, name, owner, 1)
+    private val petInventory = PetInventory(plugin, petMemory, name, owner, 1)
 
     private var petPetTime: Long = 0
     private val PET_COOLDOWN = 15

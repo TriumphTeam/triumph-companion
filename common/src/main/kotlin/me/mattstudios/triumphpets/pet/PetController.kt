@@ -9,9 +9,18 @@ import org.bukkit.entity.Player
  */
 interface PetController {
 
+    /**
+     * Checks if the entity is a pet or not
+     */
     fun isPet(entity: Entity): Boolean
 
+    /**
+     * Spawns a new pet on the location
+     */
     fun spawnPet(location: Location, player: Player)
 
+    /**
+     * Removes all the pets from the world
+     */
     fun removeAll()
 }
