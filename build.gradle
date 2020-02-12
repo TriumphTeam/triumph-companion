@@ -38,6 +38,9 @@ allprojects {
             exclude group: "org.yaml", module: "snakeyaml"
         }
 
+        // X Series
+        compile "com.github.cryptomorin:XSeries:5.3.1"
+
         // Kotlin
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     }

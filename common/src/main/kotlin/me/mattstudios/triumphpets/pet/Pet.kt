@@ -10,6 +10,10 @@ import org.bukkit.entity.Player
  */
 interface Pet {
 
+    fun getName(): String
+
+    fun getLevel(): Short
+
     /**
      * Gets the pet memory
      */

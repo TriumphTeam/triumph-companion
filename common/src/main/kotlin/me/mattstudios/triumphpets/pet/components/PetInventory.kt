@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets.pet.components
 
+import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mfgui.gui.GUI
@@ -7,11 +8,12 @@ import me.mattstudios.mfgui.gui.GuiItem
 import me.mattstudios.mfgui.gui.components.GuiAction
 import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.pet.Pet
+import me.mattstudios.triumphpets.pet.PetType
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.Sound
 import org.bukkit.entity.Item
-import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -20,9 +22,12 @@ import org.bukkit.inventory.ItemStack
 /**
  * @author Matt
  */
-class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMemory, name: String, private val owner: Player, private var level: Int) {
+class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
 
-    private val petGui = GUI(plugin, rows(), color(name + plugin.locale.getMessage(Message.PET_GUI_TITLE)), true)
+    private val owner = pet.getOwner()
+    private val petMemory = pet.getMemory()
+
+    private val petGui = GUI(plugin, rows(), color(pet.getName() + plugin.locale.getMessage(Message.PET_GUI_TITLE)), true)
     private val filterGui = GUI(plugin, 3, color("&3Filter"))
 
     private val dummyInventory = Bukkit.createInventory(petGui.inventory.holder, petGui.inventory.size, "")
@@ -71,7 +76,14 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
      */
     private fun setUpPetGui() {
         // Sets the fill items in the bottom
-        petGui.setItem(listOf(rows() * 9 - 9, rows() * 9 - 8, rows() * 9 - 6, rows() * 9 - 4, rows() * 9 - 2, rows() * 9 - 1), GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
+        petGui.setItem(listOf(rows() * 9 - 8, rows() * 9 - 6, rows() * 9 - 4, rows() * 9 - 2, rows() * 9 - 1), GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
+
+        // Sets the filter item for the filter GUI
+        petGui.setItem(rows() * 9 - 9, GuiItem(getPetItem(), GuiAction {
+            it.isCancelled = true
+            clickSound()
+            filterGui.open(owner)
+        }))
 
         // Sets the filter item for the filter GUI
         petGui.setItem(rows() * 9 - 7, GuiItem(getFilterItem(), GuiAction {
@@ -100,13 +112,13 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
 
         filterGui.setFillItem(GuiItem(getFillItem()))
 
-        filterGui.setItem(10, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(11, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(12, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(13, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(14, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(15, GuiItem(ItemStack(Material.AIR)))
-        filterGui.setItem(16, GuiItem(ItemStack(Material.AIR)))
+        filterGui.setItem(10, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(11, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(12, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(13, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(14, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(15, GuiItem(XMaterial.AIR.parseItem()))
+        filterGui.setItem(16, GuiItem(XMaterial.AIR.parseItem()))
 
         filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
             clickSound()
@@ -136,14 +148,14 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
      * Gets the rows needed
      */
     private fun rows(): Int {
-        return level + 1
+        return pet.getLevel() + 1
     }
 
     /**
      * Gets the item to fill the bottom row
      */
     private fun getFillItem(): ItemStack {
-        return ItemBuilder(Material.BLACK_STAINED_GLASS_PANE).setName(" ")
+        return ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()).setName(" ")
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
     }
 
@@ -151,7 +163,7 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
      * Gets the item for the filter button
      */
     private fun getFilterItem(): ItemStack {
-        return ItemBuilder(Material.HOPPER).setName(plugin.locale.getMessage(Message.PET_GUI_FILTER_NAME))
+        return ItemBuilder(XMaterial.HOPPER.parseItem()).setName(plugin.locale.getMessage(Message.PET_GUI_FILTER_NAME))
                 .setLore(color("&cChange later")).build()
     }
 
@@ -159,7 +171,7 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
      * Gets the item for the close button
      */
     private fun getCloseItem(): ItemStack {
-        return ItemBuilder(Material.BARRIER).setName(plugin.locale.getMessage(Message.PET_GUI_CLOSE_NAME))
+        return ItemBuilder(XMaterial.BARRIER.parseItem()).setName(plugin.locale.getMessage(Message.PET_GUI_CLOSE_NAME))
                 .setLore(color("&cChange later")).build()
     }
 
@@ -167,9 +179,20 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
      * Gets the item for the options button
      */
     private fun getOptionsItem(): ItemStack {
-        return ItemBuilder(Material.COMMAND_BLOCK).setName(plugin.locale.getMessage(Message.PET_GUI_OPTIONS_NAME))
+        return ItemBuilder(XMaterial.COMMAND_BLOCK.parseItem()).setName(plugin.locale.getMessage(Message.PET_GUI_OPTIONS_NAME))
                 .setLore(color("&cChange later")).build()
     }
+
+    /**
+     * Gets the item for the options button
+     */
+    private fun getPetItem(): ItemStack {
+        return ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
+                .setSkullTexture(PetType.PET_FOX_SNOW.texture)
+                .setName("")
+                .setLore(color("&cChange later")).build()
+    }
+
 
     /**
      * Plays the click sound
@@ -200,14 +223,14 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
             val cursor = it.cursor ?: return@GuiAction
 
             // Removing filter
-            if (cursor.type == Material.AIR && it.currentItem != null) {
+            if (cursor.type == XMaterial.AIR.parseMaterial() && it.currentItem != null) {
                 it.currentItem?.type?.let { type -> petMemory.unFilter(type) }
-                filterGui.updateItem(slot, ItemStack(Material.AIR))
+                filterGui.updateItem(slot, XMaterial.AIR.parseItem())
                 xpDeepSound()
                 return@GuiAction
             }
 
-            if (cursor.type == Material.AIR) return@GuiAction
+            if (cursor.type == XMaterial.AIR.parseMaterial()) return@GuiAction
 
             if (petMemory.isFiltered(cursor.type)) return@GuiAction
 

@@ -29,12 +29,12 @@ import org.bukkit.potion.PotionEffectType
 /**
  * @author Matt
  */
-class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, name: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
+class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, private val petName: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
 
     private val petMemory: PetMemory = PetMemory(plugin, FilterType.BLACK_LIST)
-    private val petInventory = PetInventory(plugin, petMemory, name, owner, 1)
+    private val petInventory = PetInventory(plugin, this)
 
-    private val displayLevel = NameEntity(name, world)
+    private val displayLevel = NameEntity(petName, world)
 
     private var petPetTime: Long = 0
     private val PET_COOLDOWN = 15
@@ -61,6 +61,14 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
 
         goalSelector.a(7, PathfinderGoalLookAtPlayer(this, EntityHuman::class.java, 5f))
         goalSelector.a(10, PathfinderGoalFloat(this))
+    }
+
+    override fun getLevel(): Short {
+        return 1
+    }
+
+    override fun getName(): String {
+        return petName
     }
 
     /**
