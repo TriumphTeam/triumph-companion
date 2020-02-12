@@ -113,6 +113,16 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
             owner.closeInventory()
         }))
 
+        filterGui.setItem(20, GuiItem(ItemStack(Material.PAPER), GuiAction {
+            clickSound()
+            owner.closeInventory()
+        }))
+
+        filterGui.setItem(24, GuiItem(ItemStack(Material.BLACK_CONCRETE), GuiAction {
+            clickSound()
+            owner.closeInventory()
+        }))
+
         addSlotFilterAction(10)
         addSlotFilterAction(11)
         addSlotFilterAction(12)
@@ -161,18 +171,30 @@ class PetInventory(private val plugin: MattPlugin, private val petMemory: PetMem
                 .setLore(color("&cChange later")).build()
     }
 
+    /**
+     * Plays the click sound
+     */
     private fun clickSound() {
         owner.playSound(owner.location, Sound.UI_BUTTON_CLICK, .3f, .5f)
     }
 
+    /**
+     * Plays deep xp sound
+     */
     private fun xpDeepSound() {
         owner.playSound(owner.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .2f)
     }
 
+    /**
+     * Plays high xp sound
+     */
     private fun xpHighSound() {
         owner.playSound(owner.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .8f)
     }
 
+    /**
+     * Adds a slot action to the filters
+     */
     private fun addSlotFilterAction(slot: Int) {
         filterGui.addSlotAction(slot, GuiAction {
             val cursor = it.cursor ?: return@GuiAction

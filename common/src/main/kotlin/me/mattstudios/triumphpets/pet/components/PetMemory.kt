@@ -9,7 +9,7 @@ import org.bukkit.entity.Item
 /**
  * @author Matt
  */
-class PetMemory(private val plugin: MattPlugin) {
+class PetMemory(private val plugin: MattPlugin, val filterType: FilterType) {
 
     var tracking = false
 

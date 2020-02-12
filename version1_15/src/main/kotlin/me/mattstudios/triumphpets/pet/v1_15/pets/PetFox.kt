@@ -4,8 +4,10 @@ import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.pet.Pet
+import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
+import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalFollowPlayer
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalPickUpItems
 import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalRandomWalkAround
@@ -29,8 +31,10 @@ import org.bukkit.potion.PotionEffectType
  */
 class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, name: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
 
-    private val petMemory: PetMemory = PetMemory(plugin)
+    private val petMemory: PetMemory = PetMemory(plugin, FilterType.BLACK_LIST)
     private val petInventory = PetInventory(plugin, petMemory, name, owner, 1)
+
+    private val displayLevel = NameEntity(name, world)
 
     private var petPetTime: Long = 0
     private val PET_COOLDOWN = 15
@@ -39,7 +43,7 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
         // Clears the goal selector
         goalSelector = PathfinderGoalSelector(if (world.methodProfiler != null) world.methodProfiler else null)
 
-        customName = ChatMessage(color(name))
+        customName = ChatMessage(color("&7[&6&l★★★★★&7]"))
         customNameVisible = true
         foxType = type
         canPickUpLoot = false
@@ -49,7 +53,7 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
             ageLocked = true
         }
 
-        collides = false
+        world.addEntity(displayLevel)
 
         goalSelector.a(0, PathfinderGoalPickUpItems(this, this, 1.5))
         goalSelector.a(1, PathfinderGoalFollowPlayer(this, this, 1.5))
@@ -85,6 +89,19 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
      */
     override fun getOwner(): Player {
         return owner
+    }
+
+    /**
+     * Keeps the name on top of their head
+     */
+    override fun tick() {
+        super.tick()
+
+        displayLevel.setLocation(locX(), locY() + .6, locZ(), 0.0F, 0.0F)
+
+        displayLevel.customNameVisible = !owner.isSneaking
+        this.customNameVisible = !owner.isSneaking
+
     }
 
     /**

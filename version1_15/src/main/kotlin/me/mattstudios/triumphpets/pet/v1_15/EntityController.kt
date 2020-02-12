@@ -3,6 +3,7 @@ package me.mattstudios.triumphpets.pet.v1_15
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.PetController
+import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
 import org.bukkit.Location
@@ -25,6 +26,13 @@ class EntityController(private val plugin: MattPlugin) : PetController {
      */
     override fun isPet(entity: Entity): Boolean {
         return (entity as CraftEntity).handle is Pet
+    }
+
+    /**
+     * Checks weather or not the entity that is being tracked is a pet or not.
+     */
+    override fun isPetComponent(entity: Entity): Boolean {
+        return (entity as CraftEntity).handle is PetNameEntity
     }
 
     /**

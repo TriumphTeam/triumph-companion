@@ -14,6 +14,8 @@ interface PetController {
      */
     fun isPet(entity: Entity): Boolean
 
+    fun isPetComponent(entity: Entity): Boolean
+
     /**
      * Spawns a new pet on the location
      */

@@ -172,7 +172,7 @@ class PathfinderGoalPickUpItems(private val pet: Pet, private val petInsentient:
      * Makes it run only once a second
      */
     private fun shouldPickUp(): Boolean {
-        if (pickUpController <= 2) {
+        if (pickUpController <= 5) {
             pickUpController++
             return false
         }
