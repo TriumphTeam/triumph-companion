@@ -16,18 +16,17 @@ class PetListener(private val plugin: TriumphPets) : Listener {
      * Makes sure entities don't target the pet
      */
     @EventHandler
-    fun entityTargetPet(event: EntityTargetLivingEntityEvent) {
-        val target = event.target ?: return
-        if (plugin.petManager.petController.isPet(target)) event.isCancelled = true
+    fun EntityTargetLivingEntityEvent.onEntityTargetPet() {
+        val target = target ?: return
+        isCancelled = plugin.petManager.petController.isPet(target)
     }
 
     /**
      * Makes pet invincible
      */
     @EventHandler
-    fun petDamage(event: EntityDamageEvent) {
-        if (plugin.petManager.petController.isPet(event.entity)) event.isCancelled = true
+    fun EntityDamageEvent.onPetDamage() {
+        isCancelled = plugin.petManager.petController.isPet(entity)
     }
-
 
 }

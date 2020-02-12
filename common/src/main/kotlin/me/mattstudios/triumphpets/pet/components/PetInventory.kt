@@ -112,13 +112,15 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
 
         filterGui.setFillItem(GuiItem(getFillItem()))
 
-        filterGui.setItem(10, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(11, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(12, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(13, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(14, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(15, GuiItem(XMaterial.AIR.parseItem()))
-        filterGui.setItem(16, GuiItem(XMaterial.AIR.parseItem()))
+        val air = GuiItem(XMaterial.AIR.parseItem())
+
+        filterGui.setItem(10, air)
+        filterGui.setItem(11, air)
+        filterGui.setItem(12, air)
+        filterGui.setItem(13, air)
+        filterGui.setItem(14, air)
+        filterGui.setItem(15, air)
+        filterGui.setItem(16, air)
 
         filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
             clickSound()
