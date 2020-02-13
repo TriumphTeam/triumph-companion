@@ -108,16 +108,16 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         // Fills everything with glass
         filterGui.setFillItem(GuiItem(getFillItem()))
 
-        val air = GuiItem(XMaterial.AIR.parseItem())
+        val air = XMaterial.AIR.parseItem()
 
         // Opens the slots in the middle for filtering
-        filterGui.setItem(10, air)
-        filterGui.setItem(11, air)
-        filterGui.setItem(12, air)
-        filterGui.setItem(13, air)
-        filterGui.setItem(14, air)
-        filterGui.setItem(15, air)
-        filterGui.setItem(16, air)
+        filterGui.setItem(10, GuiItem(air))
+        filterGui.setItem(11, GuiItem(air))
+        filterGui.setItem(12, GuiItem(air))
+        filterGui.setItem(13, GuiItem(air))
+        filterGui.setItem(14, GuiItem(air))
+        filterGui.setItem(15, GuiItem(air))
+        filterGui.setItem(16, GuiItem(air))
 
         // Adds the close item
         filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
