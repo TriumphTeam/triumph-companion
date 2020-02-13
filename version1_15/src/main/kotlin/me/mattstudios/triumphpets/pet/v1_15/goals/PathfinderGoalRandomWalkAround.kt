@@ -1,7 +1,7 @@
 package me.mattstudios.triumphpets.pet.v1_15.goals
 
 import me.mattstudios.triumphpets.pet.Pet
-import me.mattstudios.triumphpets.pet.PetUtils.getSafeY
+import me.mattstudios.triumphpets.pet.utils.PetUtils.getSafeY
 import net.minecraft.server.v1_15_R1.EntityInsentient
 import net.minecraft.server.v1_15_R1.PathfinderGoal
 import java.util.Random

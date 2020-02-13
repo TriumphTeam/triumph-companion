@@ -3,7 +3,7 @@ package me.mattstudios.triumphpets.locale
 import ch.jalu.configme.SettingsHolder
 import ch.jalu.configme.properties.Property
 import ch.jalu.configme.properties.PropertyInitializer.newProperty
-import me.mattstudios.triumphpets.pet.PetUtils
+import me.mattstudios.triumphpets.pet.utils.PetUtils
 
 /**
  * @author Matt

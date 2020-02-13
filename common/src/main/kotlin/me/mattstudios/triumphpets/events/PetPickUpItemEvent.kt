@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.events
 
-import me.mattstudios.triumphpets.pet.PetType
+import me.mattstudios.triumphpets.pet.utils.PetType
 import org.bukkit.entity.Player
 import org.bukkit.event.Cancellable
 import org.bukkit.event.Event

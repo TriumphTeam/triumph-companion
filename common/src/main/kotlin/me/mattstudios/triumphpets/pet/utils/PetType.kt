@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet
+package me.mattstudios.triumphpets.pet.utils
 
 /**
  * @author Matt

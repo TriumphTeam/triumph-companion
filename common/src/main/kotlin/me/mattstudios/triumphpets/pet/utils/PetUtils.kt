@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet
+package me.mattstudios.triumphpets.pet.utils
 
 import org.bukkit.Location
 import org.bukkit.World

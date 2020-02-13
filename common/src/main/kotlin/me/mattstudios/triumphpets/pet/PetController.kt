@@ -14,7 +14,15 @@ interface PetController {
      */
     fun isPet(entity: Entity): Boolean
 
+    /**
+     * Checks if the entity is a pet component
+     */
     fun isPetComponent(entity: Entity): Boolean
+
+    /**
+     * Despawns the pet from player
+     */
+    fun despawnPet(player: Player)
 
     /**
      * Spawns a new pet on the location

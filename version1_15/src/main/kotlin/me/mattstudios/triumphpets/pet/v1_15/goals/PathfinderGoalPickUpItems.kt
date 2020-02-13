@@ -3,8 +3,8 @@ package me.mattstudios.triumphpets.pet.v1_15.goals
 import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent
 import me.mattstudios.triumphpets.pet.Pet
-import me.mattstudios.triumphpets.pet.PetType
-import me.mattstudios.triumphpets.pet.PetUtils.distance
+import me.mattstudios.triumphpets.pet.utils.PetType
+import me.mattstudios.triumphpets.pet.utils.PetUtils.distance
 import net.minecraft.server.v1_15_R1.EntityInsentient
 import net.minecraft.server.v1_15_R1.PathfinderGoal
 import org.bukkit.Bukkit

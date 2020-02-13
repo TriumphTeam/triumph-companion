@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
+import org.bukkit.event.player.PlayerQuitEvent
 
 
 /**
@@ -12,13 +13,15 @@ import org.bukkit.event.entity.EntityTargetLivingEntityEvent
  */
 class PetListener(private val plugin: TriumphPets) : Listener {
 
+    private val petController = plugin.petManager.petController
+    
     /**
      * Makes sure entities don't target the pet
      */
     @EventHandler
     fun EntityTargetLivingEntityEvent.onEntityTargetPet() {
         val target = target ?: return
-        isCancelled = plugin.petManager.petController.isPet(target)
+        isCancelled = petController.isPet(target)
     }
 
     /**
@@ -26,7 +29,15 @@ class PetListener(private val plugin: TriumphPets) : Listener {
      */
     @EventHandler
     fun EntityDamageEvent.onPetDamage() {
-        isCancelled = plugin.petManager.petController.isPet(entity)
+        isCancelled = petController.isPet(entity) || petController.isPetComponent(entity)
+    }
+
+    /**
+     * Removes the pet from the world when the player leaves
+     */
+    @EventHandler
+    fun PlayerQuitEvent.onOwnerLeave() {
+        petController.despawnPet(player)
     }
 
 }

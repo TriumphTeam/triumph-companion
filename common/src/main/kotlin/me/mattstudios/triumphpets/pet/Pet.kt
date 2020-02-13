@@ -10,8 +10,14 @@ import org.bukkit.entity.Player
  */
 interface Pet {
 
+    /**
+     * Gets the pet's name
+     */
     fun getName(): String
 
+    /**
+     * Gets the pet's level
+     */
     fun getLevel(): Short
 
     /**
@@ -30,8 +36,17 @@ interface Pet {
     fun getOwner(): Player
 
     /**
+     * Checks if the specific player is owner
+     */
+    fun isOwner(player: Player): Boolean
+
+    /**
      * Gets the pet bukkit entity
      */
     fun getEntity(): Entity
 
+    /**
+     * Removes this entity and the Name entity too
+     */
+    fun remove()
 }

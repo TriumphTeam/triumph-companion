@@ -46,12 +46,21 @@ class EntityController(private val plugin: MattPlugin) : PetController {
     }
 
     /**
+     * Removes the specific pet from the world
+     */
+    override fun despawnPet(player: Player) {
+        spawnedPets.filter { it.isOwner(player) }.forEach {
+            it.remove()
+            spawnedPets.remove(it)
+        }
+    }
+
+    /**
      * Removes all the teams created in process and all the pet entities spawned.
      */
     override fun removeAll() {
-        for (pet in spawnedPets) {
-            pet.getEntity().remove()
-        }
+        spawnedPets.forEach { it.remove() }
+        spawnedPets.clear()
     }
 
 }

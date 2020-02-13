@@ -34,7 +34,7 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
     private val petMemory: PetMemory = PetMemory(plugin, FilterType.BLACK_LIST)
     private val petInventory = PetInventory(plugin, this)
 
-    private val displayLevel = NameEntity(petName, world)
+    private var displayLevel = NameEntity(petName, world)
 
     private var petPetTime: Long = 0
     private val PET_COOLDOWN = 15
@@ -100,10 +100,27 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
     }
 
     /**
+     * Checks if the given player is owner
+     */
+    override fun isOwner(player: Player): Boolean {
+        return owner.uniqueId == player.uniqueId
+    }
+
+    override fun remove() {
+        this.bukkitEntity.remove()
+        displayLevel.bukkitEntity.remove()
+    }
+
+    /**
      * Keeps the name on top of their head
      */
     override fun tick() {
         super.tick()
+
+        if (!displayLevel.isAlive) {
+            displayLevel = NameEntity(petName, world)
+            world.addEntity(displayLevel)
+        }
 
         displayLevel.setLocation(locX(), locY() + .6, locZ(), 0.0F, 0.0F)
 

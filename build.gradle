@@ -66,7 +66,7 @@ allprojects {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
-    minimize()
+    //minimize()
 
     relocate("me.mattstudios.mf", "me.mattstudios.triumphpets.mf")
     relocate("me.mattstudios.mattcore", "me.mattstudios.triumphpets.core")

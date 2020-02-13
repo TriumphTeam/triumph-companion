@@ -6,7 +6,7 @@ import me.mattstudios.triumphpets.commands.PetCommand
 import me.mattstudios.triumphpets.listeners.PetListener
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
-import me.mattstudios.triumphpets.pet.PetUtils
+import me.mattstudios.triumphpets.pet.utils.PetUtils
 import org.apache.commons.lang.StringUtils
 import java.util.stream.Stream
 
