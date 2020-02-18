@@ -3,6 +3,8 @@ package me.mattstudios.triumphpets
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils
 import me.mattstudios.triumphpets.commands.PetCommand
+import me.mattstudios.triumphpets.config.pet.PetConfig
+import me.mattstudios.triumphpets.config.pet.PetDefaultConfig
 import me.mattstudios.triumphpets.listeners.PetListener
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
@@ -16,9 +18,14 @@ import java.util.stream.Stream
 class TriumphPets : MattPlugin() {
 
     lateinit var petManager: PetManager
+    lateinit var petConfig: PetConfig
 
+    /**
+     * On plugin enable
+     */
     override fun onPluginEnable() {
 
+        petConfig = PetDefaultConfig()
         setupLocale()
 
         startUpMessage()
@@ -30,15 +37,24 @@ class TriumphPets : MattPlugin() {
 
     }
 
+    /**
+     * On plugin disable
+     */
     override fun onPluginDisable() {
         petManager.petController.removeAll()
     }
 
+    /**
+     * Sets up the locale of the plugin
+     */
     private fun setupLocale() {
         //PetUtils.LOCALE = //config[Settings.LANGUAGE]
         locale.load(Message::class.java, PetUtils.LOCALE)
     }
 
+    /**
+     * Just the startup message
+     */
     private fun startUpMessage() {
         Stream.of(
                 "",

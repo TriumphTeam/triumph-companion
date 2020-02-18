@@ -17,6 +17,8 @@ class PetManager(private val plugin: TriumphPets) {
             "v1_15_R1" -> petController = me.mattstudios.triumphpets.pet.v1_15.EntityController(plugin)
             else -> println("shit boy")
         }
+
+        petController.removeCrash()
     }
 
 }

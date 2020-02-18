@@ -89,7 +89,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         petGui.setItem(rows() * 9 - 5, GuiItem(getCloseItem(), GuiAction {
             it.isCancelled = true
             clickSound()
-            owner.closeInventory()
+            // Runs 1 tick later to prevent from being stolen from the GUI
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
         }))
 
         // Sets the options item to open the options GUI
@@ -122,7 +123,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         // Adds the close item
         filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
             clickSound()
-            owner.closeInventory()
+            // Runs 1 tick later to prevent from being stolen from the GUI
+            Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
         }))
 
         // Adds the back item
@@ -132,19 +134,14 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         }))
 
         // Adds the toggle white/black list item
-        filterGui.setItem(24, GuiItem(ItemStack(Material.BLACK_CONCRETE), GuiAction {
+        filterGui.setItem(24, GuiItem(getBWItem(), GuiAction {
             clickSound()
-            owner.closeInventory()
+            petMemory.toggleFilterType()
+            filterGui.updateItem(24, getBWItem())
         }))
 
         // Adds the actions for the empty slot clicks
-        addSlotFilterAction(10)
-        addSlotFilterAction(11)
-        addSlotFilterAction(12)
-        addSlotFilterAction(13)
-        addSlotFilterAction(14)
-        addSlotFilterAction(15)
-        addSlotFilterAction(16)
+        for (slot in 10..16) addSlotFilterAction(slot)
     }
 
     /**
@@ -178,6 +175,13 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
                 .setLore(color("&cChange later")).build()
     }
 
+    private fun getBWItem(): ItemStack {
+        val filterTypeItem =
+                if (petMemory.filterType == FilterType.BLACK_LIST) XMaterial.BLACK_CONCRETE.parseItem()
+                else XMaterial.WHITE_CONCRETE.parseItem()
+        return ItemBuilder(filterTypeItem).build()
+    }
+
     /**
      * Gets the item for the pet button
      *
@@ -185,17 +189,17 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
     private fun getPetItem(): ItemStack {
         return ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
                 .setSkullTexture(PetType.PET_FOX_SNOW.texture)
-                .setName(color("&8» " + pet.getName()))
+                .setName(color("&8• " + pet.getName()))
                 .setLore(
-                        color("&7Level: &c&l" + pet.getLevel()),
+                        color("&8• &7Level: &c${pet.getLevel()}&7/&c5"),
                         "",
-                        color("&7Picked items: &c&l5"),
-                        color("&7Age: &c&l5 Days"),
-                        color("&7Type: &c&lSnow Fox"),
+                        color("&8• &7Picked items: &c5"),
+                        color("&8• &7Age: &c5 Days"),
+                        color("&8• &7Type: &cSnow Fox"),
                         "",
-                        color("&cClick for options!"),
+                        color("&cClick for options"),
                         "",
-                        color("&a&l--------&c&l-- &8&l8/10xp")
+                        color("&a--------&c-- &88/10xp")
                 ).build()
     }
 
@@ -204,21 +208,21 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Plays the click sound
      */
     private fun clickSound() {
-        owner.playSound(owner.location, Sound.UI_BUTTON_CLICK, .3f, .5f)
+        owner.location.let { owner.playSound(it, Sound.UI_BUTTON_CLICK, .3f, .5f) }
     }
 
     /**
      * Plays deep xp sound
      */
     private fun xpDeepSound() {
-        owner.playSound(owner.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .2f)
+        owner.location.let { owner.playSound(it, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .2f) }
     }
 
     /**
      * Plays high xp sound
      */
     private fun xpHighSound() {
-        owner.playSound(owner.location, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .8f)
+        owner.location.let { owner.playSound(it, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .8f) }
     }
 
     /**

@@ -10,7 +10,7 @@ import java.util.Random
 /**
  * @author Matt
  */
-class PathfinderGoalRandomWalkAround(private val pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val petMemory = pet.getMemory()
     private val petInventory = pet.getInventory()

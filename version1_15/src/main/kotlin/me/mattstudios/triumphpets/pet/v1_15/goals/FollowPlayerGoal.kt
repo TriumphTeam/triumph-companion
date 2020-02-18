@@ -13,7 +13,7 @@ import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer
 /**
  * @author Matt
  */
-class PathfinderGoalFollowPlayer(pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val petMemory = pet.getMemory()
     private val owner = pet.getOwner()

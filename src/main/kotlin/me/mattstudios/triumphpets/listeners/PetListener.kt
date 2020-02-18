@@ -4,6 +4,7 @@ import me.mattstudios.triumphpets.TriumphPets
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.entity.EntityDamageEvent
+import org.bukkit.event.entity.EntityPortalEvent
 import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.player.PlayerQuitEvent
 
@@ -14,7 +15,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 class PetListener(private val plugin: TriumphPets) : Listener {
 
     private val petController = plugin.petManager.petController
-    
+
     /**
      * Makes sure entities don't target the pet
      */
@@ -38,6 +39,14 @@ class PetListener(private val plugin: TriumphPets) : Listener {
     @EventHandler
     fun PlayerQuitEvent.onOwnerLeave() {
         petController.despawnPet(player)
+    }
+
+    /**
+     * Makes so pet can't enter a portal, so it doesn't bug
+     */
+    @EventHandler
+    fun EntityPortalEvent.onPetEnterPortal() {
+        isCancelled = petController.isPet(entity) || petController.isPetComponent(entity)
     }
 
 }

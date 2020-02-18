@@ -9,7 +9,7 @@ import org.bukkit.entity.Item
 /**
  * @author Matt
  */
-class PetMemory(private val plugin: MattPlugin, val filterType: FilterType) {
+class PetMemory(private val plugin: MattPlugin, var filterType: FilterType) {
 
     var tracking = false
 
@@ -46,7 +46,12 @@ class PetMemory(private val plugin: MattPlugin, val filterType: FilterType) {
     }
 
     fun isFiltered(material: Material): Boolean {
-        return filteredItems.contains(material)
+        if (filteredItems.isEmpty()) return false
+        return if(filterType == FilterType.BLACK_LIST) filteredItems.contains(material) else !filteredItems.contains(material)
+    }
+
+    fun toggleFilterType() {
+        filterType = if (filterType == FilterType.BLACK_LIST) FilterType.WHITE_LIST else FilterType.BLACK_LIST
     }
 
     /**

@@ -8,9 +8,9 @@ import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
-import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalFollowPlayer
-import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalPickUpItems
-import me.mattstudios.triumphpets.pet.v1_15.goals.PathfinderGoalRandomWalkAround
+import me.mattstudios.triumphpets.pet.v1_15.goals.FollowPlayerGoal
+import me.mattstudios.triumphpets.pet.v1_15.goals.PickUpItemsGoal
+import me.mattstudios.triumphpets.pet.v1_15.goals.RandomWalkAroundGoal
 import net.minecraft.server.v1_15_R1.ChatMessage
 import net.minecraft.server.v1_15_R1.EntityFox
 import net.minecraft.server.v1_15_R1.EntityHuman
@@ -20,8 +20,10 @@ import net.minecraft.server.v1_15_R1.PathfinderGoalFloat
 import net.minecraft.server.v1_15_R1.PathfinderGoalLookAtPlayer
 import net.minecraft.server.v1_15_R1.PathfinderGoalSelector
 import net.minecraft.server.v1_15_R1.World
+import org.bukkit.NamespacedKey
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
+import org.bukkit.persistence.PersistentDataType
 import org.bukkit.potion.PotionEffect
 import org.bukkit.potion.PotionEffectType
 
@@ -31,12 +33,12 @@ import org.bukkit.potion.PotionEffectType
  */
 class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, private val petName: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
 
-    private val petMemory: PetMemory = PetMemory(plugin, FilterType.BLACK_LIST)
-    private val petInventory = PetInventory(plugin, this)
+    private var petMemory = PetMemory(plugin, FilterType.BLACK_LIST)
+    private var petInventory = PetInventory(plugin, this)
 
-    private var displayLevel = NameEntity(petName, world)
+    private var displayName = NameEntity(plugin, petName, world)
 
-    private var petPetTime: Long = 0
+    private var petPetTime = 0L
     private val PET_COOLDOWN = 15
 
     init {
@@ -53,14 +55,20 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
             ageLocked = true
         }
 
-        world.addEntity(displayLevel)
+        persist = true
 
-        goalSelector.a(0, PathfinderGoalPickUpItems(this, this, 1.5))
-        goalSelector.a(1, PathfinderGoalFollowPlayer(this, this, 1.5))
-        goalSelector.a(5, PathfinderGoalRandomWalkAround(this, this, 1.5))
+        world.addEntity(displayName)
+
+        goalSelector.a(0, PickUpItemsGoal(this, this, 1.5))
+        goalSelector.a(1, FollowPlayerGoal(this, this, 1.5))
+        goalSelector.a(5, RandomWalkAroundGoal(this, this, 1.5))
+        //goalSelector.a(6, FarmGoal(this, this, 1.5))
 
         goalSelector.a(7, PathfinderGoalLookAtPlayer(this, EntityHuman::class.java, 5f))
         goalSelector.a(10, PathfinderGoalFloat(this))
+
+        // Adds NBT tag to identify the entity as pet
+        bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE, 1)
     }
 
     override fun getLevel(): Short {
@@ -108,7 +116,7 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
 
     override fun remove() {
         this.bukkitEntity.remove()
-        displayLevel.bukkitEntity.remove()
+        displayName.bukkitEntity.remove()
     }
 
     /**
@@ -117,14 +125,17 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
     override fun tick() {
         super.tick()
 
-        if (!displayLevel.isAlive) {
-            displayLevel = NameEntity(petName, world)
-            world.addEntity(displayLevel)
+        // Checks if the display name died and respawns it
+        if (!displayName.isAlive) {
+            displayName = NameEntity(plugin, petName, world)
+            world.addEntity(displayName)
         }
 
-        displayLevel.setLocation(locX(), locY() + .6, locZ(), 0.0F, 0.0F)
+        // Makes it so the display name is always on top of the Pet
+        displayName.setLocation(locX(), locY() + .6, locZ(), 0.0F, 0.0F)
 
-        displayLevel.customNameVisible = !owner.isSneaking
+        // Hides the display name and level when sneaking
+        displayName.customNameVisible = !owner.isSneaking
         this.customNameVisible = !owner.isSneaking
 
     }

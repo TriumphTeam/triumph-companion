@@ -4,7 +4,7 @@ import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetType
-import me.mattstudios.triumphpets.pet.utils.PetUtils.distance
+import me.mattstudios.triumphpets.pet.utils.PetUtils
 import net.minecraft.server.v1_15_R1.EntityInsentient
 import net.minecraft.server.v1_15_R1.PathfinderGoal
 import org.bukkit.Bukkit
@@ -19,7 +19,7 @@ import org.bukkit.util.Vector
 /**
  * @author Matt
  */
-class PathfinderGoalPickUpItems(private val pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val navigation = petInsentient.navigation
     private val petInventory = pet.getInventory()
@@ -108,7 +108,7 @@ class PathfinderGoalPickUpItems(private val pet: Pet, private val petInsentient:
 
             val currentTrackedItem = trackedItem ?: continue
 
-            if (distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < distance(currentTrackedItem.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
+            if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(currentTrackedItem.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
                 trackedItem = foundEntity
             }
         }

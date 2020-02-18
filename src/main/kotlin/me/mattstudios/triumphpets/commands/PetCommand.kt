@@ -15,9 +15,7 @@ class PetCommand(private val plugin: TriumphPets) : CommandBase() {
 
     @Default
     fun help(player: Player) {
-
         plugin.petManager.petController.spawnPet(player.location, player)
-
     }
 
 }
