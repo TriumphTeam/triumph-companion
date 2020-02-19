@@ -1,6 +1,8 @@
 package me.mattstudios.triumphpets.pet.v1_15.goals
 
 import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
+import me.mattstudios.triumphpets.config.pet.PetConfig
+import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetType
@@ -19,7 +21,7 @@ import org.bukkit.util.Vector
 /**
  * @author Matt
  */
-class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityInsentient, petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val navigation = petInsentient.navigation
     private val petInventory = pet.getInventory()
@@ -28,10 +30,10 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     private var trackedItem: Item? = null
     private var startTime: Long = 0
 
-    private val PICK_DIST = 1.5
-    private val SEARCH_DISTANCE = 15
-    private val FORGET_TIME = 5
-    private val ITEM_TRACK_TICKS = 20
+    private val pickDistance = petConfig[PetProperty.ITEM_PICK_DISTANCE]
+    private val searchDistance = petConfig[PetProperty.ITEM_SEARCH_DISTANCE]
+    private val forgetTime = petConfig[PetProperty.ITEM_FORGET_TIME]
+    private val itemTrackTicks = petConfig[PetProperty.ITEM_TRACK_TICKS]
 
     private var controller = 0
     private var pickUpController = 0
@@ -56,7 +58,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     private fun pickCloseItem() {
         if (!shouldPickUp()) return
 
-        for (foundEntity in pet.getEntity().getNearbyEntities(PICK_DIST, PICK_DIST, PICK_DIST)) {
+        for (foundEntity in pet.getEntity().getNearbyEntities(pickDistance, pickDistance, pickDistance)) {
             if (foundEntity !is Item) continue
             pickItem(foundEntity)
         }
@@ -75,9 +77,9 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         val currentTrackedItem = trackedItem ?: return
 
-        if (getSecondsDifference(startTime) >= FORGET_TIME / 2) petInsentient.controllerJump.jump()
+        if (getSecondsDifference(startTime) >= forgetTime / 2) petInsentient.controllerJump.jump()
 
-        if (petMemory.tracking && startTime != 0L && getSecondsDifference(startTime) >= FORGET_TIME) {
+        if (petMemory.tracking && startTime != 0L && getSecondsDifference(startTime) >= forgetTime) {
             petMemory.forgetItem(currentTrackedItem)
             pet.getEntity().world.spawnParticle(Particle.SMOKE_NORMAL, pet.getEntity().location.x, pet.getEntity().location.y, pet.getEntity().location.z, 50, .5, .5, .5, 0.0)
         }
@@ -95,7 +97,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
         if (!shouldRun()) return
         if (petInventory.isOpened()) return
 
-        for (foundEntity in pet.getEntity().getNearbyEntities(SEARCH_DISTANCE.toDouble(), 5.0, SEARCH_DISTANCE.toDouble())) {
+        for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 5.0, searchDistance)) {
             if (foundEntity !is Item) continue
             if (petInventory.isFull(foundEntity)) continue
             if (petMemory.isForgotten(foundEntity)) continue
@@ -113,6 +115,8 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
             }
         }
     }
+
+
 
     /**
      * Picks the item given to it
@@ -159,7 +163,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
      * Makes it run only once a second
      */
     private fun shouldRun(): Boolean {
-        if (controller <= ITEM_TRACK_TICKS) {
+        if (controller <= itemTrackTicks) {
             controller++
             return false
         }

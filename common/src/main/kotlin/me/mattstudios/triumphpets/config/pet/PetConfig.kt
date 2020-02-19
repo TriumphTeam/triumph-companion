@@ -10,6 +10,6 @@ interface PetConfig {
     /**
      * Gets a property value
      */
-    fun get(property: Property<*>): Any
+    operator fun <T> get(property: Property<T>): T
 
 }

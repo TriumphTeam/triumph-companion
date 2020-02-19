@@ -3,6 +3,7 @@ package me.mattstudios.triumphpets.pet.v1_15.pets
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
+import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetInventory
@@ -31,7 +32,7 @@ import org.bukkit.potion.PotionEffectType
 /**
  * @author Matt
  */
-class PetFox(private val plugin: MattPlugin, world: World, private val owner: Player, private val petName: String, baby: Boolean, type: Type) : EntityFox(EntityTypes.FOX, world), Pet {
+class PetFox(private val plugin: MattPlugin, private val petConfig: PetConfig, private val owner: Player, private val petName: String, baby: Boolean, type: Type, world: World) : EntityFox(EntityTypes.FOX, world), Pet {
 
     private var petMemory = PetMemory(plugin, FilterType.BLACK_LIST)
     private var petInventory = PetInventory(plugin, this)
@@ -59,9 +60,9 @@ class PetFox(private val plugin: MattPlugin, world: World, private val owner: Pl
 
         world.addEntity(displayName)
 
-        goalSelector.a(0, PickUpItemsGoal(this, this, 1.5))
-        goalSelector.a(1, FollowPlayerGoal(this, this, 1.5))
-        goalSelector.a(5, RandomWalkAroundGoal(this, this, 1.5))
+        goalSelector.a(0, PickUpItemsGoal(this, this, petConfig, 1.5))
+        goalSelector.a(1, FollowPlayerGoal(this, this, petConfig, 1.5))
+        goalSelector.a(5, RandomWalkAroundGoal(this, this, petConfig, 1.5))
         //goalSelector.a(6, FarmGoal(this, this, 1.5))
 
         goalSelector.a(7, PathfinderGoalLookAtPlayer(this, EntityHuman::class.java, 5f))

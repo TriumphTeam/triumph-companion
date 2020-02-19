@@ -1,5 +1,7 @@
 package me.mattstudios.triumphpets.pet.v1_15.goals
 
+import me.mattstudios.triumphpets.config.pet.PetConfig
+import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetUtils.distance2d
 import me.mattstudios.triumphpets.pet.utils.PetUtils.getSafeY
@@ -13,14 +15,15 @@ import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer
 /**
  * @author Matt
  */
-class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient,private val petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val petMemory = pet.getMemory()
     private val owner = pet.getOwner()
 
     private val navigation: NavigationAbstract  = petInsentient.navigation
-    private var followDistance = 7
-    private val tpDistance = 20
+
+    private var followDistance = petConfig[PetProperty.FOLLOW_DISTANCE]
+    private val tpDistance = petConfig[PetProperty.TELEPORT_DISTANCE]
 
     private var controller = 0
 
@@ -32,7 +35,7 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, pr
         if (!shouldRun()) return true
 
         // Allows the player to search from a little further
-        followDistance = if (petMemory.tracking) 15 else 7
+        followDistance = if (petMemory.tracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
 
         // Gets the distance between the player and the pet
         val location: Location = owner.location.clone()

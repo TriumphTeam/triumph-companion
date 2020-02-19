@@ -2,6 +2,7 @@ package me.mattstudios.triumphpets.config.pet
 
 import ch.jalu.configme.Comment
 import ch.jalu.configme.SettingsHolder
+import ch.jalu.configme.configurationdata.CommentsConfiguration
 import ch.jalu.configme.properties.Property
 import ch.jalu.configme.properties.PropertyInitializer.newProperty
 
@@ -39,8 +40,16 @@ object PetProperty : SettingsHolder {
     @Comment("Distance in blocks which the pet will teleport to the player.", "Default: 20.0")
     val TELEPORT_DISTANCE: Property<Double> = newProperty("global.follow-distance", 20.0)
 
+    @JvmField
+    @Comment("Chance for the pet to walk around randomly, higher number more walking (1-100)", "Default: 5 (5%)")
+    val WALK_AROUND_CHANCE: Property<Int> = newProperty("global.walk-around-chance", 5)
 
-    /**
-     * # Global settings that affects all pets.
-     */
+    override fun registerComments(conf: CommentsConfiguration) {
+        conf.setComment("global",
+                "█░█░█ ▄▀█ █▀█ █▄░█ █ █▄░█ █▀▀\n" +
+                        "▀▄▀▄▀ █▀█ █▀▄ █░▀█ █ █░▀█ █▄█",
+                "Be extremely careful with this values as they can completely mess up your pets!",
+                "Only change them slightly according to your needs and ONLY if you need!",
+                "The default values are commented so if you mess up please use those!", " ", " ")
+    }
 }

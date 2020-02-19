@@ -23,7 +23,7 @@ class PetFileConfig(plugin: MattPlugin) : PetConfig {
     /**
      * Gets a property value
      */
-    override fun get(property: Property<*>): Any {
+    override operator fun <T> get(property: Property<T>): T {
         return settingsManager.getProperty(property)
     }
 

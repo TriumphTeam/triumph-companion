@@ -1,6 +1,8 @@
 package me.mattstudios.triumphpets.pet.components
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.triumphpets.config.pet.PetConfig
+import me.mattstudios.triumphpets.config.pet.PetProperty
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Item
@@ -9,9 +11,11 @@ import org.bukkit.entity.Item
 /**
  * @author Matt
  */
-class PetMemory(private val plugin: MattPlugin, var filterType: FilterType) {
+class PetMemory(private val plugin: MattPlugin, petConfig: PetConfig, var filterType: FilterType) {
 
     var tracking = false
+
+    private val forgetTime = petConfig[PetProperty.FORGET_LIST_TIME]
 
     private val forgetList = mutableListOf<Item>()
     private val filteredItems = mutableSetOf<Material>()
@@ -37,19 +41,31 @@ class PetMemory(private val plugin: MattPlugin, var filterType: FilterType) {
         return if (item == null) true else forgetList.contains(item)
     }
 
+    /**
+     * Filters the material
+     */
     fun filter(material: Material) {
         filteredItems.add(material)
     }
 
+    /**
+     * Unfilters the material
+     */
     fun unFilter(material: Material) {
         filteredItems.remove(material)
     }
 
+    /**
+     * Checks if the material is filtered
+     */
     fun isFiltered(material: Material): Boolean {
         if (filteredItems.isEmpty()) return false
-        return if(filterType == FilterType.BLACK_LIST) filteredItems.contains(material) else !filteredItems.contains(material)
+        return if (filterType == FilterType.BLACK_LIST) filteredItems.contains(material) else !filteredItems.contains(material)
     }
 
+    /**
+     * Change the filtering type
+     */
     fun toggleFilterType() {
         filterType = if (filterType == FilterType.BLACK_LIST) FilterType.WHITE_LIST else FilterType.BLACK_LIST
     }
@@ -58,7 +74,7 @@ class PetMemory(private val plugin: MattPlugin, var filterType: FilterType) {
      * Every 15 minutes clears the forgotten list
      */
     private fun periodicallyClearForget() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable { forgetList.clear() }, 18000L, 18000L)
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable { forgetList.clear() }, forgetTime * 20L, forgetTime * 20L)
     }
 
 }
