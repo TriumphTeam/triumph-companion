@@ -32,9 +32,9 @@ import org.bukkit.potion.PotionEffectType
 /**
  * @author Matt
  */
-class PetFox(private val plugin: MattPlugin, private val petConfig: PetConfig, private val owner: Player, private val petName: String, baby: Boolean, type: Type, world: World) : EntityFox(EntityTypes.FOX, world), Pet {
+class PetFox(private val plugin: MattPlugin, petConfig: PetConfig, private val owner: Player, private val petName: String, baby: Boolean, type: Type, world: World) : EntityFox(EntityTypes.FOX, world), Pet {
 
-    private var petMemory = PetMemory(plugin, FilterType.BLACK_LIST)
+    private var petMemory = PetMemory(plugin, petConfig, FilterType.BLACK_LIST)
     private var petInventory = PetInventory(plugin, this)
 
     private var displayName = NameEntity(plugin, petName, world)

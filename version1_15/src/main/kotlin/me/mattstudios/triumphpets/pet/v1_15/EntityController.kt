@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.pet.v1_15
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.PetController
 import me.mattstudios.triumphpets.pet.components.PetNameEntity
@@ -19,7 +20,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class EntityController(private val plugin: MattPlugin) : PetController {
+class EntityController(private val plugin: MattPlugin, private val petConfig: PetConfig) : PetController {
 
     // List with spawned entities
     private val spawnedPets = mutableSetOf<Pet>()
@@ -42,9 +43,12 @@ class EntityController(private val plugin: MattPlugin) : PetController {
      * Spawns a pet in the world.
      */
     override fun spawnPet(location: Location, player: Player) {
-        val petFox = PetFox(plugin, (player.world as CraftWorld).handle, player, "&cFoxy", true, EntityFox.Type.SNOW)
+
+        val world = (player.world as CraftWorld).handle
+
+        val petFox = PetFox(plugin, petConfig, player, "&cFoxy", true, EntityFox.Type.SNOW, world)
         petFox.setPosition(location.x, location.y, location.z)
-        (player.world as CraftWorld).handle.addEntity(petFox)
+        world.addEntity(petFox)
         spawnedPets.add(petFox)
     }
 

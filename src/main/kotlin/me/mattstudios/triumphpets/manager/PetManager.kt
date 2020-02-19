@@ -14,7 +14,7 @@ class PetManager(private val plugin: TriumphPets) {
 
     init {
         when (getServerVersion()) {
-            "v1_15_R1" -> petController = me.mattstudios.triumphpets.pet.v1_15.EntityController(plugin)
+            "v1_15_R1" -> petController = me.mattstudios.triumphpets.pet.v1_15.EntityController(plugin, plugin.petConfig)
             else -> println("shit boy")
         }
 
