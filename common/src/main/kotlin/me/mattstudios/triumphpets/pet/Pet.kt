@@ -45,6 +45,10 @@ interface Pet {
      */
     fun getEntity(): Entity
 
+    /*fun getXp(): Int
+
+    fun addXp(xp: Int)*/
+
     /**
      * Removes this entity and the Name entity too
      */

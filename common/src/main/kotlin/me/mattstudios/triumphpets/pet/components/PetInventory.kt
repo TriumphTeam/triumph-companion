@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.pet.components
 
 import com.cryptomorin.xseries.XMaterial
+import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mfgui.gui.GUI
@@ -12,7 +13,6 @@ import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetType
 import org.bukkit.Bukkit
 import org.bukkit.Material
-import org.bukkit.Sound
 import org.bukkit.entity.Item
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemFlag
@@ -208,21 +208,21 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Plays the click sound
      */
     private fun clickSound() {
-        owner.location.let { owner.playSound(it, Sound.UI_BUTTON_CLICK, .3f, .5f) }
+        owner.location.let { XSound.UI_BUTTON_CLICK.playSound(owner, .3f, .5f) }
     }
 
     /**
      * Plays deep xp sound
      */
     private fun xpDeepSound() {
-        owner.location.let { owner.playSound(it, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .2f) }
+        owner.location.let { XSound.ENTITY_EXPERIENCE_ORB_PICKUP.playSound(owner, .3f, .2f) }
     }
 
     /**
      * Plays high xp sound
      */
     private fun xpHighSound() {
-        owner.location.let { owner.playSound(it, Sound.ENTITY_EXPERIENCE_ORB_PICKUP, .3f, .8f) }
+        owner.location.let { XSound.ENTITY_EXPERIENCE_ORB_PICKUP.playSound(owner, .3f, .8f) }
     }
 
     /**

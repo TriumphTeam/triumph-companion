@@ -10,8 +10,10 @@ import me.mattstudios.triumphpets.config.pet.PetFileConfig
 import me.mattstudios.triumphpets.listeners.PetListener
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
+import me.mattstudios.triumphpets.pet.components.Experience
 import me.mattstudios.triumphpets.pet.utils.PetUtils
 import org.apache.commons.lang.StringUtils
+import org.bukkit.Material
 import java.util.stream.Stream
 
 /**
@@ -37,6 +39,11 @@ class TriumphPets : MattPlugin() {
         registerCommands(PetCommand(this))
         registerListeners(PetListener(this))
 
+        Experience.load(config)
+
+        println(Experience.getExp(Material.DIAMOND))
+        println(Experience.getExp(Material.IRON_ORE))
+        println(Experience.getExp(Material.STONE))
     }
 
     /**
@@ -46,6 +53,9 @@ class TriumphPets : MattPlugin() {
         petManager.petController.removeAll()
     }
 
+    /**
+     * Sets up the config related stuff
+     */
     private fun setupConfig() {
         config.load(Settings::class.java)
 
@@ -56,7 +66,7 @@ class TriumphPets : MattPlugin() {
      * Sets up the locale of the plugin
      */
     private fun setupLocale() {
-        //PetUtils.LOCALE = //config[Settings.LANGUAGE]
+        PetUtils.LOCALE = config[Settings.LANGUAGE]
         locale.load(Message::class.java, PetUtils.LOCALE)
     }
 
