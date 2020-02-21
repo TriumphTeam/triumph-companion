@@ -13,7 +13,6 @@ import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.components.Experience
 import me.mattstudios.triumphpets.pet.utils.PetUtils
 import org.apache.commons.lang.StringUtils
-import org.bukkit.Material
 import java.util.stream.Stream
 
 /**
@@ -27,8 +26,7 @@ class TriumphPets : MattPlugin() {
     /**
      * On plugin enable
      */
-    override fun onPluginEnable() {
-
+    override fun enable() {
         setupConfig()
         setupLocale()
 
@@ -40,16 +38,12 @@ class TriumphPets : MattPlugin() {
         registerListeners(PetListener(this))
 
         Experience.load(config)
-
-        println(Experience.getExp(Material.DIAMOND))
-        println(Experience.getExp(Material.IRON_ORE))
-        println(Experience.getExp(Material.STONE))
     }
 
     /**
      * On plugin disable
      */
-    override fun onPluginDisable() {
+    override fun disable() {
         petManager.petController.removeAll()
     }
 
