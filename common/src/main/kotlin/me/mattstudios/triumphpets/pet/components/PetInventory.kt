@@ -10,6 +10,7 @@ import me.mattstudios.mfgui.gui.components.GuiAction
 import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.pet.Pet
+import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import org.bukkit.Bukkit
 import org.bukkit.Material
@@ -30,31 +31,50 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
     private val petGui = GUI(plugin, rows(), color(pet.getName() + plugin.locale.getMessage(Message.PET_GUI_TITLE)), true)
     private val filterGui = GUI(plugin, 3, color("&3Filter"))
 
-    private val dummyInventory = Bukkit.createInventory(petGui.inventory.holder, petGui.inventory.size, "")
-
     /**
      * Starts the GUI related stuff
      */
     init {
         setUpPetGui()
         setUpFilterGUI()
+
+        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable {
+            petGui.updateItem(rows() * 9 - 3, ItemBuilder(Material.STONE).setName(petMemory.petExperience.xp.toString()).build())
+        }, 20L, 20L)
     }
 
     /**
      * Adds the item to the inventory
      */
-    fun addItem(item: Item) {
-        petGui.addItem(item.itemStack)
+    fun addItem(item: Item): Boolean {
+        val startAmount = item.itemStack.amount
+        val leftOvers = petGui.addItem(item.itemStack)
+
+        if (leftOvers.isEmpty()) {
+            petMemory.petExperience.addXp(Experience.getExp(item.itemStack.type, item.itemStack.amount))
+            item.remove()
+            return true
+        }
+
+        val leftItemStack = leftOvers[0] ?: return true
+        val amount = startAmount - leftItemStack.amount
+
+        petMemory.petExperience.addXp(Experience.getExp(item.itemStack.type, amount))
+        item.setItemStack(leftOvers[0])
+        return false
     }
 
     /**
      * Checks if the inventory is full
      */
-    fun isFull(item: Item): Boolean {
-        dummyInventory.contents = petGui.inventory.contents
-        val leftOvers = dummyInventory.addItem(item.itemStack)
-        dummyInventory.clear()
-        return leftOvers.isNotEmpty()
+    fun isFull(item: ItemStack): Boolean {
+        petGui.inventory.storageContents.take(9).forEach() { slot: ItemStack? ->
+            if (slot == null) return false
+            if (!slot.isSimilar(item)) return@forEach
+            if (slot.amount < slot.maxStackSize) return false
+        }
+
+        return true
     }
 
     /**

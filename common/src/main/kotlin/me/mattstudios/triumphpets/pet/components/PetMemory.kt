@@ -13,7 +13,9 @@ import org.bukkit.entity.Item
  */
 class PetMemory(private val plugin: MattPlugin, petConfig: PetConfig, var filterType: FilterType) {
 
-    var tracking = false
+    val petExperience = PetExperience(0)
+
+    var isTracking = false
 
     private val forgetTime = petConfig[PetProperty.FORGET_LIST_TIME]
 

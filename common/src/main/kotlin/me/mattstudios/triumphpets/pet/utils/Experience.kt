@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.pet.components
+package me.mattstudios.triumphpets.pet.utils
 
 import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mattcore.configuration.Config
@@ -9,19 +9,26 @@ import java.util.SplittableRandom
 
 object Experience {
 
-    // 
+    // Set with all the ores
     private val ores = mutableSetOf<Material>()
+    // Set with all the ingots/nuggets
     private val ingots = mutableSetOf<Material>()
+    // Set with all the unstackable items
     private val unstackable = mutableSetOf<Material>()
+    // Set with all the rare items
     private val rare = mutableSetOf<Material>()
+    // Set with all special items
     private val special = mutableSetOf<Material>()
 
     private val random = SplittableRandom()
 
     private lateinit var config: Config
 
+    /**
+     * Loads the data into the sets and gets the config data
+     */
     fun load(config: Config) {
-        this.config = config
+        Experience.config = config
 
         XMaterial.LAPIS_LAZULI.parseMaterial()?.let { ingots.add(it) }
         XMaterial.REDSTONE.parseMaterial()?.let { ingots.add(it) }
@@ -72,16 +79,47 @@ object Experience {
         }
     }
 
-    fun getExp(material: Material): Short {
-        return when (material) {
-            in special -> random.nextInt(config[Settings.EXPERIENCE_SPECIAL_MIN], config[Settings.EXPERIENCE_SPECIAL_MAX]).toShort()
-            in rare -> random.nextInt(config[Settings.EXPERIENCE_RARE_MIN], config[Settings.EXPERIENCE_RARE_MAX]).toShort()
-            in unstackable -> random.nextInt(config[Settings.EXPERIENCE_UNSTACKABLE_MIN], config[Settings.EXPERIENCE_UNSTACKABLE_MAX]).toShort()
-            in ingots -> random.nextInt(config[Settings.EXPERIENCE_INGOTS_MIN], config[Settings.EXPERIENCE_INGOTS_MAX]).toShort()
-            in ores -> random.nextInt(config[Settings.EXPERIENCE_ORES_MIN], config[Settings.EXPERIENCE_ORES_MAX]).toShort()
+    /**
+     * Gets the correct amount of XP based on the given Material
+     */
+    fun getExp(material: Material, amount: Int): Int {
+        var xp = 0
 
-            else -> random.nextInt(config[Settings.EXPERIENCE_BASIC_MIN], config[Settings.EXPERIENCE_BASIC_MAX]).toShort()
+        when (material) {
+            in special -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_SPECIAL_MIN], config[Settings.EXPERIENCE_SPECIAL_MAX] + 1)
+                }
+            }
+            in rare -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_RARE_MIN], config[Settings.EXPERIENCE_RARE_MAX] + 1)
+                }
+            }
+            in unstackable -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_UNSTACKABLE_MIN], config[Settings.EXPERIENCE_UNSTACKABLE_MAX] + 1)
+                }
+            }
+            in ingots -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_INGOTS_MIN], config[Settings.EXPERIENCE_INGOTS_MAX] + 1)
+                }
+            }
+            in ores -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_ORES_MIN], config[Settings.EXPERIENCE_ORES_MAX] + 1)
+                }
+            }
+
+            else -> {
+                for (i in 1..amount) {
+                    xp += random.nextInt(config[Settings.EXPERIENCE_BASIC_MIN], config[Settings.EXPERIENCE_BASIC_MAX] + 1)
+                }
+            }
         }
+
+        return xp
     }
 
 }

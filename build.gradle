@@ -21,6 +21,10 @@ allprojects {
             url = 'https://oss.sonatype.org/content/groups/public/'
         }
 
+        maven {
+            url = 'https://maven.husk.pro/repository/internal/'
+        }
+
     }
 
     dependencies {

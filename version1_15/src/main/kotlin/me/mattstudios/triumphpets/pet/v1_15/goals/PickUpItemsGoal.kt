@@ -79,12 +79,12 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         if (getSecondsDifference(startTime) >= forgetTime / 2) petInsentient.controllerJump.jump()
 
-        if (petMemory.tracking && startTime != 0L && getSecondsDifference(startTime) >= forgetTime) {
+        if (petMemory.isTracking && startTime != 0L && getSecondsDifference(startTime) >= forgetTime) {
             petMemory.forgetItem(currentTrackedItem)
             pet.getEntity().world.spawnParticle(Particle.SMOKE_NORMAL, pet.getEntity().location.x, pet.getEntity().location.y, pet.getEntity().location.z, 50, .5, .5, .5, 0.0)
         }
 
-        if (!petMemory.tracking) startTracking()
+        if (!petMemory.isTracking) startTracking()
 
         navigation.a((currentTrackedItem as CraftEntity).handle, MOVEMENT_SPEED)
     }
@@ -99,7 +99,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 5.0, searchDistance)) {
             if (foundEntity !is Item) continue
-            if (petInventory.isFull(foundEntity)) continue
+            if (petInventory.isFull(foundEntity.itemStack)) continue
             if (petMemory.isForgotten(foundEntity)) continue
             if (petMemory.isFiltered(foundEntity.itemStack.type)) continue
 
@@ -132,13 +132,12 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
         }
 
         // If the inventory is full can't pick up
-        if (petInventory.isFull(item)) return
+        if (petInventory.isFull(item.itemStack)) return
         if (petMemory.isFiltered(item.itemStack.type)) return
 
         // plays pick up sound, adds item to the inventory, and removes the item entity
         item.world.playSound(item.location, Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f)
-        petInventory.addItem(item)
-        item.remove()
+        if (!petInventory.addItem(item)) trackedItem = null
     }
 
 
@@ -146,7 +145,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
      * Starts tracking the item
      */
     private fun startTracking() {
-        petMemory.tracking = true
+        petMemory.isTracking = true
         startTime = System.currentTimeMillis()
     }
 
@@ -155,7 +154,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
      */
     private fun resetTracker() {
         trackedItem = null
-        petMemory.tracking = false
+        petMemory.isTracking = false
         startTime = 0
     }
 

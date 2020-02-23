@@ -35,7 +35,7 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient,pri
         if (!shouldRun()) return true
 
         // Allows the player to search from a little further
-        followDistance = if (petMemory.tracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
+        followDistance = if (petMemory.isTracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
 
         // Gets the distance between the player and the pet
         val location: Location = owner.location.clone()

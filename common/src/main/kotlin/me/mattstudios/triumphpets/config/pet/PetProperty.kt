@@ -43,6 +43,7 @@ object PetProperty : SettingsHolder {
     @JvmField
     @Comment("Chance for the pet to walk around randomly, higher number more walking (1-100)", "Default: 5 (5%)")
     val WALK_AROUND_CHANCE: Property<Int> = newProperty("walk-around-chance", 5)
+
     override fun registerComments(conf: CommentsConfiguration) {
         conf.setComment("item-search-distance",
                 "█░█░█ ▄▀█ █▀█ █▄░█ █ █▄░█ █▀▀",

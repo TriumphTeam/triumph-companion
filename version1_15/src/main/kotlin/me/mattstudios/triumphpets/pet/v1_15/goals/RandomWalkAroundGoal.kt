@@ -29,7 +29,7 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
     override fun a(): Boolean {
         // Makes it run only once every 2 second
         if (!shouldRun()) return true
-        if (petMemory.tracking || petInventory.isOpened()) return true
+        if (petMemory.isTracking || petInventory.isOpened()) return true
         if (randomize(1, 100) >= chance) return true
 
         moveAround()

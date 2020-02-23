@@ -10,7 +10,7 @@ import me.mattstudios.triumphpets.config.pet.PetFileConfig
 import me.mattstudios.triumphpets.listeners.PetListener
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
-import me.mattstudios.triumphpets.pet.components.Experience
+import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetUtils
 import org.apache.commons.lang.StringUtils
 import java.util.stream.Stream
@@ -38,6 +38,7 @@ class TriumphPets : MattPlugin() {
         registerListeners(PetListener(this))
 
         Experience.load(config)
+
     }
 
     /**
