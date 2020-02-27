@@ -39,7 +39,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         setUpFilterGUI()
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable {
-            petGui.updateItem(rows() * 9 - 3, ItemBuilder(Material.STONE).setName(petMemory.petExperience.xp.toString()).build())
+            petGui.updateItem(rows() * 9 - 3, ItemBuilder(Material.STONE).setName("Level - " + petMemory.petExperience.level)
+                    .setLore("XP - " + petMemory.petExperience.xp).build())
         }, 20L, 20L)
     }
 

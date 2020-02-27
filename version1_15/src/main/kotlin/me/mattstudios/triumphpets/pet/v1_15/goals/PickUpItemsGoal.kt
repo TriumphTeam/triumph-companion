@@ -86,7 +86,8 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         if (!petMemory.isTracking) startTracking()
 
-        navigation.a((currentTrackedItem as CraftEntity).handle, MOVEMENT_SPEED)
+
+        //navigation.a((currentTrackedItem as CraftEntity).handle, MOVEMENT_SPEED)
     }
 
     /**
@@ -109,6 +110,14 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
             }
 
             val currentTrackedItem = trackedItem ?: continue
+
+            val nmsEntity = (currentTrackedItem as CraftEntity).handle
+
+            // This is where I'll check if the pet can reach the item or not
+            // Basically navigation.a will create the PathEntity and h() is canReach()
+            // First I was doing navigation.k().h() but that'd get the current moving path, which isn't what I want
+            // I'll make it so it checks it before it goes for the item
+            println(navigation.a(nmsEntity, 1)?.h())
 
             if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(currentTrackedItem.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
                 trackedItem = foundEntity

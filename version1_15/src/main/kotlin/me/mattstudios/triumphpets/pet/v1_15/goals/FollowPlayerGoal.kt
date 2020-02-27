@@ -45,7 +45,8 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient,pri
         // If distance is bigger than tp distance it'll tp to owner
         if (dist >= followDistance) {
             if (dist >= tpDistance) {
-                petInsentient.setPosition(location.x, getSafeY(location, owner.world).toDouble(), location.z)
+                val y = if (owner.isFlying && location.y > 64) getSafeY(location, owner.world).toDouble() else location.y
+                petInsentient.setPosition(location.x, y, location.z)
             }
 
             navigation.a((owner as CraftPlayer).handle, MOVEMENT_SPEED)
