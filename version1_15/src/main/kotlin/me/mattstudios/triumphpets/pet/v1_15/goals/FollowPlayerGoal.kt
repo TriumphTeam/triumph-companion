@@ -3,24 +3,23 @@ package me.mattstudios.triumphpets.pet.v1_15.goals
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.pet.Pet
-import me.mattstudios.triumphpets.pet.utils.PetUtils.distance2d
-import me.mattstudios.triumphpets.pet.utils.PetUtils.getSafeY
+import me.mattstudios.triumphpets.pet.utils.PetUtils.distance
 import net.minecraft.server.v1_15_R1.EntityInsentient
 import net.minecraft.server.v1_15_R1.NavigationAbstract
 import net.minecraft.server.v1_15_R1.PathfinderGoal
-import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftPlayer
+import org.bukkit.util.Vector
 
 
 /**
  * @author Matt
  */
-class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient,private val petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, private val petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val petMemory = pet.getMemory()
     private val owner = pet.getOwner()
 
-    private val navigation: NavigationAbstract  = petInsentient.navigation
+    private val navigation: NavigationAbstract = petInsentient.navigation
 
     private var followDistance = petConfig[PetProperty.FOLLOW_DISTANCE]
     private val tpDistance = petConfig[PetProperty.TELEPORT_DISTANCE]
@@ -38,28 +37,31 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient,pri
         followDistance = if (petMemory.isTracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
 
         // Gets the distance between the player and the pet
-        val location: Location = owner.location.clone()
-        val dist: Double = distance2d(location.x, petInsentient.locX(), location.z, petInsentient.locZ())
+        val location = owner.location.clone()
+        val petLocation = Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())
+        val distance: Double = distance(location.toVector(), petLocation)
 
-        // If distance is bigger than follow distance it'll walk to owner
-        // If distance is bigger than tp distance it'll tp to owner
-        if (dist >= followDistance) {
-            if (dist >= tpDistance) {
-                val y = if (owner.isFlying && location.y > 64) getSafeY(location, owner.world).toDouble() else location.y
-                petInsentient.setPosition(location.x, y, location.z)
-            }
+        // Checks if distance is less than the follow distance
+        if (distance < followDistance) return true
 
+        // Checks if distance is less than the tp distance
+        if (distance < tpDistance) {
+            // Walks to player
             navigation.a((owner as CraftPlayer).handle, MOVEMENT_SPEED)
+            return true
         }
 
+        // Teleports to owner
+        petInsentient.setPosition(location.x, location.y, location.z)
         return true
+
     }
 
     /**
      * Makes it run only once a second
      */
     private fun shouldRun(): Boolean {
-        if (controller <= 2) {
+        if (controller <= 10) {
             controller++
             return false
         }

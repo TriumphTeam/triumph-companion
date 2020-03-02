@@ -14,6 +14,7 @@ import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity
+import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
 import org.bukkit.util.Vector
 
@@ -27,7 +28,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     private val petInventory = pet.getInventory()
     private val petMemory = pet.getMemory()
 
-    private var trackedItem: Item? = null
+    private var target: Item? = null
     private var startTime: Long = 0
 
     private val pickDistance = petConfig[PetProperty.ITEM_PICK_DISTANCE]
@@ -47,7 +48,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         followItem()
 
-        if (trackedItem?.isDead == true) trackedItem = null
+        if (target?.isDead == true) target = null
 
         return true
     }
@@ -70,14 +71,12 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     private fun followItem() {
 
         // Checking if the item is null, dead, or forgotten
-        if (trackedItem == null || trackedItem?.isDead == true || petMemory.isForgotten(trackedItem)) {
+        if (target == null || target?.isDead == true || petMemory.isForgotten(target)) {
             resetTracker()
             return
         }
 
-        val currentTrackedItem = trackedItem ?: return
-
-        if (getSecondsDifference(startTime) >= forgetTime / 2) petInsentient.controllerJump.jump()
+        val currentTrackedItem = target ?: return
 
         if (petMemory.isTracking && startTime != 0L && getSecondsDifference(startTime) >= forgetTime) {
             petMemory.forgetItem(currentTrackedItem)
@@ -86,8 +85,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         if (!petMemory.isTracking) startTracking()
 
-
-        //navigation.a((currentTrackedItem as CraftEntity).handle, MOVEMENT_SPEED)
+        navigation.a(asNmsEntity(currentTrackedItem), MOVEMENT_SPEED)
     }
 
     /**
@@ -98,34 +96,40 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
         if (!shouldRun()) return
         if (petInventory.isOpened()) return
 
-        for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 5.0, searchDistance)) {
+
+        var itemToTrack: Item? = null
+
+        for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 7.5, searchDistance)) {
             if (foundEntity !is Item) continue
             if (petInventory.isFull(foundEntity.itemStack)) continue
             if (petMemory.isForgotten(foundEntity)) continue
             if (petMemory.isFiltered(foundEntity.itemStack.type)) continue
 
-            if (trackedItem == null || trackedItem?.isDead == true) {
-                trackedItem = foundEntity
+            if (itemToTrack == null || itemToTrack.isDead) {
+                if (cantPath(foundEntity)) continue
+
+                itemToTrack = foundEntity
                 continue
             }
 
-            val currentTrackedItem = trackedItem ?: continue
+            if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(itemToTrack.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
+                if (cantPath(foundEntity)) continue
 
-            val nmsEntity = (currentTrackedItem as CraftEntity).handle
-
-            // This is where I'll check if the pet can reach the item or not
-            // Basically navigation.a will create the PathEntity and h() is canReach()
-            // First I was doing navigation.k().h() but that'd get the current moving path, which isn't what I want
-            // I'll make it so it checks it before it goes for the item
-            println(navigation.a(nmsEntity, 1)?.h())
-
-            if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(currentTrackedItem.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
-                trackedItem = foundEntity
+                itemToTrack = foundEntity
             }
         }
+
+        setTarget(itemToTrack)
+
     }
 
-
+    /**
+     * Creates a path and checks if it is doable
+     */
+    private fun cantPath(entity: Entity): Boolean {
+        val path = navigation.a(asNmsEntity(entity), 1)
+        return path != null && !path.h()
+    }
 
     /**
      * Picks the item given to it
@@ -146,7 +150,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         // plays pick up sound, adds item to the inventory, and removes the item entity
         item.world.playSound(item.location, Sound.ENTITY_ITEM_PICKUP, SoundCategory.MASTER, .5f, 10f)
-        if (!petInventory.addItem(item)) trackedItem = null
+        if (!petInventory.addItem(item)) target = null
     }
 
 
@@ -159,10 +163,29 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     }
 
     /**
+     * Gets the NMS entity out of the bukkit one
+     */
+    private fun asNmsEntity(entity: Entity): net.minecraft.server.v1_15_R1.Entity {
+        return (entity as CraftEntity).handle
+    }
+
+    /***
+     * Sets the target the pet should follow
+     */
+    private fun setTarget(item: Item?) {
+        if (item == null) {
+            target = item
+            return
+        }
+
+        target = item
+    }
+
+    /**
      * Resets the item tracker to track a new one
      */
     private fun resetTracker() {
-        trackedItem = null
+        target = null
         petMemory.isTracking = false
         startTime = 0
     }

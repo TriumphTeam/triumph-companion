@@ -46,7 +46,7 @@ class PetFox(private val plugin: MattPlugin, petConfig: PetConfig, private val o
         // Clears the goal selector
         goalSelector = PathfinderGoalSelector(if (world.methodProfiler != null) world.methodProfiler else null)
 
-        customName = ChatMessage(color("&7[&6&l★★★★★&7]"))
+        customName = ChatMessage(color("&7[&6&l★&7]"))
         customNameVisible = true
         foxType = type
         canPickUpLoot = false

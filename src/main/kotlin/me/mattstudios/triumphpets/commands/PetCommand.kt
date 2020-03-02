@@ -18,4 +18,5 @@ class PetCommand(private val plugin: TriumphPets) : CommandBase() {
         plugin.petManager.petController.spawnPet(player.location, player)
     }
 
+
 }
