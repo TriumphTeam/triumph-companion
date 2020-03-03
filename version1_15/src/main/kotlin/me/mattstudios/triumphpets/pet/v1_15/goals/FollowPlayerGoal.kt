@@ -53,6 +53,7 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, pr
 
         // Teleports to owner
         petInsentient.setPosition(location.x, location.y, location.z)
+        // TODO despawn pet if player goes too high
         return true
 
     }

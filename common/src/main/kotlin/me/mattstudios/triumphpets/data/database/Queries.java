@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.util;
+package me.mattstudios.triumphpets.data.database;
 
 public class Queries {
 

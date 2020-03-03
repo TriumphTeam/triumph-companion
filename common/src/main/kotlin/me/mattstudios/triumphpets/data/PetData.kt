@@ -5,4 +5,6 @@ package me.mattstudios.triumphpets.data
  */
 class PetData() {
 
+
+
 }
