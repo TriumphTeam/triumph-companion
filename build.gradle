@@ -34,9 +34,9 @@ allprojects {
         compileOnly "org.xerial:sqlite-jdbc:3.30.1"
 
         // Matt stuff
-        implementation "me.mattstudios.utils:matt-framework:+"
+        implementation "me.mattstudios.utils:matt-framework:1.2.4"
         implementation "me.mattstudios.utils:matt-framework-gui:+"
-        implementation "me.mattstudios.utils:matt-core:1.1.9"
+        implementation "me.mattstudios.utils:matt-core:1.1.10"
 
         // Config repository
         implementation ("ch.jalu:configme:1.1.0") {

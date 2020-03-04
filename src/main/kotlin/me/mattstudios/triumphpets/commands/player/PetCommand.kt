@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.commands
+package me.mattstudios.triumphpets.commands.player
 
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Completion
@@ -13,7 +13,7 @@ import java.util.UUID
 /**
  * @author Matt
  */
-@Command("petadmin")
+@Command("pet")
 class PetCommand(private val plugin: TriumphPets) : CommandBase() {
 
 

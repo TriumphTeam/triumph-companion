@@ -5,6 +5,7 @@ import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.DBType
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.type.SQLite
+import org.bukkit.Bukkit
 
 /**
  * @author Matt
@@ -18,6 +19,7 @@ class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
         when (dbType) {
             DBType.SQLITE -> database = SQLite(plugin, this)
         }
+
     }
 
     /**

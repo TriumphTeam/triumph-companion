@@ -1,6 +1,11 @@
 package me.mattstudios.triumphpets.data.database.type
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.mattcore.utils.Task.async
+import me.mattstudios.mattcore.utils.Task.asyncTimer
+import me.mattstudios.mattcore.utils.Task.later
+import me.mattstudios.mattcore.utils.Task.laterAsync
+import me.mattstudios.mattcore.utils.Task.timer
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.Queries
@@ -9,13 +14,14 @@ import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.DataManager
 import me.mattstudios.triumphpets.pet.components.PetExperience
 import me.mattstudios.triumphpets.pet.utils.PetType
-import me.mattstudios.triumphpets.pet.utils.Task.async
+import org.bukkit.Bukkit
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
 import java.sql.Connection
 import java.sql.SQLException
 import java.util.UUID
+import kotlin.concurrent.timerTask
 
 
 /**
@@ -132,12 +138,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
      * Inserts the pet in the database
      */
     override fun insertPet(petData: PetData) {
-
-        async(plugin) {
-            // Do async code here
-        }
-
-        async(plugin) {
+        async {
             var connection: Connection? = null
 
             try {
