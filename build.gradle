@@ -36,7 +36,7 @@ allprojects {
         // Matt stuff
         implementation "me.mattstudios.utils:matt-framework:+"
         implementation "me.mattstudios.utils:matt-framework-gui:+"
-        implementation "me.mattstudios.utils:matt-core:+"
+        implementation "me.mattstudios.utils:matt-core:1.1.9"
 
         // Config repository
         implementation ("ch.jalu:configme:1.1.0") {

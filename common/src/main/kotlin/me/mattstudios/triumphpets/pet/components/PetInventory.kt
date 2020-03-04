@@ -209,7 +209,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      */
     private fun getPetItem(): ItemStack {
         return ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
-                .setSkullTexture(PetType.PET_FOX_SNOW.texture)
+                .setSkullTexture(PetType.PET_SNOW_FOX_BABY.texture)
                 .setName(color("&8• " + pet.getName()))
                 .setLore(
                         color("&8• &7Level: &c${pet.getLevel()}&7/&c5"),

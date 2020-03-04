@@ -12,7 +12,6 @@ import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetUtils
-import org.apache.commons.lang.StringUtils
 import java.util.stream.Stream
 
 /**
@@ -38,7 +37,6 @@ class TriumphPets : MattPlugin() {
         registerListeners(PetListener(this))
 
         Experience.load(config)
-
     }
 
     /**
@@ -73,9 +71,8 @@ class TriumphPets : MattPlugin() {
                 "",
                 "&3&l█▀█ █▀▀ ▀█▀ █▀",
                 "&3&l█▀▀ ██▄ ░█░ ▄█",
-                "       &8Version: &c1.0 &8(&a${PetUtils.LOCALE}&8)",
-                ""
-        ).forEach { MessageUtils.info(StringUtils.center(MessageUtils.color(it), 53)) }
+                "${locale.getMessageRaw(Message.STARTUP_VERSION)} &c1.0 &8(&c${PetUtils.LOCALE}&8)"
+        ).forEach { MessageUtils.info(MessageUtils.color(it)) }
     }
 
 }
