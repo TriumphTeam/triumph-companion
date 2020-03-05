@@ -12,7 +12,7 @@ import me.mattstudios.triumphpets.pet.PetController
 class PetManager(private val plugin: TriumphPets) {
 
     lateinit var petController: PetController
-    var databaseManager = DataManager(plugin, DBType.SQLITE)
+    val dataManager = DataManager(plugin, DBType.SQLITE)
 
     init {
         when (getServerVersion()) {

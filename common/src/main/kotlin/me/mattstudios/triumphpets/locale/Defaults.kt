@@ -34,6 +34,27 @@ enum class Defaults(private var path: String, private var en: String, private va
             ""
     ),
 
+
+    /**
+     * Admin commands
+     */
+
+    COMMAND_GIVE_SUCCESS(
+            "command.admin.success.give-success",
+            "&7Pet was given to &a{player} &7successfully!",
+            ""
+    ),
+    COMMAND_GIVE_NO_PLAYER(
+            "command.admin.error.give-no-player",
+            "&cThe selected player doesn't exist or is not online!",
+            ""
+    ),
+    COMMAND_GIVE_NO_PET(
+            "command.admin.error.give-no-pet",
+            "&cThe Pet you introduced is not a valid one!",
+            ""
+    ),
+
     /**
      * Pet GUI messages
      */

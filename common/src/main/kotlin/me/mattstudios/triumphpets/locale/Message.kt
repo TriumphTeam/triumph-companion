@@ -38,6 +38,24 @@ object Message : SettingsHolder {
     // ------------------------------------------------------------------------------------------------- //
 
     /**
+     * Admin command messages
+     */
+
+    @JvmField
+    val COMMAND_GIVE_NO_PLAYER: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PLAYER.getPath(),
+            Defaults.COMMAND_GIVE_NO_PLAYER.get(PetUtils.LOCALE))
+
+    @JvmField
+    val COMMAND_GIVE_NO_PET: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PET.getPath(),
+            Defaults.COMMAND_GIVE_NO_PET.get(PetUtils.LOCALE))
+
+    @JvmField
+    val COMMAND_GIVE_SUCCESS: Property<String> = newProperty(Defaults.COMMAND_GIVE_SUCCESS.getPath(),
+            Defaults.COMMAND_GIVE_SUCCESS.get(PetUtils.LOCALE))
+
+    // ------------------------------------------------------------------------------------------------- //
+
+    /**
      * PET GUI MESSAGES
      */
 

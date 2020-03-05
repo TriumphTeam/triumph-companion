@@ -3,13 +3,12 @@ package me.mattstudios.triumphpets
 import com.google.common.primitives.Ints
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils
-import me.mattstudios.mattcore.utils.NmsUtils
 import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
 import me.mattstudios.mf.base.components.TypeResult
-import me.mattstudios.triumphpets.commands.admin.PetAdmin
-import me.mattstudios.triumphpets.commands.player.PetCommand
+import me.mattstudios.triumphpets.commands.admin.PetGive
+import me.mattstudios.triumphpets.commands.player.PetsCommand
 import me.mattstudios.triumphpets.config.Settings
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetDefaultConfig
@@ -20,8 +19,6 @@ import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.pet.utils.PetUtils
-import java.lang.reflect.Type
-import java.util.Arrays
 import java.util.regex.Pattern
 import java.util.stream.Stream
 
@@ -100,8 +97,8 @@ class TriumphPets : MattPlugin() {
         })
 
         registerCommands(
-                PetAdmin(this),
-                PetCommand(this)
+                PetGive(this),
+                PetsCommand(this)
         )
     }
 
