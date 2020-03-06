@@ -10,7 +10,10 @@ import org.bukkit.entity.Player
  */
 interface PetController {
 
-    fun spawnPet(petData: PetData)
+    /**
+     * Spawns the pet
+     */
+    fun spawnPet(petPlayer: PetPlayer, petData: PetData)
 
     /**
      * Despawns the pet from player

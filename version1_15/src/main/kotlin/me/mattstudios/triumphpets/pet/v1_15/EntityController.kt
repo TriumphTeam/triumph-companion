@@ -5,11 +5,11 @@ import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.PetController
+import me.mattstudios.triumphpets.pet.PetPlayer
 import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
 import org.bukkit.Bukkit
-import org.bukkit.Location
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity
@@ -43,9 +43,9 @@ class EntityController(private val plugin: MattPlugin, private val petConfig: Pe
     /**
      * Spawns a pet in the world.
      */
-    override fun spawnPet(petData: PetData) {
+    override fun spawnPet(petPlayer: PetPlayer, petData: PetData) {
 
-        val player = petData.owner.player ?: return
+        val player = petPlayer.player.player ?: return
 
         val world = (player.world as CraftWorld).handle
 
@@ -53,6 +53,10 @@ class EntityController(private val plugin: MattPlugin, private val petConfig: Pe
         val petFox = PetFox(plugin, petConfig, player, petData.name, petData.type.baby, EntityFox.Type.SNOW, world)
         petFox.setPosition(player.location.x, player.location.y, player.location.z)
         world.addEntity(petFox)
+
+        // Sets this as the active pet
+        petPlayer.activePetUUID = petData.uuid
+
         spawnedPets.add(petFox)
     }
 

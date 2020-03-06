@@ -9,13 +9,10 @@ import java.util.UUID
  * @author Matt
  */
 class PetData(
-        val uuid: UUID, ownerUuid: UUID, val type: PetType,
+        val uuid: UUID, val type: PetType,
         var name: String, var experience: PetExperience) {
 
-    var owner = Bukkit.getOfflinePlayer(ownerUuid)
-    var spawned = false
-
-    constructor(uuid: UUID, ownerUuid: UUID, petType: PetType, name: String) :
-            this(uuid, ownerUuid, petType, name, PetExperience(0))
+    constructor(uuid: UUID, petType: PetType, name: String) :
+            this(uuid, petType, name, PetExperience(0))
 
 }

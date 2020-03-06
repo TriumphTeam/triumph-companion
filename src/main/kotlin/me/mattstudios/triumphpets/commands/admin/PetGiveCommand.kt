@@ -9,6 +9,7 @@ import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.pet.utils.PetType
+import org.apache.commons.lang.StringUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import java.util.UUID
@@ -19,9 +20,18 @@ import java.util.UUID
 @Command("pet")
 class PetGiveCommand(private val plugin: TriumphPets) : CommandBase() {
 
+    private val dataManager = plugin.petManager.dataManager
+
     @SubCommand("give")
     fun give(sender: CommandSender, @Completion("#players") player: Player?, @Values("#pets") petType: PetType?) {
         if (player == null) {
+            plugin.locale.sendMessage(sender, Message.COMMAND_GIVE_NO_PLAYER)
+            return
+        }
+
+        val petPlayer = dataManager.getPetPlayer(player)
+
+        if (petPlayer == null) {
             plugin.locale.sendMessage(sender, Message.COMMAND_GIVE_NO_PLAYER)
             return
         }
@@ -31,7 +41,9 @@ class PetGiveCommand(private val plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        plugin.petManager.dataManager.addPet(sender, player, PetData(UUID.randomUUID(), player.uniqueId, petType, petType.defaultName))
+        // Adds the pet to the player
+        dataManager.addPet(petPlayer, PetData(UUID.randomUUID(), player.uniqueId, petType, petType.defaultName))
+        sender.sendMessage(StringUtils.replace(plugin.locale.getMessage(Message.COMMAND_GIVE_SUCCESS), "{player}", player.name))
     }
 
 }

@@ -9,6 +9,6 @@ import me.mattstudios.triumphpets.pet.PetPlayer
 interface Database {
 
     fun insertPlayer(petPlayer: PetPlayer)
-    fun insertPet(petData: PetData)
+    fun insertPet(petPlayer: PetPlayer, petData: PetData)
 
 }

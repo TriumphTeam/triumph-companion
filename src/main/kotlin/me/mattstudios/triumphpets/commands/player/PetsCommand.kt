@@ -40,13 +40,18 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
     private val prevItems = ItemBuilder(XMaterial.PAPER.parseItem())
             .setName("Previous").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
 
+    private val dataManager = plugin.petManager.dataManager
+
 
     /**
      * Runs the pets command
      */
     @Default
     fun pets(player: Player) {
-        val pets = plugin.petManager.dataManager.getPets(player)
+        val petPlayer = dataManager.getPetPlayer(player) ?: return
+
+        // List with all the pets the player has
+        val pets = petPlayer.pets
 
         val rows = rows(pets.size)
         val gui = GUI(plugin, rows, plugin.locale.getMessage(Message.PET_LIST_GUI_TITLE))
@@ -58,12 +63,11 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
         for (slot in pets.indices) {
             val petData = pets[slot]
             gui.setItem(slot, GuiItem(getPetItem(petData), GuiAction {
-                if (petData.spawned) return@GuiAction
+                if (petPlayer.isActivePet(petData)) return@GuiAction
                 player.sendMessage("should spawn here")
-                petData.spawned = true
 
                 gui.updateItem(slot, getPetItem(petData))
-                plugin.petManager.petController.spawnPet(petData)
+                plugin.petManager.petController.spawnPet(petPlayer, petData)
             }))
         }
 

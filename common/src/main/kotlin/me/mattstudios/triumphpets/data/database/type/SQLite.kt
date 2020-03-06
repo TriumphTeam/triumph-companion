@@ -4,8 +4,12 @@ import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.Task.async
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
-import me.mattstudios.triumphpets.data.database.SQLiteQueries
-import me.mattstudios.triumphpets.data.database.SQLiteQueries.SQLITE_CREATE_PETS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PETS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PLAYERS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PET
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PLAYER
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PETS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PLAYERS
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.DataManager
 import me.mattstudios.triumphpets.pet.PetPlayer
@@ -70,6 +74,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
             connection = dataSource.connection
 
             connection.prepareStatement(SQLITE_CREATE_PETS).execute()
+            connection.prepareStatement(SQLITE_CREATE_PLAYERS).execute()
             //connection.prepareStatement(SQLITE_CREATE_PET_INVENTORY).execute()
         } catch (e: SQLException) {
             plugin.locale.sendMessage(Message.STARTUP_CREATE_TABLES_ERROR)
@@ -100,11 +105,12 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
         try {
             connection = dataSource.connection
-            val resultSet = connection.createStatement().executeQuery(SQLiteQueries.SQLITE_CREATE_PLAYERS)
+            val resultSet = connection.createStatement().executeQuery(SQLITE_SELECT_PLAYERS)
 
             while (resultSet.next()) {
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
-                val activePetUUID = UUID.fromString(resultSet.getString("active_pet"))
+                val activePet = resultSet.getString("active_pet")
+                val activePetUUID: UUID? = if (activePet != "null") UUID.fromString(activePet) else null
 
                 val petPlayer = PetPlayer(uuid, activePetUUID)
                 cachePets(petPlayer)
@@ -135,7 +141,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
         try {
             connection = dataSource.connection
-            val statement = connection.prepareStatement(SQLiteQueries.SQLITE_SELECT_PETS)
+            val statement = connection.prepareStatement(SQLITE_SELECT_PETS)
             statement.setString(1, petPlayer.player.uniqueId.toString())
 
             val resultSet = statement.executeQuery()
@@ -174,7 +180,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
             try {
                 connection = dataSource.connection
-                val statement = connection.prepareStatement(SQLiteQueries.SQLITE_INSERT_PET)
+                val statement = connection.prepareStatement(SQLITE_INSERT_PLAYER)
                 statement.setString(1, petPlayer.player.uniqueId.toString())
                 statement.setString(2, petPlayer.activePetUUID.toString())
 
@@ -202,7 +208,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
             try {
                 connection = dataSource.connection
-                val statement = connection.prepareStatement(SQLiteQueries.SQLITE_INSERT_PET)
+                val statement = connection.prepareStatement(SQLITE_INSERT_PET)
                 statement.setString(1, petData.uuid.toString())
                 statement.setString(2, petData.owner.uniqueId.toString())
                 statement.setString(3, petData.type.toString())

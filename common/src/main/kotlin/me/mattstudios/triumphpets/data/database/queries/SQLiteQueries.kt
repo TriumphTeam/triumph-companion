@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.data.database
+package me.mattstudios.triumphpets.data.database.queries
 
 object SQLiteQueries {
 
@@ -7,7 +7,7 @@ object SQLiteQueries {
      */
     const val SQLITE_CREATE_PLAYERS = "CREATE TABLE IF NOT EXISTS `players`(\n" +
             "  `uuid` VARCHAR(36) PRIMARY KEY,\n" +
-            "  `active_pet` VARCHAR(36),\n" +
+            "  `active_pet` VARCHAR(36)\n" +
             ");"
 
     const val SQLITE_CREATE_PETS = "CREATE TABLE IF NOT EXISTS `pets`(\n" +
@@ -16,7 +16,9 @@ object SQLiteQueries {
             "  `type` VARCHAR(36),\n" +
             "  `name` VARCHAR(128),\n" +
             "  `experience` INTEGER\n" +
-            ");" /*public static final String SQLITE_CREATE_PET_INVENTORY =
+            ");"
+
+    /*public static final String SQLITE_CREATE_PET_INVENTORY =
             "CREATE TABLE IF NOT EXISTS `tp_pet_inventory`(\n" +
                     "  `inv_id` INTEGER PRIMARY KEY AUTOINCREMENT,\n" +
                     "  `pet_id` INTEGER, \n" +

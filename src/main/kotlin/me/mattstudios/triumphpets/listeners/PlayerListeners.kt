@@ -14,9 +14,13 @@ class PlayerListeners(plugin: TriumphPets) : Listener {
 
     private val dataManager = plugin.petManager.dataManager
 
+    /**
+     * Creates the pe player once the player joins the server
+     */
     @EventHandler
     fun PlayerJoinEvent.onPlayerJoin() {
-        if (dataManager.getPetPlayer(player) == null) return
+        // If player already exists, returns
+        if (dataManager.getPetPlayer(player) != null) return
 
         dataManager.addPlayer(PetPlayer(player.uniqueId))
     }
