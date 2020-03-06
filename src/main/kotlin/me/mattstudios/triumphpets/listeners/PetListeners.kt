@@ -12,7 +12,7 @@ import org.bukkit.event.player.PlayerQuitEvent
 /**
  * @author Matt
  */
-class PetListener(private val plugin: TriumphPets) : Listener {
+class PetListeners(private val plugin: TriumphPets) : Listener {
 
     private val petController = plugin.petManager.petController
 

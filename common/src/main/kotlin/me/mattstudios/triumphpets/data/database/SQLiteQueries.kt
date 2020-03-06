@@ -1,10 +1,15 @@
 package me.mattstudios.triumphpets.data.database
 
-object Queries {
+object SQLiteQueries {
 
     /**
      * Create Queries
      */
+    const val SQLITE_CREATE_PLAYERS = "CREATE TABLE IF NOT EXISTS `players`(\n" +
+            "  `uuid` VARCHAR(36) PRIMARY KEY,\n" +
+            "  `active_pet` VARCHAR(36),\n" +
+            ");"
+
     const val SQLITE_CREATE_PETS = "CREATE TABLE IF NOT EXISTS `pets`(\n" +
             "  `uuid` VARCHAR(36) PRIMARY KEY,\n" +
             "  `owner_uuid` VARCHAR(36),\n" +
@@ -18,16 +23,20 @@ object Queries {
                     "  `inventory` TEXT, \n" +
                     "  FOREIGN KEY (`pet_id`) REFERENCES `tp_pets` (`pet_id`)" +
                     ");";*/
+
     /**
      * Select queries
      */
 
-    const val SQLITE_SELECT_PETS = "SELECT * FROM `pets`"
+    const val SQLITE_SELECT_PLAYERS = "SELECT * FROM `players`"
+
+    const val SQLITE_SELECT_PETS = "SELECT * FROM `pets` WHERE `owner_uuid` = ?"
 
 
     /**
      * Insert queries
      */
+    const val SQLITE_INSERT_PLAYER = "INSERT INTO `players` VALUES(?, ?)"
 
     const val SQLITE_INSERT_PET = "INSERT INTO `pets` VALUES(?, ?, ?, ?, ?)"
 }

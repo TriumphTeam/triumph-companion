@@ -4,6 +4,7 @@ import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.data.database.DBType
 import me.mattstudios.triumphpets.pet.PetController
+import me.mattstudios.triumphpets.pet.PetPlayer
 
 
 /**

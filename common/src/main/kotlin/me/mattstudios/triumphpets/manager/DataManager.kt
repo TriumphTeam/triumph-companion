@@ -6,6 +6,7 @@ import me.mattstudios.triumphpets.data.database.DBType
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.type.SQLite
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.pet.PetPlayer
 import org.apache.commons.lang.StringUtils
 import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
@@ -16,7 +17,7 @@ import org.bukkit.entity.Player
 class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
 
     private lateinit var database: Database
-    private val pets = mutableSetOf<PetData>()
+    private val petPlayers = mutableSetOf<PetPlayer>()
 
     init {
         when (dbType) {
@@ -28,11 +29,20 @@ class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
     /**
      * Loads the data from the database to the set
      */
-    fun loadPet(petData: PetData) {
-        pets.add(petData)
+    fun loadPlayer(player: PetPlayer) {
+        petPlayers.add(player)
     }
 
-    /**
+    fun addPlayer(petPlayer: PetPlayer) {
+        database.insertPlayer(petPlayer)
+        petPlayers.add(petPlayer)
+    }
+
+    fun getPetPlayer(player: Player): PetPlayer? {
+        return petPlayers.find { it.isPetPlayer(player) }
+    }
+
+    /*/**
      * Adds the new pet to the set and to the database
      */
     fun addPet(sender: CommandSender, player: Player, petData: PetData) {
@@ -46,6 +56,6 @@ class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
      */
     fun getPets(player: Player): List<PetData> {
         return pets.filter { it.owner.player == player }
-    }
+    }*/
 
 }

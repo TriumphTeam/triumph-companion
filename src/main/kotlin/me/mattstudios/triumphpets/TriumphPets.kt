@@ -13,7 +13,7 @@ import me.mattstudios.triumphpets.config.Settings
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetDefaultConfig
 import me.mattstudios.triumphpets.config.pet.PetFileConfig
-import me.mattstudios.triumphpets.listeners.PetListener
+import me.mattstudios.triumphpets.listeners.PetListeners
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
@@ -42,7 +42,7 @@ class TriumphPets : MattPlugin() {
         petManager = PetManager(this)
 
         setupCommands()
-        registerListeners(PetListener(this))
+        registerListeners(PetListeners(this))
 
         Experience.load(config)
     }

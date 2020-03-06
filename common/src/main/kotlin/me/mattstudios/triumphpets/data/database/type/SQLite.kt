@@ -2,26 +2,21 @@ package me.mattstudios.triumphpets.data.database.type
 
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.Task.async
-import me.mattstudios.mattcore.utils.Task.asyncTimer
-import me.mattstudios.mattcore.utils.Task.later
-import me.mattstudios.mattcore.utils.Task.laterAsync
-import me.mattstudios.mattcore.utils.Task.timer
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
-import me.mattstudios.triumphpets.data.database.Queries
-import me.mattstudios.triumphpets.data.database.Queries.SQLITE_CREATE_PETS
+import me.mattstudios.triumphpets.data.database.SQLiteQueries
+import me.mattstudios.triumphpets.data.database.SQLiteQueries.SQLITE_CREATE_PETS
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.DataManager
+import me.mattstudios.triumphpets.pet.PetPlayer
 import me.mattstudios.triumphpets.pet.components.PetExperience
 import me.mattstudios.triumphpets.pet.utils.PetType
-import org.bukkit.Bukkit
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
 import java.sql.Connection
 import java.sql.SQLException
 import java.util.UUID
-import kotlin.concurrent.timerTask
 
 
 /**
@@ -94,20 +89,56 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
      * Caches all the data
      */
     private fun cacheData() {
+        cachePlayers()
+    }
 
-        cachePets()
+    /**
+     * Caches the player's data
+     */
+    private fun cachePlayers() {
+        var connection: Connection? = null
 
+        try {
+            connection = dataSource.connection
+            val resultSet = connection.createStatement().executeQuery(SQLiteQueries.SQLITE_CREATE_PLAYERS)
+
+            while (resultSet.next()) {
+                val uuid = UUID.fromString(resultSet.getString("uuid"))
+                val activePetUUID = UUID.fromString(resultSet.getString("active_pet"))
+
+                val petPlayer = PetPlayer(uuid, activePetUUID)
+                cachePets(petPlayer)
+                dataManager.loadPlayer(petPlayer)
+            }
+
+            resultSet.close()
+        } catch (e: SQLException) {
+            // TODO change this for player
+            plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
+            e.printStackTrace()
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close()
+                } catch (e: SQLException) {
+                    e.printStackTrace()
+                }
+            }
+        }
     }
 
     /**
      * Caches the pet's data
      */
-    private fun cachePets() {
+    private fun cachePets(petPlayer: PetPlayer) {
         var connection: Connection? = null
 
         try {
             connection = dataSource.connection
-            val resultSet = connection.createStatement().executeQuery(Queries.SQLITE_SELECT_PETS)
+            val statement = connection.prepareStatement(SQLiteQueries.SQLITE_SELECT_PETS)
+            statement.setString(1, petPlayer.player.uniqueId.toString())
+
+            val resultSet = statement.executeQuery()
 
             while (resultSet.next()) {
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
@@ -116,7 +147,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 val name = resultSet.getString("name")
                 val experience = PetExperience(resultSet.getInt("experience"))
 
-                dataManager.loadPet(PetData(uuid, ownerUuid, petType, name, experience))
+                petPlayer.addPet(PetData(uuid, ownerUuid, petType, name, experience))
             }
 
             resultSet.close()
@@ -135,6 +166,34 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
     }
 
     /**
+     * Inserts the player in the database
+     */
+    override fun insertPlayer(petPlayer: PetPlayer) {
+        async {
+            var connection: Connection? = null
+
+            try {
+                connection = dataSource.connection
+                val statement = connection.prepareStatement(SQLiteQueries.SQLITE_INSERT_PET)
+                statement.setString(1, petPlayer.player.uniqueId.toString())
+                statement.setString(2, petPlayer.activePetUUID.toString())
+
+                statement.executeUpdate()
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                if (connection != null) {
+                    try {
+                        connection.close()
+                    } catch (e: SQLException) {
+                        e.printStackTrace()
+                    }
+                }
+            }
+        }
+    }
+
+    /**
      * Inserts the pet in the database
      */
     override fun insertPet(petData: PetData) {
@@ -143,7 +202,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
             try {
                 connection = dataSource.connection
-                val statement = connection.prepareStatement(Queries.SQLITE_INSERT_PET)
+                val statement = connection.prepareStatement(SQLiteQueries.SQLITE_INSERT_PET)
                 statement.setString(1, petData.uuid.toString())
                 statement.setString(2, petData.owner.uniqueId.toString())
                 statement.setString(3, petData.type.toString())
