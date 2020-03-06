@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XMaterial
 import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
+import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mfgui.gui.GUI
 import me.mattstudios.mfgui.gui.GuiItem
 import me.mattstudios.mfgui.gui.components.GuiAction
@@ -12,6 +13,7 @@ import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
+import me.mattstudios.triumphpets.util.Utils.playClickSound
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Item
@@ -102,16 +104,18 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         // Sets the filter item for the filter GUI
         petGui.setItem(rows() * 9 - 7, GuiItem(getFilterItem(), GuiAction {
             it.isCancelled = true
-            clickSound()
+            playClickSound(owner)
             filterGui.open(owner)
         }))
 
         // Sets the close item to close the GUI
         petGui.setItem(rows() * 9 - 5, GuiItem(getCloseItem(), GuiAction {
             it.isCancelled = true
-            clickSound()
-            // Runs 1 tick later to prevent from being stolen from the GUI
-            Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
+
+            later(2) {
+                playClickSound(owner)
+                owner.closeInventory()
+            }
         }))
 
         // Sets the options item to open the options GUI
@@ -143,20 +147,20 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
 
         // Adds the close item
         filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
-            clickSound()
+            playClickSound(owner)
             // Runs 1 tick later to prevent from being stolen from the GUI
             Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
         }))
 
         // Adds the back item
         filterGui.setItem(20, GuiItem(ItemStack(Material.PAPER), GuiAction {
-            clickSound()
+            playClickSound(owner)
             owner.closeInventory()
         }))
 
         // Adds the toggle white/black list item
         filterGui.setItem(24, GuiItem(getBWItem(), GuiAction {
-            clickSound()
+            playClickSound(owner)
             petMemory.toggleFilterType()
             filterGui.updateItem(24, getBWItem())
         }))
@@ -192,7 +196,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Gets the item for the close button
      */
     private fun getCloseItem(): ItemStack {
-        return ItemBuilder(XMaterial.BARRIER.parseItem()).setName(plugin.locale.getMessage(Message.PET_GUI_CLOSE_NAME))
+        return ItemBuilder(XMaterial.BARRIER.parseItem()).setName(plugin.locale.getMessage(Message.GUI_CLOSE_NAME))
                 .setLore(color("&cChange later")).build()
     }
 
@@ -208,8 +212,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      *
      */
     private fun getPetItem(): ItemStack {
-        return ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
-                .setSkullTexture(PetType.PET_SNOW_FOX_BABY.texture)
+        return ItemBuilder(PetType.PET_SNOW_FOX_BABY.item.clone())
                 .setName(color("&8• " + pet.getName()))
                 .setLore(
                         color("&8• &7Level: &c${pet.getLevel()}&7/&c5"),
@@ -222,14 +225,6 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
                         "",
                         color("&a--------&c-- &88/10xp")
                 ).build()
-    }
-
-
-    /**
-     * Plays the click sound
-     */
-    private fun clickSound() {
-        owner.location.let { XSound.UI_BUTTON_CLICK.playSound(owner, .3f, .5f) }
     }
 
     /**

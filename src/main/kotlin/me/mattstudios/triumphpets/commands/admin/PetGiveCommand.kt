@@ -17,7 +17,7 @@ import java.util.UUID
  * @author Matt
  */
 @Command("pet")
-class PetGive(private val plugin: TriumphPets) : CommandBase() {
+class PetGiveCommand(private val plugin: TriumphPets) : CommandBase() {
 
     @SubCommand("give")
     fun give(sender: CommandSender, @Completion("#players") player: Player?, @Values("#pets") petType: PetType?) {

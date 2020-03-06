@@ -45,7 +45,7 @@ class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
      * Gets all the pets the player has
      */
     fun getPets(player: Player): List<PetData> {
-        return pets.filter { it.ownerUuid == player.uniqueId }
+        return pets.filter { it.owner.player == player }
     }
 
 }

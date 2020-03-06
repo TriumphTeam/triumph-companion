@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets.pet
 
+import me.mattstudios.triumphpets.data.PetData
 import org.bukkit.Location
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
@@ -9,7 +10,7 @@ import org.bukkit.entity.Player
  */
 interface PetController {
 
-    fun spawnPet(location: Location, player: Player)
+    fun spawnPet(petData: PetData)
 
     /**
      * Despawns the pet from player

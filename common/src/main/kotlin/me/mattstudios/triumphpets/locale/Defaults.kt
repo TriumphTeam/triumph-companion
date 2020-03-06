@@ -56,26 +56,41 @@ enum class Defaults(private var path: String, private var en: String, private va
     ),
 
     /**
+     * Global GUI messages
+     */
+
+    GUI_CLOSE_NAME(
+            "gui.global.close-name",
+            "&c&lClose",
+            ""
+    ),
+
+    /**
+     * Pet list GUI messages
+     */
+
+    PET_LIST_GUI_TITLE(
+            "gui.pet-list.title",
+            "&cPets",
+            ""
+    ),
+
+    /**
      * Pet GUI messages
      */
 
     PET_GUI_TITLE(
-            "pet.gui.title",
+            "gui.pet.title",
             "&8's Inventory",
             ""
     ),
     PET_GUI_FILTER_NAME(
-            "pet.gui.filter-name",
+            "gui.pet.filter-name",
             "&3&lFilter",
             ""
     ),
-    PET_GUI_CLOSE_NAME(
-            "pet.gui.close-name",
-            "&c&lClose",
-            ""
-    ),
     PET_GUI_OPTIONS_NAME(
-            "pet.gui.options-name",
+            "gui.pet.options-name",
             "&6&lOptions",
             ""
     );

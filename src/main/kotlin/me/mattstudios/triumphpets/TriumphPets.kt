@@ -7,7 +7,7 @@ import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
 import me.mattstudios.mf.base.components.TypeResult
-import me.mattstudios.triumphpets.commands.admin.PetGive
+import me.mattstudios.triumphpets.commands.admin.PetGiveCommand
 import me.mattstudios.triumphpets.commands.player.PetsCommand
 import me.mattstudios.triumphpets.config.Settings
 import me.mattstudios.triumphpets.config.pet.PetConfig
@@ -97,7 +97,7 @@ class TriumphPets : MattPlugin() {
         })
 
         registerCommands(
-                PetGive(this),
+                PetGiveCommand(this),
                 PetsCommand(this)
         )
     }

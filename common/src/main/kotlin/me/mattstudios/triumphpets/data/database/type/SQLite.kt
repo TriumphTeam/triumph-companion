@@ -145,7 +145,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 connection = dataSource.connection
                 val statement = connection.prepareStatement(Queries.SQLITE_INSERT_PET)
                 statement.setString(1, petData.uuid.toString())
-                statement.setString(2, petData.ownerUuid.toString())
+                statement.setString(2, petData.owner.uniqueId.toString())
                 statement.setString(3, petData.type.toString())
                 statement.setString(4, petData.name)
                 statement.setInt(5, petData.experience.xp)

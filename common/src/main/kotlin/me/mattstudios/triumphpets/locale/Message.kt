@@ -56,7 +56,27 @@ object Message : SettingsHolder {
     // ------------------------------------------------------------------------------------------------- //
 
     /**
-     * PET GUI MESSAGES
+     * Global GUI messages
+     */
+
+    @JvmField
+    val GUI_CLOSE_NAME: Property<String> = newProperty(Defaults.GUI_CLOSE_NAME.getPath(),
+            Defaults.GUI_CLOSE_NAME.get(PetUtils.LOCALE))
+
+    // ------------------------------------------------------------------------------------------------- //
+
+    /**
+     * Pet list GUI messages
+     */
+
+    @JvmField
+    val PET_LIST_GUI_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_TITLE.getPath(),
+            Defaults.PET_LIST_GUI_TITLE.get(PetUtils.LOCALE))
+
+    // ------------------------------------------------------------------------------------------------- //
+
+    /**
+     * Pet GUI messages
      */
 
     @JvmField
@@ -64,17 +84,12 @@ object Message : SettingsHolder {
             Defaults.PET_GUI_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_GUI_FILTER_NAME: Property<String> = newProperty(Defaults.PET_GUI_FILTER_NAME.getPath(), Defaults.PET_GUI_FILTER_NAME.get(PetUtils.LOCALE))
+    val PET_GUI_FILTER_NAME: Property<String> = newProperty(Defaults.PET_GUI_FILTER_NAME.getPath(),
+            Defaults.PET_GUI_FILTER_NAME.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_GUI_CLOSE_NAME: Property<String> =
-            newProperty(Defaults.PET_GUI_CLOSE_NAME.getPath(),
-                    Defaults.PET_GUI_CLOSE_NAME.get(PetUtils.LOCALE))
-
-    @JvmField
-    val PET_GUI_OPTIONS_NAME: Property<String> =
-            newProperty(Defaults.PET_GUI_OPTIONS_NAME.getPath(),
-                    Defaults.PET_GUI_OPTIONS_NAME.get(PetUtils.LOCALE))
+    val PET_GUI_OPTIONS_NAME: Property<String> = newProperty(Defaults.PET_GUI_OPTIONS_NAME.getPath(),
+            Defaults.PET_GUI_OPTIONS_NAME.get(PetUtils.LOCALE))
 
 
     // TODO add comments
