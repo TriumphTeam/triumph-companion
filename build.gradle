@@ -14,16 +14,10 @@ allprojects {
         mavenCentral()
         mavenLocal()
 
-        maven {
-            url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
-        }
-        maven {
-            url = 'https://oss.sonatype.org/content/groups/public/'
-        }
-
-        maven {
-            url = 'https://maven.husk.pro/repository/internal/'
-        }
+        maven { url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+        maven { url = 'https://oss.sonatype.org/content/groups/public/' }
+        maven { url = 'https://maven.husk.pro/repository/internal/' }
+        maven { url = 'https://rayzr.dev/repo/'}
 
     }
 
@@ -35,13 +29,15 @@ allprojects {
 
         // Matt stuff
         implementation "me.mattstudios.utils:matt-framework:1.2.4"
-        implementation "me.mattstudios.utils:matt-framework-gui:+"
+        implementation "me.mattstudios.utils:matt-framework-gui:1.0.3"
         implementation "me.mattstudios.utils:matt-core:1.1.10"
 
         // Config repository
-        implementation ("ch.jalu:configme:1.1.0") {
+        implementation("ch.jalu:configme:1.1.0") {
             exclude group: "org.yaml", module: "snakeyaml"
         }
+
+        implementation "me.rayzr522:jsonmessage:1.2.0"
 
         // X Series
         compile "com.github.cryptomorin:XSeries:5.3.1"

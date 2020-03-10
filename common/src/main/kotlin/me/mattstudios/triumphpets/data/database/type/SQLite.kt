@@ -148,12 +148,11 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
             while (resultSet.next()) {
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
-                val ownerUuid = UUID.fromString(resultSet.getString("owner_uuid"))
                 val petType = PetType.valueOf(resultSet.getString("type"))
                 val name = resultSet.getString("name")
                 val experience = PetExperience(resultSet.getInt("experience"))
 
-                petPlayer.addPet(PetData(uuid, ownerUuid, petType, name, experience))
+                petPlayer.addPet(PetData(uuid, petType, name, experience))
             }
 
             resultSet.close()
@@ -202,7 +201,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
     /**
      * Inserts the pet in the database
      */
-    override fun insertPet(petData: PetData) {
+    override fun insertPet(petPlayer: PetPlayer, petData: PetData) {
         async {
             var connection: Connection? = null
 
@@ -210,7 +209,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 connection = dataSource.connection
                 val statement = connection.prepareStatement(SQLITE_INSERT_PET)
                 statement.setString(1, petData.uuid.toString())
-                statement.setString(2, petData.owner.uniqueId.toString())
+                statement.setString(2, petPlayer.player.uniqueId.toString())
                 statement.setString(3, petData.type.toString())
                 statement.setString(4, petData.name)
                 statement.setInt(5, petData.experience.xp)

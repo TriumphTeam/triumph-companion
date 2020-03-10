@@ -42,7 +42,7 @@ class PetGiveCommand(private val plugin: TriumphPets) : CommandBase() {
         }
 
         // Adds the pet to the player
-        dataManager.addPet(petPlayer, PetData(UUID.randomUUID(), player.uniqueId, petType, petType.defaultName))
+        dataManager.addPet(petPlayer, PetData(UUID.randomUUID(), petType, petType.defaultName))
         sender.sendMessage(StringUtils.replace(plugin.locale.getMessage(Message.COMMAND_GIVE_SUCCESS), "{player}", player.name))
     }
 

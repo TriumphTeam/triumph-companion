@@ -10,6 +10,7 @@ import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
 import org.bukkit.Bukkit
+import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity

@@ -14,7 +14,12 @@ import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.util.Items
 import me.mattstudios.triumphpets.util.Utils.playClickSound
+import me.rayzr522.jsonmessage.JSONMessage
+import org.bukkit.Bukkit
+import org.bukkit.Particle
+import org.bukkit.block.Skull
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -48,6 +53,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     @Default
     fun pets(player: Player) {
+
         val petPlayer = dataManager.getPetPlayer(player) ?: return
 
         // List with all the pets the player has
@@ -58,16 +64,38 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
         setupGui(gui, rows, player)
 
+        val activePet = petPlayer.getActivePet()
+
+        val petItem = activePet?.type?.item ?: Items.EMPTY_PET.item
+
+        gui.setItem(rows * 9 - 5, GuiItem(petItem, GuiAction {
+            if (activePet == null) return@GuiAction
+
+            plugin.petManager.petController.despawnPet(player)
+            petPlayer.activePetUUID = null
+
+            later(2) {
+                playClickSound(player)
+                player.closeInventory()
+            }
+        }))
+
         // TODO Pagination
         // Loads all the pets into the GUI
-        for (slot in pets.indices) {
+        for (slot in pets.filter { !petPlayer.isActivePet(it) }.indices) {
             val petData = pets[slot]
+
             gui.setItem(slot, GuiItem(getPetItem(petData), GuiAction {
                 if (petPlayer.isActivePet(petData)) return@GuiAction
-                player.sendMessage("should spawn here")
+                player.sendMessage("Spawning")
 
                 gui.updateItem(slot, getPetItem(petData))
                 plugin.petManager.petController.spawnPet(petPlayer, petData)
+
+                later(2) {
+                    playClickSound(player)
+                    player.closeInventory()
+                }
             }))
         }
 
@@ -85,17 +113,10 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
             it.isCancelled = true
         }
 
-        gui.setItem(listOf(lastRow - 9, lastRow - 8, lastRow - 6, lastRow - 4, lastRow - 2, lastRow - 1), GuiItem(fillItem))
+        gui.fillBottom(GuiItem(fillItem))
 
         // TODO Pagination
         gui.setItem(lastRow - 7, GuiItem(prevItems))
-
-        gui.setItem(lastRow - 5, GuiItem(closeItem, GuiAction {
-            later(2) {
-                playClickSound(player)
-                player.closeInventory()
-            }
-        }))
 
         // TODO Pagination
         gui.setItem(lastRow - 3, GuiItem(nextItem))

@@ -99,7 +99,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      */
     private fun setUpPetGui() {
         // Sets the fill items in the bottom
-        petGui.setItem(listOf(rows() * 9 - 9, rows() * 9 - 8, rows() * 9 - 6, rows() * 9 - 4, rows() * 9 - 2, rows() * 9 - 1), GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
+        petGui.fillBottom(GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
 
         // Sets the filter item for the filter GUI
         petGui.setItem(rows() * 9 - 7, GuiItem(getFilterItem(), GuiAction {
@@ -109,13 +109,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         }))
 
         // Sets the close item to close the GUI
-        petGui.setItem(rows() * 9 - 5, GuiItem(getCloseItem(), GuiAction {
+        petGui.setItem(rows() * 9 - 5, GuiItem(getPetItem(), GuiAction {
             it.isCancelled = true
-
-            later(2) {
-                playClickSound(owner)
-                owner.closeInventory()
-            }
         }))
 
         // Sets the options item to open the options GUI
@@ -132,7 +127,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         filterGui.setDefaultTopClickAction { it.isCancelled = true }
 
         // Fills everything with glass
-        filterGui.setFillItem(GuiItem(getFillItem()))
+        filterGui.fill(GuiItem(getFillItem()))
 
         val air = XMaterial.AIR.parseItem()
 
