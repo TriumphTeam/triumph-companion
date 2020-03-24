@@ -20,8 +20,6 @@ import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.pet.utils.PetUtils
-import me.rayzr522.jsonmessage.JSONMessage
-import java.util.UUID
 import java.util.regex.Pattern
 import java.util.stream.Stream
 
@@ -32,6 +30,8 @@ class TriumphPets : MattPlugin() {
 
     lateinit var petManager: PetManager
     lateinit var petConfig: PetConfig
+
+    var start = false
 
     /**
      * On plugin enable

@@ -24,13 +24,14 @@ allprojects {
     dependencies {
 
         compileOnly "org.spigotmc:spigot-api:+"
+        compileOnly "org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT"
 
         compileOnly "org.xerial:sqlite-jdbc:3.30.1"
 
-        // Matt stuff
+        // My stuff
         implementation "me.mattstudios.utils:matt-framework:1.2.4"
-        implementation "me.mattstudios.utils:matt-framework-gui:1.0.3"
-        implementation "me.mattstudios.utils:matt-core:1.1.10"
+        implementation "me.mattstudios.utils:matt-framework-gui:1.1.5"
+        implementation "me.mattstudios.utils:matt-core:1.1.11"
 
         // Config repository
         implementation("ch.jalu:configme:1.1.0") {

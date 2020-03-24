@@ -1,25 +1,19 @@
 package me.mattstudios.triumphpets.commands.player
 
 import com.cryptomorin.xseries.XMaterial
-import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.utils.MessageUtils.color
-import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.Default
 import me.mattstudios.mf.base.CommandBase
-import me.mattstudios.mfgui.gui.GUI
-import me.mattstudios.mfgui.gui.GuiItem
 import me.mattstudios.mfgui.gui.components.GuiAction
 import me.mattstudios.mfgui.gui.components.ItemBuilder
+import me.mattstudios.mfgui.gui.guis.GuiItem
+import me.mattstudios.mfgui.gui.guis.PaginatedGui
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.util.Items
-import me.mattstudios.triumphpets.util.Utils.playClickSound
-import me.rayzr522.jsonmessage.JSONMessage
-import org.bukkit.Bukkit
-import org.bukkit.Particle
-import org.bukkit.block.Skull
+import org.apache.commons.lang.StringUtils.replace
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
@@ -31,19 +25,21 @@ import kotlin.math.ceil
 @Command("pets")
 class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
+    val locale = plugin.locale
+
     // Starts up the items for the GUI interface
     private val fillItem = ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem())
             .setName(" ").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
 
-    private val closeItem = ItemBuilder(XMaterial.BARRIER.parseItem())
-            .setName(plugin.locale.getMessage(Message.GUI_CLOSE_NAME))
+    // The item builder for the next page button
+    private val nextPageItem = ItemBuilder(XMaterial.PAPER.parseItem())
+            .setName(locale.getMessage(Message.PET_LIST_GUI_NEXT))
             .addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
 
-    private val nextItem = ItemBuilder(XMaterial.PAPER.parseItem())
-            .setName("Next").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
-
-    private val prevItems = ItemBuilder(XMaterial.PAPER.parseItem())
-            .setName("Previous").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
+    // The item builder for the previous page button
+    private val prevPageItem = ItemBuilder(XMaterial.PAPER.parseItem())
+            .setName(locale.getMessage(Message.PET_LIST_GUI_PREVIOUS))
+            .addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
 
     private val dataManager = plugin.petManager.dataManager
 
@@ -53,59 +49,59 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     @Default
     fun pets(player: Player) {
-
         val petPlayer = dataManager.getPetPlayer(player) ?: return
 
         // List with all the pets the player has
         val pets = petPlayer.pets
 
         val rows = rows(pets.size)
-        val gui = GUI(plugin, rows, plugin.locale.getMessage(Message.PET_LIST_GUI_TITLE))
+        val gui = PaginatedGui(plugin, rows, 28, locale.getMessage(Message.PET_LIST_GUI_TITLE))
 
-        setupGui(gui, rows, player)
+        // Fills in the GUI with it's items and buttons
+        setupGui(gui, rows)
 
         val activePet = petPlayer.getActivePet()
 
-        val petItem = activePet?.type?.item ?: Items.EMPTY_PET.item
+        val despawnItem = ItemBuilder(Items.EMPTY_PET.item)
+                .setName(locale.getMessage(Message.PET_LIST_GUI_NO_PET_TITLE))
+                .setLore(color(locale.getMessageRaw(Message.PET_LIST_GUI_NO_PET_LORE)))
+                .build()
 
+        val petItem = activePet?.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_DESPAWN)) ?: despawnItem
+
+        // Sets the item for the despawning of the Pet
         gui.setItem(rows * 9 - 5, GuiItem(petItem, GuiAction {
             if (activePet == null) return@GuiAction
 
+            // TODO Despawn message
             plugin.petManager.petController.despawnPet(player)
             petPlayer.activePetUUID = null
 
-            later(2) {
-                playClickSound(player)
-                player.closeInventory()
-            }
+            gui.close(player)
         }))
 
-        // TODO Pagination
         // Loads all the pets into the GUI
-        for (slot in pets.filter { !petPlayer.isActivePet(it) }.indices) {
-            val petData = pets[slot]
-
-            gui.setItem(slot, GuiItem(getPetItem(petData), GuiAction {
+        pets.parallelStream().filter { !petPlayer.isActivePet(it) }.forEach { petData ->
+            gui.addItem(GuiItem(petData.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_SPAWN)), GuiAction {
                 if (petPlayer.isActivePet(petData)) return@GuiAction
+
+                // TODO Spawn message
                 player.sendMessage("Spawning")
 
-                gui.updateItem(slot, getPetItem(petData))
                 plugin.petManager.petController.spawnPet(petPlayer, petData)
 
-                later(2) {
-                    playClickSound(player)
-                    player.closeInventory()
-                }
+                gui.close(player)
             }))
         }
 
         gui.open(player)
+
     }
 
     /**
      * Sets up the GUI
      */
-    private fun setupGui(gui: GUI, rows: Int, player: Player) {
+    private fun setupGui(gui: PaginatedGui, rows: Int) {
         val lastRow = rows * 9
 
         // Cancels all the clicks on the GUI
@@ -113,13 +109,33 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
             it.isCancelled = true
         }
 
-        gui.fillBottom(GuiItem(fillItem))
+        gui.fillBorder(GuiItem(fillItem))
 
-        // TODO Pagination
-        gui.setItem(lastRow - 7, GuiItem(prevItems))
+        // The item to use in the prev button
+        updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
+        updateLore(nextPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_NEXT_LORE), gui.currentPageNum)
 
-        // TODO Pagination
-        gui.setItem(lastRow - 3, GuiItem(nextItem))
+        // Sets the pagination item for previous page
+        gui.setItem(lastRow - 7, GuiItem(prevPageItem, GuiAction {
+            gui.prevPage()
+            // Updates the item with the current page number
+            updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
+            updateLore(nextPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_NEXT_LORE), gui.currentPageNum)
+
+            gui.updateItem(lastRow - 3, nextPageItem)
+            gui.updateItem(lastRow - 7, prevPageItem)
+        }))
+
+        // Sets the pagination item for next page
+        gui.setItem(lastRow - 3, GuiItem(nextPageItem, GuiAction {
+            gui.nextPage()
+            // Updates the item with the current page number
+            updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
+            updateLore(nextPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_NEXT_LORE), gui.currentPageNum)
+
+            gui.updateItem(lastRow - 3, nextPageItem)
+            gui.updateItem(lastRow - 7, prevPageItem)
+        }))
     }
 
     /**
@@ -127,9 +143,6 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun getPetItem(petData: PetData): ItemStack {
         val builder = ItemBuilder(petData.type.item.clone()).setName(color(petData.name))
-
-        // TODO figure how to differentiate if pet is spawned or not, fuck
-
         return builder.build()
     }
 
@@ -137,7 +150,16 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      * Gets the correct rows based on how many the player has
      */
     private fun rows(size: Int): Int {
-        return 2.coerceAtLeast(ceil(size / 9.0 + 1).toInt())
+        return 3.coerceAtLeast(ceil(size / 9.0 + 2).toInt())
+    }
+
+    /**
+     * Updates the lore
+     */
+    private fun updateLore(itemStack: ItemStack, lore: MutableList<String>, pageNumber: Int) {
+        val itemMeta = itemStack.itemMeta
+        itemMeta?.lore = color(lore.map { replace(it, "{page}", pageNumber.toString())})
+        itemStack.itemMeta = itemMeta
     }
 
 }

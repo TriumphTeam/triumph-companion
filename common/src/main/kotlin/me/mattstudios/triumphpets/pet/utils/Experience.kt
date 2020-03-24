@@ -85,6 +85,7 @@ object Experience {
     fun getExp(material: Material, amount: Int): Int {
         var xp = 0
 
+        // TODO pretty it up
         when (material) {
             in special -> {
                 for (i in 1..amount) {

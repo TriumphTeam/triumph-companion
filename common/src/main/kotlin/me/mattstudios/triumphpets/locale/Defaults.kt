@@ -56,12 +56,39 @@ enum class Defaults(private var path: String, private var en: String, private va
     ),
 
     /**
-     * Global GUI messages
+     * Pet data GUI global
      */
 
-    GUI_CLOSE_NAME(
-            "gui.global.close-name",
-            "&c&lClose",
+    PET_DATA_DISPLAY_TITLE(
+            "gui.pet-data.title",
+            "{name}",
+            "{name}"
+    ),
+    PET_DATA_DISPLAY_LORE(
+            "gui.pet-data.lore",
+            "&8• &7Level: &c{level}&7/&c{max_level}\n" +
+                    "\n" +
+                    "&8• &7Age: &c{age} Days\n" +
+                    "&8• &7Type: &c{type}\n" +
+                    "\n" +
+                    "{action}\n" +
+                    "\n" +
+                    "{xp_bar} &8{xp}/{level_xp}xp",
+            ""
+    ),
+    PET_DATA_DISPLAY_ACTION_SPAWN(
+            "gui.pet-data.action.spawn",
+            "&cClick to spawn the pet!",
+            ""
+    ),
+    PET_DATA_DISPLAY_ACTION_DESPAWN(
+            "gui.pet-data.action.despawn",
+            "&cClick to despawn the pet!",
+            ""
+    ),
+    PET_DATA_DISPLAY_ACTION_OPTIONS(
+            "gui.pet-data.action.options",
+            "&cClick for pet options!",
             ""
     ),
 
@@ -72,6 +99,36 @@ enum class Defaults(private var path: String, private var en: String, private va
     PET_LIST_GUI_TITLE(
             "gui.pet-list.title",
             "&cPets",
+            ""
+    ),
+    PET_LIST_GUI_NO_PET_TITLE(
+            "gui.pet-list.no-pet.title",
+            "&cNo Pet spawned!",
+            ""
+    ),
+    PET_LIST_GUI_NO_PET_LORE(
+            "gui.pet-list.no-pet.lore",
+            "&7Spawn pet above!",
+            ""
+    ),
+    PET_LIST_GUI_PREVIOUS(
+            "gui.pet-list.previous-button.title",
+            "&cPrevious page",
+            ""
+    ),
+    PET_LIST_GUI_PREVIOUS_LORE(
+            "gui.pet-list.previous-button.lore",
+            "&7Click to go to the previous page!\n&7Current page: &c{page}",
+            ""
+    ),
+    PET_LIST_GUI_NEXT(
+            "gui.pet-list.next-button.title",
+            "&cNext page",
+            ""
+    ),
+    PET_LIST_GUI_NEXT_LORE(
+            "gui.pet-list.next-button.lore",
+            "&7Click to go to the next page!\n&7Current page: &c{page}",
             ""
     ),
 

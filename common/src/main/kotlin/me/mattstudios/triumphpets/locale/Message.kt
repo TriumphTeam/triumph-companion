@@ -1,7 +1,9 @@
 package me.mattstudios.triumphpets.locale
 
 import ch.jalu.configme.SettingsHolder
+import ch.jalu.configme.configurationdata.CommentsConfiguration
 import ch.jalu.configme.properties.Property
+import ch.jalu.configme.properties.PropertyInitializer.newListProperty
 import ch.jalu.configme.properties.PropertyInitializer.newProperty
 import me.mattstudios.triumphpets.pet.utils.PetUtils
 
@@ -56,12 +58,28 @@ object Message : SettingsHolder {
     // ------------------------------------------------------------------------------------------------- //
 
     /**
-     * Global GUI messages
+     * Pet data GUI global
      */
 
     @JvmField
-    val GUI_CLOSE_NAME: Property<String> = newProperty(Defaults.GUI_CLOSE_NAME.getPath(),
-            Defaults.GUI_CLOSE_NAME.get(PetUtils.LOCALE))
+    val PET_DATA_DISPLAY_TITLE: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_TITLE.getPath(),
+            Defaults.PET_DATA_DISPLAY_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_DATA_DISPLAY_LORE: Property<MutableList<String>> = newListProperty(Defaults.PET_DATA_DISPLAY_LORE.getPath(),
+            *Defaults.PET_DATA_DISPLAY_LORE.get(PetUtils.LOCALE).split("\n").toTypedArray())
+
+    @JvmField
+    val PET_DATA_DISPLAY_ACTION_SPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.getPath(),
+            Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_DATA_DISPLAY_ACTION_DESPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.getPath(),
+            Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_DATA_DISPLAY_ACTION_OPTIONS: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.getPath(),
+            Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.get(PetUtils.LOCALE))
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -72,6 +90,30 @@ object Message : SettingsHolder {
     @JvmField
     val PET_LIST_GUI_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_TITLE.getPath(),
             Defaults.PET_LIST_GUI_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_LIST_GUI_NO_PET_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_NO_PET_TITLE.getPath(),
+            Defaults.PET_LIST_GUI_NO_PET_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_LIST_GUI_NO_PET_LORE: Property<MutableList<String>> = newListProperty(Defaults.PET_LIST_GUI_NO_PET_LORE.getPath(),
+            Defaults.PET_LIST_GUI_NO_PET_LORE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_LIST_GUI_PREVIOUS: Property<String> = newProperty(Defaults.PET_LIST_GUI_PREVIOUS.getPath(),
+            Defaults.PET_LIST_GUI_PREVIOUS.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_LIST_GUI_PREVIOUS_LORE: Property<MutableList<String>> = newListProperty(Defaults.PET_LIST_GUI_PREVIOUS_LORE.getPath(),
+            *Defaults.PET_LIST_GUI_PREVIOUS_LORE.get(PetUtils.LOCALE).split("\n").toTypedArray())
+
+    @JvmField
+    val PET_LIST_GUI_NEXT: Property<String> = newProperty(Defaults.PET_LIST_GUI_NEXT.getPath(),
+            Defaults.PET_LIST_GUI_NEXT.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_LIST_GUI_NEXT_LORE: Property<MutableList<String>> = newListProperty(Defaults.PET_LIST_GUI_NEXT_LORE.getPath(),
+            *Defaults.PET_LIST_GUI_NEXT_LORE.get(PetUtils.LOCALE).split("\n").toTypedArray())
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -92,5 +134,20 @@ object Message : SettingsHolder {
             Defaults.PET_GUI_OPTIONS_NAME.get(PetUtils.LOCALE))
 
 
-    // TODO add comments
+    /**
+     * Registers the commands for the locale file
+     */
+    override fun registerComments(conf: CommentsConfiguration) {
+        conf.setComment("startup", "Messages that will appear during the startup of the plugin.")
+        conf.setComment("command", "Messages that will be seen when performing commands.")
+
+        conf.setComment("gui", "Change the following messages to change how the GUI looks.")
+
+        conf.setComment("gui.pet-list", "Messages for the command \"/pets\".")
+        conf.setComment("gui.pet-list.no-pet", "Messages that will be displayed on the no pet item in the GUI.")
+        conf.setComment("gui.pet-list.previous-button", "Messages that will be displayed on the previous item in the GUI.")
+        conf.setComment("gui.pet-list.next-button", "Messages that will be displayed on the next item in the GUI.")
+
+        conf.setComment("gui.pet", "Messages for the Pet inventory.")
+    }
 }

@@ -4,13 +4,12 @@ import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.pet.PetPlayer
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
-import org.bukkit.event.entity.EntityTargetLivingEntityEvent
 import org.bukkit.event.player.PlayerJoinEvent
 
 /**
  * @author Matt
  */
-class PlayerListeners(plugin: TriumphPets) : Listener {
+class PlayerListeners(private val plugin: TriumphPets) : Listener {
 
     private val dataManager = plugin.petManager.dataManager
 

@@ -4,16 +4,17 @@ import com.cryptomorin.xseries.XMaterial
 import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
-import me.mattstudios.mattcore.utils.Task.later
-import me.mattstudios.mfgui.gui.GUI
-import me.mattstudios.mfgui.gui.GuiItem
 import me.mattstudios.mfgui.gui.components.GuiAction
 import me.mattstudios.mfgui.gui.components.ItemBuilder
+import me.mattstudios.mfgui.gui.guis.Gui
+import me.mattstudios.mfgui.gui.guis.GuiItem
+import me.mattstudios.mfgui.gui.guis.PersistentGui
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.util.Utils.playClickSound
+import org.apache.commons.lang.StringUtils.replace
 import org.bukkit.Bukkit
 import org.bukkit.Material
 import org.bukkit.entity.Item
@@ -30,8 +31,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
     private val owner = pet.getOwner()
     private val petMemory = pet.getMemory()
 
-    private val petGui = GUI(plugin, rows(), color(pet.getName() + plugin.locale.getMessage(Message.PET_GUI_TITLE)), true)
-    private val filterGui = GUI(plugin, 3, color("&3Filter"))
+    private val petGui = PersistentGui(plugin, rows(), color(pet.getName() + plugin.locale.getMessage(Message.PET_GUI_TITLE)))
+    private val filterGui = Gui(plugin, 3, color("&3Filter"))
 
     /**
      * Starts the GUI related stuff
@@ -141,11 +142,11 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         filterGui.setItem(16, GuiItem(air))
 
         // Adds the close item
-        filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
+        /*filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
             playClickSound(owner)
             // Runs 1 tick later to prevent from being stolen from the GUI
             Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
-        }))
+        }))*/
 
         // Adds the back item
         filterGui.setItem(20, GuiItem(ItemStack(Material.PAPER), GuiAction {
@@ -175,7 +176,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Gets the item to fill the bottom row
      */
     private fun getFillItem(): ItemStack {
-        return ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()).setName(" ")
+        val item = XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial() ?: Material.BLACK_STAINED_GLASS_PANE
+        return ItemBuilder(item).setName(" ")
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
     }
 
@@ -183,22 +185,19 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Gets the item for the filter button
      */
     private fun getFilterItem(): ItemStack {
-        return ItemBuilder(XMaterial.HOPPER.parseItem()).setName(plugin.locale.getMessage(Message.PET_GUI_FILTER_NAME))
-                .setLore(color("&cChange later")).build()
-    }
-
-    /**
-     * Gets the item for the close button
-     */
-    private fun getCloseItem(): ItemStack {
-        return ItemBuilder(XMaterial.BARRIER.parseItem()).setName(plugin.locale.getMessage(Message.GUI_CLOSE_NAME))
+        val item = XMaterial.HOPPER.parseMaterial() ?: Material.HOPPER
+        return ItemBuilder(item).setName(plugin.locale.getMessage(Message.PET_GUI_FILTER_NAME))
                 .setLore(color("&cChange later")).build()
     }
 
     private fun getBWItem(): ItemStack {
+        val blackConcrete = XMaterial.BLACK_CONCRETE.parseMaterial() ?: Material.BLACK_CONCRETE
+        val whiteConcrete = XMaterial.WHITE_CONCRETE.parseMaterial() ?: Material.WHITE_CONCRETE
+
         val filterTypeItem =
-                if (petMemory.filterType == FilterType.BLACK_LIST) XMaterial.BLACK_CONCRETE.parseItem()
-                else XMaterial.WHITE_CONCRETE.parseItem()
+                if (petMemory.filterType == FilterType.BLACK_LIST) ItemStack(blackConcrete)
+                else ItemStack(whiteConcrete)
+
         return ItemBuilder(filterTypeItem).build()
     }
 
@@ -208,18 +207,17 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      */
     private fun getPetItem(): ItemStack {
         return ItemBuilder(PetType.PET_SNOW_FOX_BABY.item.clone())
-                .setName(color("&8• " + pet.getName()))
-                .setLore(
-                        color("&8• &7Level: &c${pet.getLevel()}&7/&c5"),
-                        "",
-                        color("&8• &7Picked items: &c5"),
-                        color("&8• &7Age: &c5 Days"),
-                        color("&8• &7Type: &cSnow Fox"),
-                        "",
-                        color("&cClick for options"),
-                        "",
-                        color("&a--------&c-- &88/10xp")
-                ).build()
+                .setName(replace(plugin.locale.getMessage(Message.PET_DATA_DISPLAY_TITLE), "{name}", pet.getName()))
+                .setLore(plugin.locale.getMessageRaw(Message.PET_DATA_DISPLAY_LORE).map {
+                    replace(it, "{level}", pet.getLevel().toString())
+                    /*replace(it, "{max_level}", "10")
+                    replace(it, "{age}", "10")
+                    replace(it, "{type}", "Snow Fox")
+                    replace(it, "{xp_bar}", "&a--------&c--")
+                    replace(it, "{xp}", "8")
+                    replace(it, "{level_xp}", "10")*/
+                })
+                .build()
     }
 
     /**
@@ -246,7 +244,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
             // Removing filter
             if (cursor.type == XMaterial.AIR.parseMaterial() && it.currentItem != null) {
                 it.currentItem?.type?.let { type -> petMemory.unFilter(type) }
-                filterGui.updateItem(slot, XMaterial.AIR.parseItem())
+                filterGui.updateItem(slot, ItemStack(Material.AIR))
                 xpDeepSound()
                 return@GuiAction
             }
