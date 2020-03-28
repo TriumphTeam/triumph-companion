@@ -9,14 +9,13 @@ import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.mfgui.gui.guis.Gui
 import me.mattstudios.mfgui.gui.guis.GuiItem
 import me.mattstudios.mfgui.gui.guis.PersistentGui
+import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.locale.Message
-import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.Experience
-import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.util.Utils.playClickSound
-import org.apache.commons.lang.StringUtils.replace
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.OfflinePlayer
 import org.bukkit.entity.Item
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.ItemFlag
@@ -26,12 +25,17 @@ import org.bukkit.inventory.ItemStack
 /**
  * @author Matt
  */
-class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
+class PetInventory(private val plugin: MattPlugin, private val petData: PetData, offlinePlayer: OfflinePlayer) {
 
-    private val owner = pet.getOwner()
-    private val petMemory = pet.getMemory()
+    private val owner = offlinePlayer.player
 
-    private val petGui = PersistentGui(plugin, rows(), color(pet.getName() + plugin.locale.getMessage(Message.PET_GUI_TITLE)))
+    // Easy access fields
+    private val petMemory = petData.petMemory
+    private val petExperience = petMemory.petExperience
+    private val locale = plugin.locale
+
+    // GUI related fields
+    private val petGui = PersistentGui(plugin, rows(), color(petData.name + plugin.locale.getMessage(Message.PET_GUI_TITLE)))
     private val filterGui = Gui(plugin, 3, color("&3Filter"))
 
     /**
@@ -42,8 +46,8 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         setUpFilterGUI()
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, Runnable {
-            petGui.updateItem(rows() * 9 - 3, ItemBuilder(Material.STONE).setName("Level - " + petMemory.petExperience.level)
-                    .setLore("XP - " + petMemory.petExperience.xp).build())
+            petGui.updateItem(rows() * 9 - 3, ItemBuilder(Material.STONE).setName("Level - " + petExperience.level)
+                    .setLore("XP - " + petExperience.xp).build())
         }, 20L, 20L)
     }
 
@@ -55,7 +59,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         val leftOvers = petGui.addItem(item.itemStack)
 
         if (leftOvers.isEmpty()) {
-            petMemory.petExperience.addXp(Experience.getExp(item.itemStack.type, item.itemStack.amount))
+            petExperience.addXp(Experience.getExp(item.itemStack.type, item.itemStack.amount))
             item.remove()
             return true
         }
@@ -63,7 +67,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         val leftItemStack = leftOvers[0] ?: return true
         val amount = startAmount - leftItemStack.amount
 
-        petMemory.petExperience.addXp(Experience.getExp(item.itemStack.type, amount))
+        petExperience.addXp(Experience.getExp(item.itemStack.type, amount))
         item.setItemStack(leftOvers[0])
         return false
     }
@@ -72,7 +76,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Checks if the inventory is full
      */
     fun isFull(item: ItemStack): Boolean {
-        petGui.inventory.storageContents.take(9).forEach() { slot: ItemStack? ->
+        petGui.inventory.storageContents.take(9).forEach { slot: ItemStack? ->
             if (slot == null) return false
             if (!slot.isSimilar(item)) return@forEach
             if (slot.amount < slot.maxStackSize) return false
@@ -92,6 +96,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Opens the inventory for the player
      */
     fun open() {
+        if (owner == null) return
         petGui.open(owner)
     }
 
@@ -105,17 +110,20 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
         // Sets the filter item for the filter GUI
         petGui.setItem(rows() * 9 - 7, GuiItem(getFilterItem(), GuiAction {
             it.isCancelled = true
+            if (owner == null) return@GuiAction
+
             playClickSound(owner)
             filterGui.open(owner)
         }))
 
         // Sets the close item to close the GUI
-        petGui.setItem(rows() * 9 - 5, GuiItem(getPetItem(), GuiAction {
+        petGui.setItem(rows() * 9 - 5, GuiItem(petData.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_DESPAWN)), GuiAction {
             it.isCancelled = true
         }))
 
         // Sets the options item to open the options GUI
-        petGui.setItem(rows() * 9 - 3, GuiItem(getPetItem(), GuiAction { it.isCancelled = true }))
+        // TODO This stuff
+        petGui.setItem(rows() * 9 - 3, GuiItem(petData.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_DESPAWN)), GuiAction { it.isCancelled = true }))
     }
 
     /**
@@ -150,12 +158,16 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
 
         // Adds the back item
         filterGui.setItem(20, GuiItem(ItemStack(Material.PAPER), GuiAction {
+            if (owner == null) return@GuiAction
+
             playClickSound(owner)
             owner.closeInventory()
         }))
 
         // Adds the toggle white/black list item
         filterGui.setItem(24, GuiItem(getBWItem(), GuiAction {
+            if (owner == null) return@GuiAction
+
             playClickSound(owner)
             petMemory.toggleFilterType()
             filterGui.updateItem(24, getBWItem())
@@ -169,7 +181,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Gets the rows needed
      */
     private fun rows(): Int {
-        return pet.getLevel() + 1
+        return petExperience.level + 1
     }
 
     /**
@@ -202,28 +214,10 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
     }
 
     /**
-     * Gets the item for the pet button
-     *
-     */
-    private fun getPetItem(): ItemStack {
-        return ItemBuilder(PetType.PET_SNOW_FOX_BABY.item.clone())
-                .setName(replace(plugin.locale.getMessage(Message.PET_DATA_DISPLAY_TITLE), "{name}", pet.getName()))
-                .setLore(plugin.locale.getMessageRaw(Message.PET_DATA_DISPLAY_LORE).map {
-                    replace(it, "{level}", pet.getLevel().toString())
-                    /*replace(it, "{max_level}", "10")
-                    replace(it, "{age}", "10")
-                    replace(it, "{type}", "Snow Fox")
-                    replace(it, "{xp_bar}", "&a--------&c--")
-                    replace(it, "{xp}", "8")
-                    replace(it, "{level_xp}", "10")*/
-                })
-                .build()
-    }
-
-    /**
      * Plays deep xp sound
      */
     private fun xpDeepSound() {
+        if (owner == null) return
         owner.location.let { XSound.ENTITY_EXPERIENCE_ORB_PICKUP.playSound(owner, .3f, .2f) }
     }
 
@@ -231,6 +225,7 @@ class PetInventory(private val plugin: MattPlugin, private val pet: Pet) {
      * Plays high xp sound
      */
     private fun xpHighSound() {
+        if (owner == null) return
         owner.location.let { XSound.ENTITY_EXPERIENCE_ORB_PICKUP.playSound(owner, .3f, .8f) }
     }
 

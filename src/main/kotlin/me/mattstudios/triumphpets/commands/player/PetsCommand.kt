@@ -62,7 +62,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
         val activePet = petPlayer.getActivePet()
 
-        val despawnItem = ItemBuilder(Items.EMPTY_PET.item)
+        val despawnItem = ItemBuilder(Items.EMPTY_PET_ITEM.item)
                 .setName(locale.getMessage(Message.PET_LIST_GUI_NO_PET_TITLE))
                 .setLore(color(locale.getMessageRaw(Message.PET_LIST_GUI_NO_PET_LORE)))
                 .build()

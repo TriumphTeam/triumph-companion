@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.manager
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.DBType
 import me.mattstudios.triumphpets.data.database.Database
@@ -11,7 +12,7 @@ import org.bukkit.entity.Player
 /**
  * @author Matt
  */
-class DataManager(private val plugin: MattPlugin, private val dbType: DBType) {
+class DataManager(private val plugin: MattPlugin, dbType: DBType, val petConfig: PetConfig) {
 
     private lateinit var database: Database
     private val petPlayers = mutableSetOf<PetPlayer>()

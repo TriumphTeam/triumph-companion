@@ -13,7 +13,9 @@ import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SEL
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.manager.DataManager
 import me.mattstudios.triumphpets.pet.PetPlayer
+import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetExperience
+import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.utils.PetType
 import org.sqlite.SQLiteDataSource
 import java.io.File
@@ -150,9 +152,11 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
                 val petType = PetType.valueOf(resultSet.getString("type"))
                 val name = resultSet.getString("name")
-                val experience = PetExperience(resultSet.getInt("experience"))
+                val petExperience = PetExperience(resultSet.getInt("experience"))
 
-                petPlayer.addPet(PetData(uuid, petType, name, experience))
+                val petMemory = PetMemory(plugin, dataManager.petConfig, FilterType.BLACK_LIST, petExperience)
+
+                petPlayer.addPet(PetData(plugin, uuid, petType, name, petMemory, petPlayer.player))
             }
 
             resultSet.close()
@@ -212,7 +216,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 statement.setString(2, petPlayer.player.uniqueId.toString())
                 statement.setString(3, petData.type.toString())
                 statement.setString(4, petData.name)
-                statement.setInt(5, petData.experience.xp)
+                statement.setInt(5, petData.petMemory.petExperience.xp)
 
                 statement.executeUpdate()
             } catch (e: SQLException) {

@@ -8,6 +8,8 @@ import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.pet.components.FilterType
+import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.utils.PetType
 import org.apache.commons.lang.StringUtils
 import org.bukkit.command.CommandSender
@@ -42,7 +44,8 @@ class PetGiveCommand(private val plugin: TriumphPets) : CommandBase() {
         }
 
         // Adds the pet to the player
-        dataManager.addPet(petPlayer, PetData(UUID.randomUUID(), petType, petType.defaultName))
+        val petMemory = PetMemory(plugin, dataManager.petConfig, FilterType.BLACK_LIST)
+        dataManager.addPet(petPlayer, PetData(plugin, UUID.randomUUID(), petType, petType.defaultName, petMemory, player))
         sender.sendMessage(StringUtils.replace(plugin.locale.getMessage(Message.COMMAND_GIVE_SUCCESS), "{player}", player.name))
     }
 

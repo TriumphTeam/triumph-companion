@@ -7,12 +7,14 @@ import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
 import me.mattstudios.mf.base.components.TypeResult
+import me.mattstudios.triumphpets.commands.admin.CrateSetCommand
 import me.mattstudios.triumphpets.commands.admin.PetGiveCommand
 import me.mattstudios.triumphpets.commands.player.PetsCommand
 import me.mattstudios.triumphpets.config.Settings
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetDefaultConfig
 import me.mattstudios.triumphpets.config.pet.PetFileConfig
+import me.mattstudios.triumphpets.listeners.CrateListeners
 import me.mattstudios.triumphpets.listeners.PetListeners
 import me.mattstudios.triumphpets.listeners.PlayerListeners
 import me.mattstudios.triumphpets.locale.Message
@@ -101,6 +103,8 @@ class TriumphPets : MattPlugin() {
 
         registerCommands(
                 PetGiveCommand(this),
+                CrateSetCommand(),
+
                 PetsCommand(this)
         )
     }
@@ -111,7 +115,8 @@ class TriumphPets : MattPlugin() {
     private fun setupListeners() {
         registerListeners(
                 PetListeners(this),
-                PlayerListeners(this)
+                PlayerListeners(this),
+                CrateListeners(this)
         )
     }
 

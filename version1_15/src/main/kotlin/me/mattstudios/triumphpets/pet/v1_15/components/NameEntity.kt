@@ -13,7 +13,9 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class NameEntity(plugin: MattPlugin, displayName: String, world: World) : EntityArmorStand(EntityTypes.ARMOR_STAND, world), PetNameEntity {
+class NameEntity(plugin: MattPlugin, displayName: String, nbtValue: String, world: World) : EntityArmorStand(EntityTypes.ARMOR_STAND, world), PetNameEntity {
+
+    constructor(plugin: MattPlugin, displayName: String, world: World) : this (plugin, displayName, "pet", world)
 
     init {
         isMarker = true
@@ -22,7 +24,7 @@ class NameEntity(plugin: MattPlugin, displayName: String, world: World) : Entity
         isNoGravity = true
         isInvisible = true
 
-        bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE, 1)
+        bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, nbtValue), PersistentDataType.BYTE, 1)
     }
 
 }

@@ -1,7 +1,6 @@
 package me.mattstudios.triumphpets.pet.v1_15
 
 import me.mattstudios.mattcore.MattPlugin
-import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.PetController
@@ -10,7 +9,6 @@ import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
 import org.bukkit.Bukkit
-import org.bukkit.ChatColor
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity
@@ -22,7 +20,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class EntityController(private val plugin: MattPlugin, private val petConfig: PetConfig) : PetController {
+class EntityController(private val plugin: MattPlugin) : PetController {
 
     // List with spawned entities
     private val spawnedPets = mutableSetOf<Pet>()
@@ -51,7 +49,7 @@ class EntityController(private val plugin: MattPlugin, private val petConfig: Pe
         val world = (player.world as CraftWorld).handle
 
         // TODO fox type
-        val petFox = PetFox(plugin, petConfig, player, petData.name, petData.type.baby, EntityFox.Type.SNOW, world)
+        val petFox = PetFox(plugin, petData.petMemory, petData.petInventory, player, petData.name, petData.type.baby, EntityFox.Type.SNOW, world)
         petFox.setPosition(player.location.x, player.location.y, player.location.z)
         world.addEntity(petFox)
 

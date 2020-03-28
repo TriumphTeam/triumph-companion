@@ -11,9 +11,12 @@ import org.bukkit.entity.Item
 /**
  * @author Matt
  */
-class PetMemory(private val plugin: MattPlugin, petConfig: PetConfig, var filterType: FilterType) {
+class PetMemory(
+        private val plugin: MattPlugin, val petConfig: PetConfig,
+        var filterType: FilterType, val petExperience: PetExperience) {
 
-    val petExperience = PetExperience(0)
+    constructor(plugin: MattPlugin, petConfig: PetConfig, filterType: FilterType) :
+            this(plugin, petConfig, filterType, PetExperience(0))
 
     var isTracking = false
 
