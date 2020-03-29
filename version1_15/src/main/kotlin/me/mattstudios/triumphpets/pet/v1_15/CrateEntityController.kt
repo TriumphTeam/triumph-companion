@@ -4,6 +4,7 @@ import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
+import net.minecraft.server.v1_15_R1.World
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity
@@ -14,29 +15,18 @@ import org.bukkit.entity.Entity
  */
 class CrateEntityController(private val plugin: MattPlugin) : CrateController {
 
-    private var originalLocation: Location? = null
-    private val originalLines = mutableListOf<String>()
+    private val holograms = mutableListOf<Entity>()
 
     /**
      * Spawns the crate entities
      */
     override fun spawnCrateEntities(location: Location, lines: List<String>) {
-        originalLines.clear()
-
         val world = (location.world as CraftWorld).handle
         val lineLocation = location.clone().add(.5, .5, .5)
 
-        // Saves the entities data for the respawn
-        originalLocation = lineLocation.clone()
-        originalLines.addAll(lines.asReversed())
-
         // Spawns each line in their according location, reversed
-        for (line in originalLines) {
-            val nameEntity = NameEntity(plugin, line, "pet-crate", world)
-            nameEntity.setLocation(lineLocation.x, lineLocation.y, lineLocation.z, 0f, 0f)
-
-            world.addEntity(nameEntity)
-
+        for (line in lines.asReversed()) {
+            spawnEntity(lineLocation, line, world)
             lineLocation.add(0.0, .25, 0.0)
         }
     }
@@ -48,17 +38,33 @@ class CrateEntityController(private val plugin: MattPlugin) : CrateController {
         return (entity as CraftEntity).handle is PetNameEntity
     }
 
-    override fun respawnEntities() {
-        val lineLocation = originalLocation?.clone() ?: return
-        val world = (lineLocation.world as CraftWorld).handle
+    /**
+     * Respawns the entity if it dies
+     */
+    override fun respawnEntity(entity: Entity) {
+        holograms.remove(entity)
 
-        for (line in originalLines) {
-            val nameEntity = NameEntity(plugin, line, "pet-crate", world)
-            nameEntity.setLocation(lineLocation.x, lineLocation.y, lineLocation.z, 0f, 0f)
+        val world = (entity.location.world as CraftWorld).handle
+        spawnEntity(entity.location, entity.customName ?: "", world)
+    }
 
-            world.addEntity(nameEntity)
+    /**
+     * Removes all the holograms
+     */
+    override fun remove() {
+        holograms.forEach { it.remove() }
+        holograms.clear()
+    }
 
-            lineLocation.add(0.0, .25, 0.0)
-        }
+    /**
+     * Spawns the hologram entity
+     */
+    private fun spawnEntity(location: Location, line: String, world: World) {
+        val hologram = NameEntity(plugin, line, "pet-crate", world)
+        hologram.setLocation(location.x, location.y, location.z, 0f, 0f)
+
+        world.addEntity(hologram)
+
+        holograms.add(hologram.bukkitEntity)
     }
 }

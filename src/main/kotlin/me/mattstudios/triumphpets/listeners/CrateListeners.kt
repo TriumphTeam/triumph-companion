@@ -50,12 +50,15 @@ class CrateListeners(plugin: TriumphPets) : Listener {
         isCancelled = true
     }
 
+    /**
+     * Checks if the hologram was killed and respawns it
+     */
     @EventHandler
     fun EntityDeathEvent.onCrateHologramDeath() {
         if (entityType != EntityType.ARMOR_STAND) return
         if (!crateController.isCrateEntity(entity)) return
 
-        //crateController.respawnEntities()
+        crateController.respawnEntity(entity)
     }
 
 }

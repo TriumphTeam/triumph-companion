@@ -7,7 +7,7 @@ import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
 import me.mattstudios.mf.base.components.TypeResult
-import me.mattstudios.triumphpets.commands.admin.CrateSetCommand
+import me.mattstudios.triumphpets.commands.admin.CrateCommand
 import me.mattstudios.triumphpets.commands.admin.PetGiveCommand
 import me.mattstudios.triumphpets.commands.player.PetsCommand
 import me.mattstudios.triumphpets.config.Settings
@@ -101,9 +101,11 @@ class TriumphPets : MattPlugin() {
             return@CompletionResolver PetType.values().toList().filter { it.version <= version }.map { it.name }
         })
 
+        registerCompletion("#crate-type") { listOf("set", "unset") }
+
         registerCommands(
                 PetGiveCommand(this),
-                CrateSetCommand(),
+                CrateCommand(this),
 
                 PetsCommand(this)
         )

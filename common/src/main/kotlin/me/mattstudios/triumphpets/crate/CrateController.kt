@@ -21,5 +21,10 @@ interface CrateController {
     /**
      * Respawns the entities when they die
      */
-    fun respawnEntities()
+    fun respawnEntity(entity: Entity)
+
+    /**
+     * Removes the holograms
+     */
+    fun remove()
 }
