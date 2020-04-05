@@ -2,7 +2,8 @@ package me.mattstudios.triumphpets
 
 import com.google.common.primitives.Ints
 import me.mattstudios.mattcore.MattPlugin
-import me.mattstudios.mattcore.utils.MessageUtils
+import me.mattstudios.mattcore.utils.MessageUtils.color
+import me.mattstudios.mattcore.utils.MessageUtils.info
 import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
@@ -22,8 +23,10 @@ import me.mattstudios.triumphpets.manager.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.pet.utils.PetUtils
+import me.mattstudios.triumphpets.util.Utils.getPluginStartup
 import java.util.regex.Pattern
 import java.util.stream.Stream
+
 
 /**
  * @author Matt
@@ -128,10 +131,9 @@ class TriumphPets : MattPlugin() {
     private fun startUpMessage() {
         Stream.of(
                 "",
-                "&3&l█▀█ █▀▀ ▀█▀ █▀",
-                "&3&l█▀▀ ██▄ ░█░ ▄█",
-                "${locale.getMessageRaw(Message.STARTUP_VERSION)} &c1.0 &8(&c${PetUtils.LOCALE}&8)"
-        ).forEach { MessageUtils.info(MessageUtils.color(it)) }
+                getPluginStartup(),
+                "${locale.getMessageRaw(Message.STARTUP_VERSION)} &c${description.version} &8(&c${PetUtils.LOCALE}&8)"
+        ).forEach { info(color(it)) }
     }
 
 }

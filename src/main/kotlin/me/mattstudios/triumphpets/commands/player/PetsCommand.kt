@@ -109,7 +109,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
             it.isCancelled = true
         }
 
-        gui.fillBorder(GuiItem(fillItem))
+        gui.filler.fillBorder(GuiItem(fillItem))
 
         // The item to use in the prev button
         updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
@@ -156,7 +156,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
     /**
      * Updates the lore
      */
-    private fun updateLore(itemStack: ItemStack, lore: MutableList<String>, pageNumber: Int) {
+    private fun updateLore(itemStack: ItemStack, lore: List<String>, pageNumber: Int) {
         val itemMeta = itemStack.itemMeta
         itemMeta?.lore = color(lore.map { replace(it, "{page}", pageNumber.toString())})
         itemStack.itemMeta = itemMeta

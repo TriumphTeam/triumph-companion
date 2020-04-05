@@ -2,9 +2,9 @@ package me.mattstudios.triumphpets.manager
 
 import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.triumphpets.TriumphPets
-import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
-import me.mattstudios.triumphpets.data.database.DBType
+import me.mattstudios.triumphpets.data.database.Database
+import me.mattstudios.triumphpets.data.database.type.SQLite
 import me.mattstudios.triumphpets.pet.PetController
 
 
@@ -15,9 +15,12 @@ class PetManager(private val plugin: TriumphPets) {
 
     // The controller for the pet entity
     lateinit var petController: PetController
+    // The crate entity controller
     lateinit var crateController: CrateController
-    lateinit var crate: Crate
-    val dataManager = DataManager(plugin, DBType.SQLITE, plugin.petConfig)
+    lateinit var database: Database
+
+    lateinit var crateManager: CrateManager
+    lateinit var dataManager: DataManager
 
 
     init {
@@ -30,7 +33,14 @@ class PetManager(private val plugin: TriumphPets) {
             else -> println("shit boy")
         }
 
-        crate = Crate(crateController)
+        database = SQLite(plugin)
+
+        dataManager = DataManager(database, plugin.petConfig)
+        crateManager = CrateManager(crateController, database)
+
+        database.cachePlayers(dataManager)
+        database.cacheCrates(crateManager)
+
 
         petController.removeCrash()
     }

@@ -36,7 +36,7 @@ data class PetData(
     /**
      * Replaces all the values in the list and colors it
      */
-    private fun replaceList(lore: MutableList<String>, actionMessage: String): MutableList<String> {
+    private fun replaceList(lore: List<String>, actionMessage: String): List<String> {
         val replaced = mutableListOf<String>()
 
         for (indexLine in lore) {

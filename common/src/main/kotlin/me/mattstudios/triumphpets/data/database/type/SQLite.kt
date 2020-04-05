@@ -1,22 +1,31 @@
 package me.mattstudios.triumphpets.data.database.type
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.mattcore.utils.MessageUtils.info
 import me.mattstudios.mattcore.utils.Task.async
+import me.mattstudios.triumphpets.config.pet.PetConfig
+import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_CRATES
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PLAYERS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_CRATE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PET
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PLAYER
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_CRATES
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PLAYERS
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.manager.CrateManager
 import me.mattstudios.triumphpets.manager.DataManager
 import me.mattstudios.triumphpets.pet.PetPlayer
 import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetExperience
 import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.utils.PetType
+import me.mattstudios.triumphpets.util.Utils.blockLocationToString
+import me.mattstudios.triumphpets.util.Utils.stringToBlockLocation
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
@@ -28,7 +37,7 @@ import java.util.UUID
 /**
  * @author Matt
  */
-class SQLite(private val plugin: MattPlugin, private val dataManager: DataManager) : Database {
+class SQLite(private val plugin: MattPlugin) : Database {
 
     private lateinit var dataSource: SQLiteDataSource
 
@@ -38,7 +47,6 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
     init {
         createDB()
         createTables()
-        cacheData()
     }
 
     /**
@@ -77,32 +85,21 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
 
             connection.prepareStatement(SQLITE_CREATE_PETS).execute()
             connection.prepareStatement(SQLITE_CREATE_PLAYERS).execute()
-            //connection.prepareStatement(SQLITE_CREATE_PET_INVENTORY).execute()
+            connection.prepareStatement(SQLITE_CREATE_CRATES).execute()
         } catch (e: SQLException) {
             plugin.locale.sendMessage(Message.STARTUP_CREATE_TABLES_ERROR)
             e.printStackTrace()
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close()
-                } catch (e: SQLException) {
-                    e.printStackTrace()
-                }
+            if (connection != null && !connection.isClosed) {
+                connection.close()
             }
         }
     }
 
     /**
-     * Caches all the data
-     */
-    private fun cacheData() {
-        cachePlayers()
-    }
-
-    /**
      * Caches the player's data
      */
-    private fun cachePlayers() {
+    override fun cachePlayers(dataManager: DataManager) {
         var connection: Connection? = null
 
         try {
@@ -115,7 +112,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 val activePetUUID: UUID? = if (activePet != "null") UUID.fromString(activePet) else null
 
                 val petPlayer = PetPlayer(uuid, activePetUUID)
-                cachePets(petPlayer)
+                cachePets(petPlayer, dataManager.petConfig)
                 dataManager.loadPlayer(petPlayer)
             }
 
@@ -125,12 +122,43 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
             plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
             e.printStackTrace()
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close()
-                } catch (e: SQLException) {
-                    e.printStackTrace()
+            if (connection != null && !connection.isClosed) {
+                connection.close()
+            }
+        }
+    }
+
+    /**
+     * Caches the player's data
+     */
+    override fun cacheCrates(crateManager: CrateManager) {
+        var connection: Connection? = null
+
+        try {
+            connection = dataSource.connection
+            val resultSet = connection.createStatement().executeQuery(SQLITE_SELECT_CRATES)
+
+            while (resultSet.next()) {
+                val uuid = UUID.fromString(resultSet.getString("uuid"))
+                val location = stringToBlockLocation(resultSet.getString("location"))
+
+                if (location == null) {
+                    info("Error loading this crate")
+                    continue
                 }
+
+                val crate = Crate(uuid, location)
+                crateManager.loadCrate(crate)
+            }
+
+            resultSet.close()
+        } catch (e: SQLException) {
+            // TODO change this for player
+            plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
+            e.printStackTrace()
+        } finally {
+            if (connection != null && !connection.isClosed) {
+                connection.close()
             }
         }
     }
@@ -138,7 +166,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
     /**
      * Caches the pet's data
      */
-    private fun cachePets(petPlayer: PetPlayer) {
+    private fun cachePets(petPlayer: PetPlayer, petConfig: PetConfig) {
         var connection: Connection? = null
 
         try {
@@ -154,7 +182,7 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
                 val name = resultSet.getString("name")
                 val petExperience = PetExperience(resultSet.getInt("experience"))
 
-                val petMemory = PetMemory(plugin, dataManager.petConfig, FilterType.BLACK_LIST, petExperience)
+                val petMemory = PetMemory(plugin, petConfig, FilterType.BLACK_LIST, petExperience)
 
                 petPlayer.addPet(PetData(plugin, uuid, petType, name, petMemory, petPlayer.player))
             }
@@ -164,12 +192,8 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
             plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
             e.printStackTrace()
         } finally {
-            if (connection != null) {
-                try {
-                    connection.close()
-                } catch (e: SQLException) {
-                    e.printStackTrace()
-                }
+            if (connection != null && !connection.isClosed) {
+                connection.close()
             }
         }
     }
@@ -191,12 +215,32 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
             } catch (e: SQLException) {
                 e.printStackTrace()
             } finally {
-                if (connection != null) {
-                    try {
-                        connection.close()
-                    } catch (e: SQLException) {
-                        e.printStackTrace()
-                    }
+                if (connection != null && !connection.isClosed) {
+                    connection.close()
+                }
+            }
+        }
+    }
+
+    /**
+     * Inserts the player in the database
+     */
+    override fun insertCrate(crate: Crate) {
+        async {
+            var connection: Connection? = null
+
+            try {
+                connection = dataSource.connection
+                val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
+                statement.setString(1, crate.uuid.toString())
+                statement.setString(2, blockLocationToString(crate.location))
+
+                statement.executeUpdate()
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                if (connection != null && !connection.isClosed) {
+                    connection.close()
                 }
             }
         }
@@ -222,12 +266,8 @@ class SQLite(private val plugin: MattPlugin, private val dataManager: DataManage
             } catch (e: SQLException) {
                 e.printStackTrace()
             } finally {
-                if (connection != null) {
-                    try {
-                        connection.close()
-                    } catch (e: SQLException) {
-                        e.printStackTrace()
-                    }
+                if (connection != null && !connection.isClosed) {
+                    connection.close()
                 }
             }
         }

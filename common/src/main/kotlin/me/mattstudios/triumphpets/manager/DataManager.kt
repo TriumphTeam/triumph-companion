@@ -1,28 +1,17 @@
 package me.mattstudios.triumphpets.manager
 
-import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.data.PetData
-import me.mattstudios.triumphpets.data.database.DBType
 import me.mattstudios.triumphpets.data.database.Database
-import me.mattstudios.triumphpets.data.database.type.SQLite
 import me.mattstudios.triumphpets.pet.PetPlayer
 import org.bukkit.entity.Player
 
 /**
  * @author Matt
  */
-class DataManager(private val plugin: MattPlugin, dbType: DBType, val petConfig: PetConfig) {
+class DataManager(private val database: Database, val petConfig: PetConfig) {
 
-    private lateinit var database: Database
     private val petPlayers = mutableSetOf<PetPlayer>()
-
-    init {
-        when (dbType) {
-            DBType.SQLITE -> database = SQLite(plugin, this)
-        }
-
-    }
 
     /**
      * Loads the data from the database to the set

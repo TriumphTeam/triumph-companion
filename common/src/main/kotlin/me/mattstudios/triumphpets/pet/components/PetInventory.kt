@@ -105,7 +105,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
      */
     private fun setUpPetGui() {
         // Sets the fill items in the bottom
-        petGui.fillBottom(GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
+        petGui.filler.fillBottom(GuiItem(getFillItem(), GuiAction { it.isCancelled = true }))
 
         // Sets the filter item for the filter GUI
         petGui.setItem(rows() * 9 - 7, GuiItem(getFilterItem(), GuiAction {
@@ -136,7 +136,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
         filterGui.setDefaultTopClickAction { it.isCancelled = true }
 
         // Fills everything with glass
-        filterGui.fill(GuiItem(getFillItem()))
+        filterGui.filler.fill(GuiItem(getFillItem()))
 
         val air = XMaterial.AIR.parseItem()
 

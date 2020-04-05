@@ -1,22 +1,24 @@
 package me.mattstudios.triumphpets.crate
 
 import org.bukkit.Location
-import org.bukkit.Material
-import org.bukkit.entity.Player
+import java.util.UUID
 
 
 /**
  * @author Matt
  */
-class Crate(private val crateController: CrateController) {
+class Crate(val uuid: UUID, val location: Location) {
 
-    private var crateLocation: Location? = null
+    fun isCrate(location: Location): Boolean {
+        return this.location == location
+    }
+
+    /*private var crateLocation: Location? = null
 
     /**
      * Sets the crate location and initializes it
      */
     fun setCrate(crateLocation: Location) {
-        // TODO Add to database
         initCrate(crateLocation)
     }
 
@@ -61,6 +63,6 @@ class Crate(private val crateController: CrateController) {
         crateLocation = null
 
         player.sendMessage("Successfully removed")
-    }
+    }*/
 
 }

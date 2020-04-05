@@ -10,6 +10,7 @@ import me.mattstudios.mf.annotations.SubCommand
 import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
+import me.mattstudios.triumphpets.util.Items
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
@@ -26,7 +27,7 @@ import java.util.UUID
 @Command("pet")
 class CrateCommand(plugin: TriumphPets) : CommandBase() {
 
-    private val crate = plugin.petManager.crate
+    private val crateManager = plugin.petManager.crateManager
     private val blockStateValues = BlockFace.values().toList().map { it.name }
 
     /**
@@ -78,13 +79,13 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
      * Sets the crate to the block
      */
     private fun setCrate(block: Block?, player: Player, face: BlockFace) {
-        if (crate.exists()) {
-            player.sendMessage("You already have a crate set!")
+        if (block == null) {
+            player.sendMessage("Temp message saying error")
             return
         }
 
-        if (block == null) {
-            player.sendMessage("Temp message saying error")
+        if (crateManager.isCrate(block.location)) {
+            player.sendMessage("You already have a crate set!")
             return
         }
 
@@ -99,7 +100,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
 
         // Creates the game profile for the skull
         val profile = GameProfile(UUID.randomUUID(), null)
-        profile.properties.put("textures", Property("textures", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDY0MmFmYTM5Njg1M2I4MWIxN2JlZjVjOGQ3YTQ0YzEyZGU2ODlhNTZhZjQ3NDg0NjY3OTgzOTlkYTNjZmVhZSJ9fX0="))
+        profile.properties.put("textures", Property("textures", Items.CRATE_ITEM.texture))
 
         // Sets the skull texture
         setSkullTexture(getSkullTile(player.world, crateBlock), profile)
@@ -110,7 +111,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
         crateBlock.blockData = data
         crateBlock.state.update(true)
 
-        crate.setCrate(crateBlock.location)
+        crateManager.createCrate(crateBlock.location)
     }
 
     /**
@@ -118,7 +119,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
      * Does not require the looking block
      */
     private fun unsetCrate(player: Player) {
-        crate.remove(player)
+        //crate.remove(player)
     }
 
     /**
