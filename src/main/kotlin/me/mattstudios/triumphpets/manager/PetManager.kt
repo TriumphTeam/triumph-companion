@@ -33,16 +33,22 @@ class PetManager(private val plugin: TriumphPets) {
             else -> println("shit boy")
         }
 
+        // Removes entities left behind in case the server crashes
         petController.removeCrash()
 
+        // Initializes the database TODO turn it into a when
         database = SQLite(plugin)
 
+        // Initializes the data and crate managers
         dataManager = DataManager(database, plugin.petConfig)
         crateManager = CrateManager(crateController, database)
 
+        // Caches all the data
         database.cachePlayers(dataManager)
         database.cacheCrates(crateManager)
 
+        // Checks if there was a mistake and crate block is missing
+        crateManager.checkStartupMissing()
     }
 
     fun disable() {

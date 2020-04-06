@@ -2,7 +2,6 @@ package me.mattstudios.triumphpets.commands.admin
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
-import me.mattstudios.mattcore.utils.NmsUtils.getNMSClass
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.CompleteFor
 import me.mattstudios.mf.annotations.Optional
@@ -11,8 +10,9 @@ import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.util.Items
+import me.mattstudios.triumphpets.util.Utils.getSkullTile
+import me.mattstudios.triumphpets.util.Utils.setSkullTexture
 import org.bukkit.Material
-import org.bukkit.World
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
@@ -169,32 +169,4 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
         return returnValues
     }
 
-    /**
-     * Reflection to get the NMS world from a bukkit world
-     */
-    private fun getNmsWorld(world: World): Any {
-        return world.javaClass.getMethod("getHandle").invoke(world)
-    }
-
-    /**
-     * Reflection to get the block position from a block
-     */
-    private fun getBlockPosition(block: Block): Any {
-        return block.javaClass.getMethod("getPosition").invoke(block)
-    }
-
-    /**
-     * Reflection to get the skull tile from a block
-     */
-    private fun getSkullTile(world: World, block: Block): Any {
-        val nmsWorld = getNmsWorld(world)
-        return nmsWorld.javaClass.getMethod("getTileEntity", getNMSClass("BlockPosition")).invoke(nmsWorld, getBlockPosition(block))
-    }
-
-    /**
-     * Reflection to set the skull texture to the block
-     */
-    private fun setSkullTexture(skullTile: Any, profile: GameProfile) {
-        skullTile.javaClass.getMethod("setGameProfile", GameProfile::class.java).invoke(skullTile, profile)
-    }
 }

@@ -1,9 +1,13 @@
 package me.mattstudios.triumphpets.util
 
 import com.cryptomorin.xseries.XSound
+import com.mojang.authlib.GameProfile
+import me.mattstudios.mattcore.utils.NmsUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.World
+import org.bukkit.block.Block
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64
@@ -127,6 +131,35 @@ object Utils {
         val z = rZ.toDoubleOrNull() ?: return null
 
         return Location(world, x, y, z)
+    }
+
+    /**
+     * Reflection to set the skull texture to the block
+     */
+    fun setSkullTexture(skullTile: Any, profile: GameProfile) {
+        skullTile.javaClass.getMethod("setGameProfile", GameProfile::class.java).invoke(skullTile, profile)
+    }
+
+    /**
+     * Reflection to get the skull tile from a block
+     */
+    fun getSkullTile(world: World, block: Block): Any {
+        val nmsWorld = getNmsWorld(world)
+        return nmsWorld.javaClass.getMethod("getTileEntity", NmsUtils.getNMSClass("BlockPosition")).invoke(nmsWorld, getBlockPosition(block))
+    }
+
+    /**
+     * Reflection to get the NMS world from a bukkit world
+     */
+    private fun getNmsWorld(world: World): Any {
+        return world.javaClass.getMethod("getHandle").invoke(world)
+    }
+
+    /**
+     * Reflection to get the block position from a block
+     */
+    private fun getBlockPosition(block: Block): Any {
+        return block.javaClass.getMethod("getPosition").invoke(block)
     }
 
 }

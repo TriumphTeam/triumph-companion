@@ -1,11 +1,18 @@
 package me.mattstudios.triumphpets.manager
 
+import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
+import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.data.database.Database
+import me.mattstudios.triumphpets.util.Items
+import me.mattstudios.triumphpets.util.Utils.getSkullTile
+import me.mattstudios.triumphpets.util.Utils.setSkullTexture
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
+import org.bukkit.block.data.Rotatable
 import java.util.UUID
 
 /**
@@ -57,6 +64,32 @@ class CrateManager(private val crateController: CrateController, private val dat
      */
     private fun initCrate(crate: Crate) {
         crateController.spawnCrateEntities(crate, mutableListOf("&aMultiple", "&bColored", "&cLines", "&dTest"))
+    }
+
+    /**
+     * Check if the crate block was removed for no reason
+     */
+    fun checkStartupMissing() {
+        for (crate in crates) {
+            val crateBlock = crate.location.block
+
+            if (crateBlock.type == XMaterial.PLAYER_HEAD.parseMaterial()) continue
+
+            crateBlock.type = Material.PLAYER_HEAD
+
+            // Creates the game profile for the skull
+            val profile = GameProfile(UUID.randomUUID(), null)
+            profile.properties.put("textures", Property("textures", Items.CRATE_ITEM.texture))
+
+            // Sets the skull texture
+            setSkullTexture(getSkullTile(crateBlock.world, crateBlock), profile)
+
+            // Sets the rotation of the block
+            val data = crateBlock.blockData as Rotatable
+            data.rotation = crate.face
+            crateBlock.blockData = data
+            crateBlock.state.update(true)
+        }
     }
 
     /**
