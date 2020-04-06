@@ -10,7 +10,6 @@ object PetUtils {
 
     var LOCALE = "en_US"
 
-
     /**
      * Calculates the distance between 2 entities in 3D space
      */

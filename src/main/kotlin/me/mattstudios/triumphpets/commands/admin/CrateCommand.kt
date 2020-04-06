@@ -111,7 +111,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
         crateBlock.blockData = data
         crateBlock.state.update(true)
 
-        crateManager.createCrate(crateBlock.location)
+        crateManager.createCrate(crateBlock.location, face)
         player.sendMessage("Crate created")
     }
 

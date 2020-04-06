@@ -27,6 +27,7 @@ import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.util.Utils.blockLocationToString
 import me.mattstudios.triumphpets.util.Utils.stringToBlockLocation
+import org.bukkit.block.BlockFace
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
@@ -142,13 +143,16 @@ class SQLite(private val plugin: MattPlugin) : Database {
             while (resultSet.next()) {
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
                 val location = stringToBlockLocation(resultSet.getString("location"))
+                // Not using value of to not throw errors and instead get null
+                val face = BlockFace.values().find { it.name == resultSet.getString("face") }
 
-                if (location == null) {
+                // Errors if any of those are null
+                if (location == null || face == null) {
                     info("Error loading this crate")
                     continue
                 }
 
-                val crate = Crate(uuid, location)
+                val crate = Crate(uuid, location, face)
                 crateManager.loadCrate(crate)
             }
 
@@ -235,6 +239,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
                 statement.setString(1, crate.uuid.toString())
                 statement.setString(2, blockLocationToString(crate.location))
+                statement.setString(3, crate.face.name)
 
                 statement.executeUpdate()
             } catch (e: SQLException) {

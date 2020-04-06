@@ -5,6 +5,7 @@ import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.data.database.Database
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.block.BlockFace
 import java.util.UUID
 
 /**
@@ -25,8 +26,8 @@ class CrateManager(private val crateController: CrateController, private val dat
     /**
      * Sets the crate location and initializes it
      */
-    fun createCrate(location: Location) {
-        val crate = Crate(UUID.randomUUID(), location)
+    fun createCrate(location: Location, face: BlockFace) {
+        val crate = Crate(UUID.randomUUID(), location, face)
         database.insertCrate(crate)
         loadCrate(crate)
     }

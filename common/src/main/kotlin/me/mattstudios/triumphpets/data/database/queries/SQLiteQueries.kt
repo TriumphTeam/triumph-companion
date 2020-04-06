@@ -20,7 +20,8 @@ object SQLiteQueries {
 
     const val SQLITE_CREATE_CRATES = "CREATE TABLE IF NOT EXISTS `crates`(\n" +
                                      "  `uuid` VARCHAR(36) PRIMARY KEY,\n" +
-                                     "  `location` VARCHAR(256)" +
+                                     "  `location` VARCHAR(256)," +
+                                     "  `face` VARCHAR(36)" +
                                      ");"
 
     /*public static final String SQLITE_CREATE_PET_INVENTORY =
@@ -50,7 +51,7 @@ object SQLiteQueries {
 
     const val SQLITE_INSERT_PET = "INSERT INTO `pets` VALUES(?, ?, ?, ?, ?)"
 
-    const val SQLITE_INSERT_CRATE = "INSERT INTO `crates` VALUES(?, ?)"
+    const val SQLITE_INSERT_CRATE = "INSERT INTO `crates` VALUES(?, ?, ?)"
 
     /**
      * Remove queries
