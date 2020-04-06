@@ -1,7 +1,6 @@
 package me.mattstudios.triumphpets.util
 
 import com.cryptomorin.xseries.XSound
-import com.google.common.primitives.Doubles
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -11,12 +10,14 @@ import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
-import java.util.regex.Pattern
 
 /**
  * @author Matt
  */
 object Utils {
+
+    // Matches `world:x:y:z`
+    private val regex = Regex("(?<world>[^:]*):(?<x>-?\\d+):(?<y>-?\\d+):(?<z>-?\\d+)")
 
     /**
      * Plays the click sound
@@ -113,18 +114,17 @@ object Utils {
                 .toString()
     }
 
+    /**
+     * Turns a string into a location
+     */
     @Suppress("UnstableApiUsage")
     fun stringToBlockLocation(storedLocation: String): Location? {
-        val pattern = Pattern.compile("(?<world>[^:]*):(?<x>-?\\d+):(?<y>-?\\d+):(?<z>-?\\d+)")
-        val matcher = pattern.matcher(storedLocation)
+        val (rWorld, rX, rY, rZ) = regex.matchEntire(storedLocation)?.destructured ?: return null
+        val world = Bukkit.getWorld(rWorld) ?: return null
 
-        if (!matcher.matches()) return null
-
-        val world = Bukkit.getWorld(matcher.group("world")) ?: return null
-
-        val x = Doubles.tryParse(matcher.group("x")) ?: return null
-        val y = Doubles.tryParse(matcher.group("y")) ?: return null
-        val z = Doubles.tryParse(matcher.group("z")) ?: return null
+        val x = rX.toDoubleOrNull() ?: return null
+        val y = rY.toDoubleOrNull() ?: return null
+        val z = rZ.toDoubleOrNull() ?: return null
 
         return Location(world, x, y, z)
     }

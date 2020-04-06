@@ -33,6 +33,8 @@ class PetManager(private val plugin: TriumphPets) {
             else -> println("shit boy")
         }
 
+        petController.removeCrash()
+
         database = SQLite(plugin)
 
         dataManager = DataManager(database, plugin.petConfig)
@@ -41,8 +43,11 @@ class PetManager(private val plugin: TriumphPets) {
         database.cachePlayers(dataManager)
         database.cacheCrates(crateManager)
 
+    }
 
-        petController.removeCrash()
+    fun disable() {
+        petController.removeAll()
+        crateManager.removeAll()
     }
 
 }

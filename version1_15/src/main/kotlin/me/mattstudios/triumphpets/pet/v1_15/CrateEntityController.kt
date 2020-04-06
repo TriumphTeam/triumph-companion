@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.pet.v1_15
 
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.pet.components.PetNameEntity
 import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
@@ -15,18 +16,18 @@ import org.bukkit.entity.Entity
  */
 class CrateEntityController(private val plugin: MattPlugin) : CrateController {
 
-    private val holograms = mutableListOf<Entity>()
+    private val holograms = mutableMapOf<Crate, MutableList<Entity>>()
 
     /**
      * Spawns the crate entities
      */
-    override fun spawnCrateEntities(location: Location, lines: List<String>) {
-        val world = (location.world as CraftWorld).handle
-        val lineLocation = location.clone().add(.5, .5, .5)
+    override fun spawnCrateEntities(crate: Crate, lines: List<String>) {
+        val world = (crate.location.world as CraftWorld).handle
+        val lineLocation = crate.location.clone().add(.5, .5, .5)
 
         // Spawns each line in their according location, reversed
         for (line in lines.asReversed()) {
-            spawnEntity(lineLocation, line, world)
+            spawnEntity(crate, lineLocation, line, world)
             lineLocation.add(0.0, .25, 0.0)
         }
     }
@@ -42,29 +43,41 @@ class CrateEntityController(private val plugin: MattPlugin) : CrateController {
      * Respawns the entity if it dies
      */
     override fun respawnEntity(entity: Entity) {
-        holograms.remove(entity)
+        for ((crate, list) in holograms) {
+            if (!list.remove(entity)) continue
 
-        val world = (entity.location.world as CraftWorld).handle
-        spawnEntity(entity.location, entity.customName ?: "", world)
+            val world = (entity.location.world as CraftWorld).handle
+            spawnEntity(crate, entity.location, entity.customName ?: return, world)
+        }
     }
 
     /**
      * Removes all the holograms
      */
-    override fun remove() {
-        holograms.forEach { it.remove() }
-        holograms.clear()
+    override fun remove(crate: Crate) {
+        val holos = holograms[crate] ?: return
+
+        holos.forEach { it.remove() }
+        holos.clear()
     }
 
     /**
      * Spawns the hologram entity
      */
-    private fun spawnEntity(location: Location, line: String, world: World) {
+    private fun spawnEntity(crate: Crate, location: Location, line: String, world: World) {
         val hologram = NameEntity(plugin, line, "pet-crate", world)
         hologram.setLocation(location.x, location.y, location.z, 0f, 0f)
 
         world.addEntity(hologram)
 
-        holograms.add(hologram.bukkitEntity)
+        val holoList = holograms[crate]
+
+        if (holoList != null) {
+            holoList.add(hologram.bukkitEntity)
+        } else {
+            // Cast to prevent `Type inference failed`
+            holograms[crate] = mutableListOf(hologram.bukkitEntity as Entity)
+        }
     }
+
 }

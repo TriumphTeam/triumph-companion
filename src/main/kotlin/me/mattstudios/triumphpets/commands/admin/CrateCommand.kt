@@ -53,7 +53,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        unsetCrate(player)
+        unsetCrate(lookingBlock, player)
     }
 
     /**
@@ -112,14 +112,20 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
         crateBlock.state.update(true)
 
         crateManager.createCrate(crateBlock.location)
+        player.sendMessage("Crate created")
     }
 
     /**
      * Removes the crate
-     * Does not require the looking block
      */
-    private fun unsetCrate(player: Player) {
-        //crate.remove(player)
+    private fun unsetCrate(block: Block?, player: Player) {
+        if (block == null) {
+            player.sendMessage("Temp message saying error")
+            return
+        }
+
+        crateManager.remove(block.location)
+        player.sendMessage("crate removed")
     }
 
     /**

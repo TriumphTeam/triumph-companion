@@ -5,7 +5,6 @@ import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.data.database.Database
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.entity.Player
 import java.util.UUID
 
 /**
@@ -15,9 +14,12 @@ class CrateManager(private val crateController: CrateController, private val dat
 
     private val crates = mutableSetOf<Crate>()
 
+    /**
+     * Loads the crate in from new or from the database
+     */
     fun loadCrate(crate: Crate) {
         crates.add(crate)
-        initCrate(crate.location)
+        initCrate(crate)
     }
 
     /**
@@ -39,17 +41,29 @@ class CrateManager(private val crateController: CrateController, private val dat
     /**
      * Removes the crate
      */
-    fun remove(location: Location, player: Player) {
+    fun remove(location: Location) {
+        val crate = crates.find { isCrate(location) } ?: return
+        database.removeCrate(crate)
         location.block.type = Material.AIR
-        //crateController.remove()
-        player.sendMessage("Successfully removed")
+
+        // Removes the crate's
+        crateController.remove(crate)
+        crates.remove(crate)
     }
 
     /**
      * Initializes the crate
      */
-    private fun initCrate(crateLocation: Location) {
-        //crateController.spawnCrateEntities(crateLocation, mutableListOf("&aMultiple", "&bColored", "&cLines", "&dTest"))
+    private fun initCrate(crate: Crate) {
+        crateController.spawnCrateEntities(crate, mutableListOf("&aMultiple", "&bColored", "&cLines", "&dTest"))
     }
+
+    /**
+     * Removes all the holograms
+     */
+    fun removeAll() {
+        crates.forEach { crateController.remove(it) }
+    }
+
 
 }

@@ -1,6 +1,5 @@
 package me.mattstudios.triumphpets.crate
 
-import org.bukkit.Location
 import org.bukkit.entity.Entity
 
 /**
@@ -11,7 +10,7 @@ interface CrateController {
     /**
      * Spawns a name entity in the location
      */
-    fun spawnCrateEntities(location: Location, lines: List<String>)
+    fun spawnCrateEntities(crate: Crate, lines: List<String>)
 
     /**
      * Checks if the entity is a crate entity
@@ -26,5 +25,5 @@ interface CrateController {
     /**
      * Removes the holograms
      */
-    fun remove()
+    fun remove(crate: Crate)
 }

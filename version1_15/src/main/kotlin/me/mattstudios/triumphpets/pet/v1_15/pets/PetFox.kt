@@ -30,11 +30,11 @@ import org.bukkit.potion.PotionEffectType
 /**
  * @author Matt
  */
-class PetFox(private val plugin: MattPlugin, private val petMemory: PetMemory,private val petInventory: PetInventory, private val owner: Player, private val petName: String, baby: Boolean, type: Type, world: World) : EntityFox(EntityTypes.FOX, world), Pet {
+class PetFox(private val plugin: MattPlugin, private val petMemory: PetMemory, private val petInventory: PetInventory, private val owner: Player, private val petName: String, baby: Boolean, type: Type, world: World) : EntityFox(EntityTypes.FOX, world), Pet {
 
     private val petConfig = petMemory.petConfig
 
-    private var displayName = NameEntity(plugin, petName, world)
+    private var displayName = NameEntity(plugin, "Foxy", world)
 
     private var petPetTime = 0L
     private val PET_COOLDOWN = 15
@@ -55,6 +55,7 @@ class PetFox(private val plugin: MattPlugin, private val petMemory: PetMemory,pr
 
         persist = true
 
+        displayName.setLocation(locX(), locY() + .6, locZ(), 0.0F, 0.0F)
         world.addEntity(displayName)
 
         goalSelector.a(0, PickUpItemsGoal(this, this, petConfig, 1.5))

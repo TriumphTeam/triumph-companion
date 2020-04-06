@@ -85,7 +85,14 @@ class EntityController(private val plugin: MattPlugin) : PetController {
 
         for (world in Bukkit.getWorlds()) {
             for (entity in world.entities) {
-                entity.persistentDataContainer.get(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE) ?: continue
+                val nbt = entity.persistentDataContainer
+
+                // Checks for the NBTs
+                if (nbt.get(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE) == null &&
+                    nbt.get(NamespacedKey(plugin, "pet-crate"), PersistentDataType.BYTE) == null) {
+                    continue
+                }
+
                 entity.remove()
                 removed++
             }

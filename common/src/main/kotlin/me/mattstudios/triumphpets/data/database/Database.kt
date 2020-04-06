@@ -20,4 +20,6 @@ interface Database {
     fun insertPet(petPlayer: PetPlayer, petData: PetData)
 
     fun insertCrate(crate: Crate)
+
+    fun removeCrate(crate: Crate)
 }

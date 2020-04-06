@@ -59,7 +59,7 @@ class TriumphPets : MattPlugin() {
      * On plugin disable
      */
     override fun disable() {
-        petManager.petController.removeAll()
+        petManager.disable()
     }
 
     /**

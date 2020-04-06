@@ -51,4 +51,10 @@ object SQLiteQueries {
     const val SQLITE_INSERT_PET = "INSERT INTO `pets` VALUES(?, ?, ?, ?, ?)"
 
     const val SQLITE_INSERT_CRATE = "INSERT INTO `crates` VALUES(?, ?)"
+
+    /**
+     * Remove queries
+     */
+
+    const val SQLITE_REMOVE_CRATE = "DELETE FROM `crates` WHERE `uuid` = ?"
 }

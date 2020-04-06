@@ -13,6 +13,7 @@ import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CRE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_CRATE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PET
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PLAYER
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_REMOVE_CRATE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_CRATES
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PLAYERS
@@ -262,6 +263,28 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 statement.setString(4, petData.name)
                 statement.setInt(5, petData.petMemory.petExperience.xp)
 
+                statement.executeUpdate()
+            } catch (e: SQLException) {
+                e.printStackTrace()
+            } finally {
+                if (connection != null && !connection.isClosed) {
+                    connection.close()
+                }
+            }
+        }
+    }
+
+    /**
+     * Inserts the pet in the database
+     */
+    override fun removeCrate(crate: Crate) {
+        async {
+            var connection: Connection? = null
+
+            try {
+                connection = dataSource.connection
+                val statement = connection.prepareStatement(SQLITE_REMOVE_CRATE)
+                statement.setString(1, crate.uuid.toString())
                 statement.executeUpdate()
             } catch (e: SQLException) {
                 e.printStackTrace()
