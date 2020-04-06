@@ -60,6 +60,18 @@ class CrateEntityController(private val plugin: MattPlugin) : CrateController {
         holos.clear()
     }
 
+    override fun hide(crate: Crate) {
+        val holoList = holograms[crate] ?: return
+
+        holoList.forEach { it.isCustomNameVisible = false }
+    }
+
+    override fun show(crate: Crate) {
+        val holoList = holograms[crate] ?: return
+
+        holoList.forEach { it.isCustomNameVisible = true }
+    }
+
     /**
      * Spawns the hologram entity
      */

@@ -2,6 +2,8 @@ package me.mattstudios.triumphpets.listeners
 
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.TriumphPets
+import me.mattstudios.triumphpets.crate.CrateAnimation
+import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -14,7 +16,7 @@ import org.bukkit.inventory.EquipmentSlot
 /**
  * @author Matt
  */
-class CrateListeners(plugin: TriumphPets) : Listener {
+class CrateListeners(private val plugin: TriumphPets) : Listener {
 
     private val crateController = plugin.petManager.crateController
     private val crateManager = plugin.petManager.crateManager
@@ -38,16 +40,11 @@ class CrateListeners(plugin: TriumphPets) : Listener {
         val block = clickedBlock ?: return
 
         if (block.type != XMaterial.PLAYER_HEAD.parseMaterial()) return
-        if (!crateManager.isCrate(block.location)) return
-
 
         val crate = crateManager.getCrate(block.location) ?: return
 
-        player.sendMessage(crate.uuid.toString())
-
-        /*val armorStand = player.world.spawnEntity(block.location.clone().add(1.0, .0, .0), EntityType.ARMOR_STAND) as ArmorStand
-        armorStand.equipment?.helmet = Items.CRATE_ITEM.item*/
-
+        val animationTask = CrateAnimation(player, crate, crateManager)
+        animationTask.taskId = Bukkit.getScheduler().runTaskTimer(plugin, animationTask, 0, 2).taskId
     }
 
     /**

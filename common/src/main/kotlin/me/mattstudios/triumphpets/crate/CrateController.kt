@@ -26,4 +26,8 @@ interface CrateController {
      * Removes the holograms
      */
     fun remove(crate: Crate)
+
+    fun hide(crate: Crate)
+
+    fun show(crate: Crate)
 }
