@@ -3,8 +3,7 @@ package me.mattstudios.triumphpets.pet.v1_15
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
-import me.mattstudios.triumphpets.pet.components.PetNameEntity
-import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
+import me.mattstudios.triumphpets.pet.v1_15.components.HologramEntity
 import net.minecraft.server.v1_15_R1.World
 import org.bukkit.Location
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
@@ -36,7 +35,7 @@ class CrateEntityController(private val plugin: MattPlugin) : CrateController {
      * Checks if the entity is a crate entity
      */
     override fun isCrateEntity(entity: Entity): Boolean {
-        return (entity as CraftEntity).handle is PetNameEntity
+        return (entity as CraftEntity).handle is me.mattstudios.triumphpets.pet.components.NameEntity
     }
 
     /**
@@ -65,7 +64,7 @@ class CrateEntityController(private val plugin: MattPlugin) : CrateController {
      * Spawns the hologram entity
      */
     private fun spawnEntity(crate: Crate, location: Location, line: String, world: World) {
-        val hologram = NameEntity(plugin, line, "pet-crate", world)
+        val hologram = HologramEntity(plugin, line, world, "pet-crate")
         hologram.setLocation(location.x, location.y, location.z, 0f, 0f)
 
         world.addEntity(hologram)

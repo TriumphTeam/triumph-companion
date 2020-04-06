@@ -6,7 +6,7 @@ import me.mattstudios.mattcore.utils.TimeUtils.getSecondsDifference
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
-import me.mattstudios.triumphpets.pet.v1_15.components.NameEntity
+import me.mattstudios.triumphpets.pet.v1_15.components.HologramEntity
 import me.mattstudios.triumphpets.pet.v1_15.goals.FollowPlayerGoal
 import me.mattstudios.triumphpets.pet.v1_15.goals.PickUpItemsGoal
 import me.mattstudios.triumphpets.pet.v1_15.goals.RandomWalkAroundGoal
@@ -34,7 +34,7 @@ class PetFox(private val plugin: MattPlugin, private val petMemory: PetMemory, p
 
     private val petConfig = petMemory.petConfig
 
-    private var displayName = NameEntity(plugin, "Foxy", world)
+    private var displayName = HologramEntity(plugin, "Foxy", world)
 
     private var petPetTime = 0L
     private val PET_COOLDOWN = 15
@@ -126,7 +126,7 @@ class PetFox(private val plugin: MattPlugin, private val petMemory: PetMemory, p
 
         // Checks if the display name died and respawns it
         if (!displayName.isAlive) {
-            displayName = NameEntity(plugin, petName, world)
+            displayName = HologramEntity(plugin, petName, world)
             world.addEntity(displayName)
         }
 

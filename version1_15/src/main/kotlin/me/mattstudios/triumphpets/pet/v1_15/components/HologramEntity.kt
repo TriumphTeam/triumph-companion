@@ -2,7 +2,7 @@ package me.mattstudios.triumphpets.pet.v1_15.components
 
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
-import me.mattstudios.triumphpets.pet.components.PetNameEntity
+import me.mattstudios.triumphpets.pet.components.NameEntity
 import net.minecraft.server.v1_15_R1.ChatMessage
 import net.minecraft.server.v1_15_R1.EntityArmorStand
 import net.minecraft.server.v1_15_R1.EntityTypes
@@ -13,9 +13,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class NameEntity(plugin: MattPlugin, displayName: String, nbtValue: String, world: World) : EntityArmorStand(EntityTypes.ARMOR_STAND, world), PetNameEntity {
-
-    constructor(plugin: MattPlugin, displayName: String, world: World) : this (plugin, displayName, "pet", world)
+class HologramEntity(plugin: MattPlugin, displayName: String, world: World, nbtValue: String = "pet") : EntityArmorStand(EntityTypes.ARMOR_STAND, world), NameEntity {
 
     init {
         isMarker = true
@@ -24,7 +22,13 @@ class NameEntity(plugin: MattPlugin, displayName: String, nbtValue: String, worl
         isNoGravity = true
         isInvisible = true
 
+        test(true)
+
         bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, nbtValue), PersistentDataType.BYTE, 1)
+    }
+
+    private fun test(bte: Boolean, text: String = "") {
+
     }
 
 }

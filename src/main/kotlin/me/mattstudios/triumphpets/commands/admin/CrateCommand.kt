@@ -124,6 +124,13 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
             return
         }
 
+        if (!crateManager.isCrate(block.location)) {
+            player.sendMessage("Temp message saying error")
+            return
+        }
+
+        player.sendMessage(block.location.toString())
+
         crateManager.remove(block.location)
         player.sendMessage("crate removed")
     }

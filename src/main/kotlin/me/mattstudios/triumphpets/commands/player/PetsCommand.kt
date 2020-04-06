@@ -25,7 +25,7 @@ import kotlin.math.ceil
 @Command("pets")
 class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
-    val locale = plugin.locale
+    private val locale = plugin.locale
 
     // Starts up the items for the GUI interface
     private val fillItem = ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem())
@@ -95,7 +95,6 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
         }
 
         gui.open(player)
-
     }
 
     /**

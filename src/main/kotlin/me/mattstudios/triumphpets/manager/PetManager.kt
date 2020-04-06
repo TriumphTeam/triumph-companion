@@ -17,10 +17,11 @@ class PetManager(private val plugin: TriumphPets) {
     lateinit var petController: PetController
     // The crate entity controller
     lateinit var crateController: CrateController
-    lateinit var database: Database
 
-    lateinit var crateManager: CrateManager
-    lateinit var dataManager: DataManager
+    val database: Database
+
+    val crateManager: CrateManager
+    val dataManager: DataManager
 
 
     init {
@@ -51,6 +52,9 @@ class PetManager(private val plugin: TriumphPets) {
         crateManager.checkStartupMissing()
     }
 
+    /**
+     * Runs on server disable to remove entities from the world
+     */
     fun disable() {
         petController.removeAll()
         crateManager.removeAll()

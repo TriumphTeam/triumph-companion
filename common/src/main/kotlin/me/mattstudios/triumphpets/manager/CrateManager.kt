@@ -47,23 +47,25 @@ class CrateManager(private val crateController: CrateController, private val dat
     }
 
     /**
-     * Removes the crate
+     * Gets a grate based on the location
      */
-    fun remove(location: Location) {
-        val crate = crates.find { isCrate(location) } ?: return
-        database.removeCrate(crate)
-        location.block.type = Material.AIR
-
-        // Removes the crate's
-        crateController.remove(crate)
-        crates.remove(crate)
+    fun getCrate(location: Location): Crate? {
+        return crates.find { it.isCrate(location) }
     }
 
     /**
-     * Initializes the crate
+     * Removes the crate
      */
-    private fun initCrate(crate: Crate) {
-        crateController.spawnCrateEntities(crate, mutableListOf("&aMultiple", "&bColored", "&cLines", "&dTest"))
+    fun remove(location: Location) {
+        val crate = getCrate(location) ?: return
+
+        println("removed ${crate.uuid}")
+
+        // Removes the crate's
+        crateController.remove(crate)
+        database.removeCrate(crate)
+        crates.remove(crate)
+        location.block.type = Material.AIR
     }
 
     /**
@@ -99,5 +101,11 @@ class CrateManager(private val crateController: CrateController, private val dat
         crates.forEach { crateController.remove(it) }
     }
 
+    /**
+     * Initializes the crate
+     */
+    private fun initCrate(crate: Crate) {
+        crateController.spawnCrateEntities(crate, mutableListOf("&aMultiple", "&bColored", "&cLines", "&dTest"))
+    }
 
 }

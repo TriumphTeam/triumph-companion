@@ -5,7 +5,7 @@ import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.PetController
 import me.mattstudios.triumphpets.pet.PetPlayer
-import me.mattstudios.triumphpets.pet.components.PetNameEntity
+import me.mattstudios.triumphpets.pet.components.NameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
 import org.bukkit.Bukkit
@@ -36,7 +36,7 @@ class EntityController(private val plugin: MattPlugin) : PetController {
      * Checks weather or not the entity that is being tracked is a pet or not.
      */
     override fun isPetComponent(entity: Entity): Boolean {
-        return (entity as CraftEntity).handle is PetNameEntity
+        return (entity as CraftEntity).handle is NameEntity
     }
 
     /**
