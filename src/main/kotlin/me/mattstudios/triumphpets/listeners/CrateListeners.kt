@@ -44,7 +44,7 @@ class CrateListeners(private val plugin: TriumphPets) : Listener {
         val crate = crateManager.getCrate(block.location) ?: return
 
         val animationTask = CrateAnimation(player, crate, crateManager)
-        animationTask.taskId = Bukkit.getScheduler().runTaskTimer(plugin, animationTask, 0, 2).taskId
+        animationTask.taskId = Bukkit.getScheduler().runTaskTimer(plugin, animationTask, 0, 1).taskId
     }
 
     /**

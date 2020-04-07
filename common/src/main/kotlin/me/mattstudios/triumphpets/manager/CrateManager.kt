@@ -2,6 +2,7 @@ package me.mattstudios.triumphpets.manager
 
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
+import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
@@ -54,8 +55,10 @@ class CrateManager(private val crateController: CrateController, private val dat
     }
 
     fun hideCrate(crate: Crate) {
-        crate.location.block.type = Material.AIR
-        crateController.hide(crate)
+        later(5) {
+            crate.location.block.type = Material.AIR
+            crateController.hide(crate)
+        }
     }
 
     fun showCrate(crate: Crate) {
