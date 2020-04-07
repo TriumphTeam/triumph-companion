@@ -5,6 +5,7 @@ import me.mattstudios.triumphpets.util.Items
 import org.bukkit.Bukkit
 import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
 import java.util.concurrent.TimeUnit
 
@@ -45,37 +46,31 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
         }
 
         when (controller) {
+            // First wobble
             in 15..19 -> {
-                eulerX += .1
-                eulerZ += .1
-
-                if (controller == 19) armorStand.equipment?.helmet = Items.CRATE_ITEM_CRACK_1.item
+                increaseEuler()
+                // Add first crack
+                if (controller == 19) setHead(Items.CRATE_ITEM_CRACK_1.item)
             }
 
-            in 20..24 -> {
-                eulerX -= .1
-                eulerZ -= .1
-            }
+            // Back to the beginning
+            in 20..24 -> decreaseEuler()
 
-            25 -> {
-                eulerX = 0.0
-                eulerZ = 0.0
-            }
+            // Resets the rotation
+            25 -> resetEuler()
 
+            // Second wobble
             in 45..49 -> {
-                eulerX -= .1
-                eulerZ -= .1
+                decreaseEuler()
+                // Second crack
+                if (controller == 49) setHead(Items.CRATE_ITEM_CRACK_2.item)
             }
 
-            in 50..54 -> {
-                eulerX += .1
-                eulerZ += .1
-            }
+            // Back to the beginning
+            in 50..54 -> increaseEuler()
 
-            55 -> {
-                eulerX = 0.0
-                eulerZ = 0.0
-            }
+            // Resets the rotation
+            55 -> resetEuler()
         }
 
         armorStand.headPose = EulerAngle(eulerX, eulerY, eulerZ)
@@ -97,5 +92,36 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
      */
     private fun getTimeSinceStart(): Long {
         return TimeUnit.SECONDS.convert(System.currentTimeMillis() - start, TimeUnit.MILLISECONDS)
+    }
+
+    /**
+     * Resets the euler angle back to 0 x and z
+     */
+    private fun resetEuler() {
+        eulerX = 0.0
+        eulerZ = 0.0
+    }
+
+    /**
+     * Increases the euler angle .1 x and z
+     */
+    private fun increaseEuler() {
+        eulerX += .1
+        eulerZ += .1
+    }
+
+    /**
+     * Decreases the euler angle .1 x and z
+     */
+    private fun decreaseEuler() {
+        eulerX -= .1
+        eulerZ -= .1
+    }
+
+    /**
+     * Sets the armorstand head to the new item
+     */
+    private fun setHead(head: ItemStack) {
+        armorStand.equipment?.helmet = head
     }
 }
