@@ -28,17 +28,24 @@ enum class Items(val item: ItemStack, val texture: String) {
     // Cate item for animation first crack
     CRATE_ITEM_CRACK_1(
             ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
-                    .setSkullTexture("eyJ0aW1lc3RhbXAiOjE1ODYyMjMxMzg5OTAsInByb2ZpbGVJZCI6IjgyYzYwNmM1YzY1MjRiNzk4YjkxYTEyZDNhNjE2OTc3IiwicHJvZmlsZU5hbWUiOiJOb3ROb3RvcmlvdXNOZW1vIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS83NzQyYjIzNDBjOTMyZWQ1ZGY5YTg5NTM0ODE4MDEyOWUwZWJjNzAyMTc2M2NmN2Y0NmIyYmJiZmNhYjY2ZDBjIn19fQ==")
+                    .setSkullTexture("eyJ0aW1lc3RhbXAiOjE1ODYyOTkzNjY4NzksInByb2ZpbGVJZCI6ImQ2MGYzNDczNmExMjQ3YTI5YjgyY2M3MTViMDA0OGRiIiwicHJvZmlsZU5hbWUiOiJCSl9EYW5pZWwiLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlL2FkMTAxMWJlZWIzMGMxMDAzZDMwNmYyMDc0MjhiOGFjMTYzNTQ3OTRiZjUwMDEzYjZjNTVjOThmNjhlN2FkZmMifX19")
                     .build(),
-            "eyJ0aW1lc3RhbXAiOjE1ODYyMjMxMzg5OTAsInByb2ZpbGVJZCI6IjgyYzYwNmM1YzY1MjRiNzk4YjkxYTEyZDNhNjE2OTc3IiwicHJvZmlsZU5hbWUiOiJOb3ROb3RvcmlvdXNOZW1vIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS83NzQyYjIzNDBjOTMyZWQ1ZGY5YTg5NTM0ODE4MDEyOWUwZWJjNzAyMTc2M2NmN2Y0NmIyYmJiZmNhYjY2ZDBjIn19fQ=="
+            ""
     ),
 
     // Crate item for animation second crack
     CRATE_ITEM_CRACK_2(
             ItemBuilder(XMaterial.PLAYER_HEAD.parseItem())
-                    .setSkullTexture("eyJ0aW1lc3RhbXAiOjE1ODYyMjQyMjQ0MzYsInByb2ZpbGVJZCI6ImRlNTcxYTEwMmNiODQ4ODA4ZmU3YzlmNDQ5NmVjZGFkIiwicHJvZmlsZU5hbWUiOiJNSEZfTWluZXNraW4iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzM3MGMzNTk4NzA3ZTZkOWFiZmZlOWY1Mjc5NDU5MTZhM2E4ODkwNmMwZWI1ZGY3NGFlNDk5ZGE2OWYzMDkxZWIifX19")
+                    .setSkullTexture("eyJ0aW1lc3RhbXAiOjE1ODYyOTk0MTg0MDMsInByb2ZpbGVJZCI6ImJlY2RkYjI4YTJjODQ5YjRhOWIwOTIyYTU4MDUxNDIwIiwicHJvZmlsZU5hbWUiOiJTdFR2Iiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS85MWU4YmE4MmI0N2M4YmUyY2Q4MDc5ZWZlNjE2MGJhMjljZjc0ODNlZGJjYjA3ZGIxMjJmMDU0NDNjNjk5ZTk1In19fQ==")
                     .build(),
-            "eyJ0aW1lc3RhbXAiOjE1ODYyMjQyMjQ0MzYsInByb2ZpbGVJZCI6ImRlNTcxYTEwMmNiODQ4ODA4ZmU3YzlmNDQ5NmVjZGFkIiwicHJvZmlsZU5hbWUiOiJNSEZfTWluZXNraW4iLCJzaWduYXR1cmVSZXF1aXJlZCI6dHJ1ZSwidGV4dHVyZXMiOnsiU0tJTiI6eyJ1cmwiOiJodHRwOi8vdGV4dHVyZXMubWluZWNyYWZ0Lm5ldC90ZXh0dXJlLzM3MGMzNTk4NzA3ZTZkOWFiZmZlOWY1Mjc5NDU5MTZhM2E4ODkwNmMwZWI1ZGY3NGFlNDk5ZGE2OWYzMDkxZWIifX19"
+            ""
+    ),
+
+    CRATE_ITEM_CRACK_3(
+            ItemBuilder(XMaterial.PLAYER_HEAD.parseMaterial())
+                    .setSkullTexture("eyJ0aW1lc3RhbXAiOjE1ODYzMDUxMTMyNDQsInByb2ZpbGVJZCI6IjkxOGEwMjk1NTlkZDRjZTZiMTZmN2E1ZDUzZWZiNDEyIiwicHJvZmlsZU5hbWUiOiJCZWV2ZWxvcGVyIiwic2lnbmF0dXJlUmVxdWlyZWQiOnRydWUsInRleHR1cmVzIjp7IlNLSU4iOnsidXJsIjoiaHR0cDovL3RleHR1cmVzLm1pbmVjcmFmdC5uZXQvdGV4dHVyZS9hMTk2MGUyNzAzYzdiNzRjMzVjMWJkZjI3MzNjZGEwN2MwYzNkYzJlYTljODY1YmUxZGM3OTVlMzQwYzhhYTBiIn19fQ==")
+                    .build(),
+            ""
     )
 
 }
