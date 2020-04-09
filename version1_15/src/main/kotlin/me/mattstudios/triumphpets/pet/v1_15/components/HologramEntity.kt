@@ -22,13 +22,7 @@ class HologramEntity(plugin: MattPlugin, displayName: String, world: World, nbtV
         isNoGravity = true
         isInvisible = true
 
-        test(true)
-
         bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, nbtValue), PersistentDataType.BYTE, 1)
-    }
-
-    private fun test(bte: Boolean, text: String = "") {
-
     }
 
 }

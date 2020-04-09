@@ -1,19 +1,15 @@
 package me.mattstudios.triumphpets.manager
 
-import com.mojang.authlib.GameProfile
-import com.mojang.authlib.properties.Property
 import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.util.Items
-import me.mattstudios.triumphpets.util.Utils.getSkullTile
-import me.mattstudios.triumphpets.util.Utils.setSkullTexture
+import me.mattstudios.triumphpets.util.Utils.setSkullBlock
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.block.BlockFace
-import org.bukkit.block.data.Rotatable
 import java.util.UUID
 
 /**
@@ -54,15 +50,21 @@ class CrateManager(private val crateController: CrateController, private val dat
         return crates.find { it.isCrate(location) }
     }
 
+    /**
+     * Hides the crate's block / holograms
+     */
     fun hideCrate(crate: Crate) {
-        later(5) {
+        later(2) {
             crate.location.block.type = Material.AIR
             crateController.hide(crate)
         }
     }
 
+    /**
+     * Shows the crate block / holograms back
+     */
     fun showCrate(crate: Crate) {
-        setCrateBlock(crate)
+        setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM.texture)
         crateController.show(crate)
     }
 
@@ -90,7 +92,7 @@ class CrateManager(private val crateController: CrateController, private val dat
 
             if (crateBlock.type == XMaterial.PLAYER_HEAD.parseMaterial()) continue
 
-            setCrateBlock(crate)
+            setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM.texture)
         }
     }
 
@@ -106,27 +108,5 @@ class CrateManager(private val crateController: CrateController, private val dat
      */
     private fun initCrate(crate: Crate) {
         crateController.spawnCrateEntities(crate, listOf("&3Pet &cCrate", "&7Click to open!"))
-    }
-
-    /**
-     * Sets the crate block back to normal
-     */
-    private fun setCrateBlock(crate: Crate) {
-        val crateBlock = crate.location.block
-
-        crateBlock.type = Material.PLAYER_HEAD
-
-        // Creates the game profile for the skull
-        val profile = GameProfile(UUID.randomUUID(), null)
-        profile.properties.put("textures", Property("textures", Items.CRATE_ITEM.texture))
-
-        // Sets the skull texture
-        setSkullTexture(getSkullTile(crateBlock.world, crateBlock), profile)
-
-        // Sets the rotation of the block
-        val data = crateBlock.blockData as Rotatable
-        data.rotation = crate.face
-        crateBlock.blockData = data
-        crateBlock.state.update(true)
     }
 }

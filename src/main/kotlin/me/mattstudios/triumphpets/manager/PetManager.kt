@@ -15,14 +15,15 @@ class PetManager(private val plugin: TriumphPets) {
 
     // The controller for the pet entity
     lateinit var petController: PetController
+        private set
     // The crate entity controller
     lateinit var crateController: CrateController
+        private set
 
     val database: Database
 
     val crateManager: CrateManager
     val dataManager: DataManager
-
 
     init {
         when (getServerVersion()) {

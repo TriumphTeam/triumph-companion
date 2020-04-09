@@ -2,18 +2,22 @@ package me.mattstudios.triumphpets.util
 
 import com.cryptomorin.xseries.XSound
 import com.mojang.authlib.GameProfile
+import com.mojang.authlib.properties.Property
 import me.mattstudios.mattcore.utils.NmsUtils
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.World
 import org.bukkit.block.Block
+import org.bukkit.block.BlockFace
+import org.bukkit.block.data.Rotatable
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
+import java.util.UUID
 
 /**
  * @author Matt
@@ -35,7 +39,7 @@ object Utils {
      */
     fun getPluginStartup(): String {
         return if (isPaper()) "&3&l█▀█ █▀▀ ▀█▀ █▀\n" +
-                              "&3&l█▀▀ ██▄ ░█░ ▄█"
+                "&3&l█▀▀ ██▄ ░█░ ▄█"
         else "&3&lTriumph Pets"
     }
 
@@ -160,6 +164,28 @@ object Utils {
      */
     private fun getBlockPosition(block: Block): Any {
         return block.javaClass.getMethod("getPosition").invoke(block)
+    }
+
+    /**
+     * Sets the crate block back to normal
+     */
+    fun setSkullBlock(location: Location, face: BlockFace, texture: String) {
+        val crateBlock = location.block
+
+        crateBlock.type = Material.PLAYER_HEAD
+
+        // Creates the game profile for the skull
+        val profile = GameProfile(UUID.randomUUID(), null)
+        profile.properties.put("textures", Property("textures", texture))
+
+        // Sets the skull texture
+        setSkullTexture(getSkullTile(crateBlock.world, crateBlock), profile)
+
+        // Sets the rotation of the block
+        val data = crateBlock.blockData as Rotatable
+        data.rotation = face
+        crateBlock.blockData = data
+        crateBlock.state.update(true)
     }
 
 }

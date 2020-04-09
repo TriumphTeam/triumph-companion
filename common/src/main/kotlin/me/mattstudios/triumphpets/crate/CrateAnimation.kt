@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XSound
 import me.mattstudios.triumphpets.manager.CrateManager
 import me.mattstudios.triumphpets.util.Items
 import org.bukkit.Bukkit
+import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand
@@ -18,9 +19,17 @@ import java.util.concurrent.TimeUnit
  */
 class CrateAnimation(private val player: Player, private val crate: Crate, private val crateManager: CrateManager) : Runnable {
 
-    private var armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.70, .5), ArmorStand::class.java) {
+    private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.70, .5), ArmorStand::class.java) {
         it.isSilent = true
         it.isVisible = false
+        it.headPose = EulerAngle(0.0, 45.0, 0.0)
+        it.isSmall = true
+        it.equipment?.helmet = Items.CRATE_ITEM.item
+        it.isMarker = true
+        it.setGravity(false)
+
+        it.customName = "crate-animation-stand"
+        it.isCustomNameVisible = false
     }
 
     private val start = System.currentTimeMillis()
@@ -34,20 +43,17 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
 
     init {
         crateManager.hideCrate(crate)
-
-        armorStand.headPose = EulerAngle(0.0, 45.0, 0.0)
-        armorStand.isSmall = true
-        armorStand.equipment?.helmet = Items.CRATE_ITEM.item
-        armorStand.isMarker = true
-        armorStand.setGravity(false)
+        player.world.spawnParticle(Particle.REDSTONE, crate.location.clone().add(.5, .15, .5), 50, .25, .25, .25, .0, Particle.DustOptions(Color.WHITE, 1F))
     }
 
     override fun run() {
+        // Checks if it's been 5 seconds running
         if (getTimeSinceStart() >= 5) {
             cancel()
             return
         }
 
+        // Handles wobble animation
         when (controller) {
             // First wobble
             in 15..19 -> {
@@ -141,7 +147,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
         armorStand.equipment?.helmet = head
 
         // TODO add 1.12 sound - Furnace I guess
-        XSound.ENTITY_TURTLE_EGG_CRACK.playSound(crate.location)
+        XSound.ENTITY_TURTLE_EGG_CRACK.playSound(crate.location.clone().add(.5, .5, .5))
 
         player.world.spawnParticle(Particle.BLOCK_DUST, crate.location.clone().add(.5, .5, .5), 5, .2, .2, .2, .0, Material.WHITE_CONCRETE.createBlockData())
     }

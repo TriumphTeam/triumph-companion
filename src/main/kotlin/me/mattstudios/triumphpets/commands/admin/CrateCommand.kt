@@ -1,7 +1,5 @@
 package me.mattstudios.triumphpets.commands.admin
 
-import com.mojang.authlib.GameProfile
-import com.mojang.authlib.properties.Property
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.CompleteFor
 import me.mattstudios.mf.annotations.Optional
@@ -10,15 +8,12 @@ import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.util.Items
-import me.mattstudios.triumphpets.util.Utils.getSkullTile
-import me.mattstudios.triumphpets.util.Utils.setSkullTexture
+import me.mattstudios.triumphpets.util.Utils.setSkullBlock
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
-import org.bukkit.block.data.Rotatable
 import org.bukkit.entity.Player
 import org.bukkit.util.BlockIterator
-import java.util.UUID
 
 
 /**
@@ -96,20 +91,7 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        crateBlock.type = Material.PLAYER_HEAD
-
-        // Creates the game profile for the skull
-        val profile = GameProfile(UUID.randomUUID(), null)
-        profile.properties.put("textures", Property("textures", Items.CRATE_ITEM.texture))
-
-        // Sets the skull texture
-        setSkullTexture(getSkullTile(player.world, crateBlock), profile)
-
-        // Sets the rotation of the block
-        val data = crateBlock.blockData as Rotatable
-        data.rotation = face
-        crateBlock.blockData = data
-        crateBlock.state.update(true)
+        setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
 
         crateManager.createCrate(crateBlock.location, face)
         player.sendMessage("Crate created")

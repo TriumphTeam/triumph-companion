@@ -34,9 +34,9 @@ import java.util.stream.Stream
 class TriumphPets : MattPlugin() {
 
     lateinit var petManager: PetManager
+        private set
     lateinit var petConfig: PetConfig
-
-    var start = false
+        private set
 
     /**
      * On plugin enable

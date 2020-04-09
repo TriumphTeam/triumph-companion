@@ -32,6 +32,9 @@ class CrateListeners(private val plugin: TriumphPets) : Listener {
         isCancelled = true
     }
 
+    /**
+     * Event to open the crate
+     */
     @EventHandler
     fun PlayerInteractEvent.onCrateOpen() {
         if (action != Action.RIGHT_CLICK_BLOCK) return
