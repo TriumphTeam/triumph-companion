@@ -189,7 +189,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
      */
     private fun getFillItem(): ItemStack {
         val item = XMaterial.BLACK_STAINED_GLASS_PANE.parseMaterial() ?: Material.BLACK_STAINED_GLASS_PANE
-        return ItemBuilder(item).setName(" ")
+        return ItemBuilder(item).setName("")
                 .addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
     }
 

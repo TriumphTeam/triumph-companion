@@ -29,7 +29,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
     // Starts up the items for the GUI interface
     private val fillItem = ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem())
-            .setName(" ").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
+            .setName("").addItemFlags(ItemFlag.HIDE_ATTRIBUTES).build()
 
     // The item builder for the next page button
     private val nextPageItem = ItemBuilder(XMaterial.PAPER.parseItem())

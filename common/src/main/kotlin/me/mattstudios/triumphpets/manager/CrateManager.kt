@@ -64,7 +64,7 @@ class CrateManager(private val crateController: CrateController, private val dat
      * Shows the crate block / holograms back
      */
     fun showCrate(crate: Crate) {
-        setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM.texture)
+        setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM_BLUE.texture)
         crateController.show(crate)
     }
 
@@ -92,7 +92,7 @@ class CrateManager(private val crateController: CrateController, private val dat
 
             if (crateBlock.type == XMaterial.PLAYER_HEAD.parseMaterial()) continue
 
-            setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM.texture)
+            setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM_BLUE.texture)
         }
     }
 

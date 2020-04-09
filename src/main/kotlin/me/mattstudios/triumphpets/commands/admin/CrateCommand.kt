@@ -1,14 +1,18 @@
 package me.mattstudios.triumphpets.commands.admin
 
+import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.CompleteFor
 import me.mattstudios.mf.annotations.Optional
 import me.mattstudios.mf.annotations.SubCommand
 import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
+import me.mattstudios.mfgui.gui.components.ItemBuilder
+import me.mattstudios.mfgui.gui.components.XMaterial
+import me.mattstudios.mfgui.gui.guis.Gui
+import me.mattstudios.mfgui.gui.guis.GuiItem
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.util.Items
-import me.mattstudios.triumphpets.util.Utils.setSkullBlock
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
@@ -20,7 +24,7 @@ import org.bukkit.util.BlockIterator
  * @author Matt
  */
 @Command("pet")
-class CrateCommand(plugin: TriumphPets) : CommandBase() {
+class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
 
     private val crateManager = plugin.petManager.crateManager
     private val blockStateValues = BlockFace.values().toList().map { it.name }
@@ -91,10 +95,31 @@ class CrateCommand(plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
+        val gui = Gui(plugin, 5, color("&cPet crate options"))
+
+        gui.filler.fill(GuiItem(ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()).build()))
+
+        val crateColorItem = ItemBuilder(Items.CRATE_ITEM_BLUE.item)
+                .setName("Crate Color")
+                .setLore(listOf("Testing"))
+                .build()
+
+        val particle = ItemBuilder(XMaterial.BLAZE_POWDER.parseItem())
+                .setName("Crate Color")
+                .setLore(listOf("Testing"))
+                .build()
+
+        gui.setItem(2, 3, GuiItem(crateColorItem))
+        gui.setItem(2, 7, GuiItem(particle))
+        gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()))
+
+        gui.open(player)
+
+
+        /*setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
 
         crateManager.createCrate(crateBlock.location, face)
-        player.sendMessage("Crate created")
+        player.sendMessage("Crate created")*/
     }
 
     /**
