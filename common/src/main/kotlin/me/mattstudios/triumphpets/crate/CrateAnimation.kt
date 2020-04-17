@@ -24,7 +24,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
         it.isVisible = false
         it.headPose = EulerAngle(0.0, 45.0, 0.0)
         it.isSmall = true
-        it.equipment?.helmet = Items.CRATE_ITEM_BLUE.item
+        it.equipment?.helmet = Items.CRATE_ITEM_RED.item
         it.isMarker = true
         it.setGravity(false)
 
@@ -59,7 +59,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 15..19 -> {
                 wobble()
                 // Add first crack
-                if (controller == 19) crack(Items.CRATE_ITEM_BLUE_CRACK_FIRST.item)
+                if (controller == 19) crack(Items.CRATE_ITEM_RED_CRACK_FIRST.item)
             }
 
             // Back to the beginning
@@ -72,7 +72,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 45..49 -> {
                 returnWobble()
                 // Second crack
-                if (controller == 49) crack(Items.CRATE_ITEM_BLUE_CRACK_SECOND.item)
+                if (controller == 49) crack(Items.CRATE_ITEM_RED_CRACK_SECOND.item)
             }
 
             // Back to the beginning
@@ -85,7 +85,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 75..79 -> {
                 wobble()
                 // Add first crack
-                if (controller == 79) crack(Items.CRATE_ITEM_BLUE_CRACK_THIRD.item)
+                if (controller == 79) crack(Items.CRATE_ITEM_RED_CRACK_THIRD.item)
             }
 
             // Back to the beginning

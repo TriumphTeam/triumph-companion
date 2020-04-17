@@ -20,7 +20,7 @@ class HologramEntity(plugin: MattPlugin, displayName: String, world: World, nbtV
         customName = ChatMessage(color(displayName))
         customNameVisible = true
         isNoGravity = true
-        isInvisible = true
+        isInvisible = true // This is a test
 
         bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, nbtValue), PersistentDataType.BYTE, 1)
     }
