@@ -8,7 +8,11 @@ import java.util.UUID
 /**
  * @author Matt
  */
-data class Crate(val uuid: UUID, val location: Location, val face: BlockFace) {
+data class Crate(
+        val uuid: UUID,
+        val location: Location,
+        val face: BlockFace
+) {
 
     /**
      * Checks whether or not the location is a crate

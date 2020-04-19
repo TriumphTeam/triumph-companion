@@ -1,6 +1,5 @@
 package me.mattstudios.triumphpets.commands.admin
 
-import com.cryptomorin.xseries.XParticle
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.CompleteFor
 import me.mattstudios.mf.annotations.Optional
@@ -14,9 +13,6 @@ import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
 import org.bukkit.entity.Player
 import org.bukkit.util.BlockIterator
-import org.codemc.worldguardwrapper.WorldGuardWrapper
-import org.codemc.worldguardwrapper.flag.WrappedState
-
 
 /**
  * @author Matt
@@ -94,14 +90,6 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
         }
 
         val crateOptionsGui = CrateOptionsGui(plugin, player)
-
-        XParticle.cube()
-
-
-        val wrapper = WorldGuardWrapper.getInstance()
-        val flag = wrapper.getFlag("pvp", WrappedState::class.java)
-
-        val state = flag.map { f -> wrapper.queryFlag(player, player.location, f).get() }.orElse(WrappedState.DENY)
 
         /*setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
 

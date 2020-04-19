@@ -17,9 +17,13 @@ import java.util.UUID
  * @author Matt
  */
 data class PetData(
-        private val plugin: MattPlugin, val uuid: UUID,
-        val type: PetType, var name: String, val petMemory: PetMemory,
-        private val owner: OfflinePlayer) {
+        private val plugin: MattPlugin,
+        val uuid: UUID,
+        val type: PetType,
+        var name: String,
+        val petMemory: PetMemory,
+        private val owner: OfflinePlayer
+) {
 
     val petInventory = PetInventory(plugin, this, owner)
 

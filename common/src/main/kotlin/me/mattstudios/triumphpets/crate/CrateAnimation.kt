@@ -1,6 +1,7 @@
 package me.mattstudios.triumphpets.crate
 
 import com.cryptomorin.xseries.XSound
+import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.triumphpets.manager.CrateManager
 import me.mattstudios.triumphpets.util.Items
 import org.bukkit.Bukkit
@@ -8,6 +9,7 @@ import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand
+import org.bukkit.entity.Fox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.util.EulerAngle
@@ -24,7 +26,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
         it.isVisible = false
         it.headPose = EulerAngle(0.0, 45.0, 0.0)
         it.isSmall = true
-        it.equipment?.helmet = Items.CRATE_ITEM_RED.item
+        it.equipment?.helmet = Items.CRATE_ITEM_RED.getItem()
         it.isMarker = true
         it.setGravity(false)
 
@@ -44,11 +46,12 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
     init {
         crateManager.hideCrate(crate)
         player.world.spawnParticle(Particle.REDSTONE, crate.location.clone().add(.5, .15, .5), 50, .25, .25, .25, .0, Particle.DustOptions(Color.WHITE, 1F))
+        XSound.ENTITY_ITEM_FRAME_REMOVE_ITEM.playSound(crate.location.clone().add(.5, .5, .5))
     }
 
     override fun run() {
         // Checks if it's been 5 seconds running
-        if (getTimeSinceStart() >= 5) {
+        if (getTimeSinceStart() >= 10) {
             cancel()
             return
         }
@@ -59,7 +62,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 15..19 -> {
                 wobble()
                 // Add first crack
-                if (controller == 19) crack(Items.CRATE_ITEM_RED_CRACK_FIRST.item)
+                if (controller == 19) crack(Items.CRATE_ITEM_RED_CRACK_FIRST.getItem())
             }
 
             // Back to the beginning
@@ -72,7 +75,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 45..49 -> {
                 returnWobble()
                 // Second crack
-                if (controller == 49) crack(Items.CRATE_ITEM_RED_CRACK_SECOND.item)
+                if (controller == 49) crack(Items.CRATE_ITEM_RED_CRACK_SECOND.getItem())
             }
 
             // Back to the beginning
@@ -85,7 +88,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             in 75..79 -> {
                 wobble()
                 // Add first crack
-                if (controller == 79) crack(Items.CRATE_ITEM_RED_CRACK_THIRD.item)
+                if (controller == 79) crack(Items.CRATE_ITEM_RED_CRACK_THIRD.getItem())
             }
 
             // Back to the beginning
@@ -94,6 +97,22 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
             // Resets the rotation
             85 -> resetEgg()
 
+            95 -> {
+                player.world.spawnParticle(Particle.CLOUD, crate.location.clone().add(.5, .5, .5), 100, .25, .25, .25, .0)
+                XSound.ENTITY_TURTLE_EGG_HATCH.playSound(crate.location.clone().add(.5, .5, .5))
+
+                later(2) {
+                    armorStand.remove()
+
+                    XSound.ENTITY_BLAZE_SHOOT.playSound(crate.location.clone().add(.5, .5, .5), .5f, .5f)
+
+                    val pet = player.world.spawn(crate.location.clone().add(.5, .0, .5), Fox::class.java) {
+                        it.setAI(true)
+                        it.setGravity(false)
+                        it.setBaby()
+                    }
+                }
+            }
         }
 
         armorStand.headPose = EulerAngle(euler, 45.0, euler)
@@ -106,7 +125,6 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
      */
     private fun cancel() {
         crateManager.showCrate(crate)
-        armorStand.remove()
         Bukkit.getScheduler().cancelTask(taskId)
     }
 
@@ -147,7 +165,8 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
         armorStand.equipment?.helmet = head
 
         // TODO add 1.12 sound - Furnace I guess
-        XSound.ENTITY_TURTLE_EGG_CRACK.playSound(crate.location.clone().add(.5, .5, .5))
+        // Maybe CROP PLACE
+        XSound.ENTITY_TURTLE_EGG_CRACK.playSound(crate.location.clone().add(.5, .5, .5), 1f, 5f)
 
         player.world.spawnParticle(Particle.BLOCK_DUST, crate.location.clone().add(.5, .5, .5), 5, .2, .2, .2, .0, Material.WHITE_CONCRETE.createBlockData())
     }
