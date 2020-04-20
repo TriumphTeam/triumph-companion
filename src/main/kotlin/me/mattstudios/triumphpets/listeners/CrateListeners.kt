@@ -3,7 +3,6 @@ package me.mattstudios.triumphpets.listeners
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.crate.CrateAnimation
-import org.bukkit.Bukkit
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
@@ -46,8 +45,8 @@ class CrateListeners(private val plugin: TriumphPets) : Listener {
 
         val crate = crateManager.getCrate(block.location) ?: return
 
-        val animationTask = CrateAnimation(player, crate, crateManager)
-        animationTask.taskId = Bukkit.getScheduler().runTaskTimer(plugin, animationTask, 0, 1).taskId
+        // Runs the animation task
+        CrateAnimation(player, crate, crateManager).runTaskTimer(plugin, 0, 1)
     }
 
     /**

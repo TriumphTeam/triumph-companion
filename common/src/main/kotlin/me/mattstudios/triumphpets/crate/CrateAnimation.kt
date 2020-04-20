@@ -4,7 +4,6 @@ import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.triumphpets.manager.CrateManager
 import me.mattstudios.triumphpets.util.Items
-import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -12,6 +11,7 @@ import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Fox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
+import org.bukkit.scheduler.BukkitRunnable
 import org.bukkit.util.EulerAngle
 import java.util.concurrent.TimeUnit
 
@@ -19,7 +19,11 @@ import java.util.concurrent.TimeUnit
 /**
  * @author Matt
  */
-class CrateAnimation(private val player: Player, private val crate: Crate, private val crateManager: CrateManager) : Runnable {
+class CrateAnimation(
+        private val player: Player,
+        private val crate: Crate,
+        private val crateManager: CrateManager
+) : BukkitRunnable() {
 
     private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.70, .5), ArmorStand::class.java) {
         it.isSilent = true
@@ -41,8 +45,6 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
 
     private var wobbleDirection = (0..1).random()
 
-    var taskId = 0
-
     init {
         crateManager.hideCrate(crate)
         player.world.spawnParticle(Particle.REDSTONE, crate.location.clone().add(.5, .15, .5), 50, .25, .25, .25, .0, Particle.DustOptions(Color.WHITE, 1F))
@@ -52,7 +54,7 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
     override fun run() {
         // Checks if it's been 5 seconds running
         if (getTimeSinceStart() >= 10) {
-            cancel()
+            cancelAnimation()
             return
         }
 
@@ -123,9 +125,9 @@ class CrateAnimation(private val player: Player, private val crate: Crate, priva
     /**
      * Cancels the task
      */
-    private fun cancel() {
+    private fun cancelAnimation() {
         crateManager.showCrate(crate)
-        Bukkit.getScheduler().cancelTask(taskId)
+        cancel()
     }
 
     /**

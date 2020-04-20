@@ -3,7 +3,7 @@ package me.mattstudios.triumphpets.locale
 /**
  * @author Matt
  */
-enum class Defaults(private var path: String, private var en: String, private var pt: String) {
+enum class Defaults(val path: String, private val en: String, private val pt: String) {
 
     /**
      * Startup messages
@@ -150,14 +150,64 @@ enum class Defaults(private var path: String, private var en: String, private va
             "gui.pet.options-name",
             "&6&lOptions",
             ""
-    );
+    ),
 
     /**
-     * Get's the path to the message
+     * Pet crate GUI messages
      */
-    fun getPath(): String {
-        return path
-    }
+
+    // Main
+    PET_CRATE_GUI_MAIN_TITLE(
+            "gui.pet-crate.main.title",
+            "&lPet crate options",
+            ""
+    ),
+    PET_CRATE_GUI_MAIN_EGG_NAME(
+            "gui.pet-crate.main.select-egg.name",
+            "&cCrate egg",
+            ""
+    ),
+    PET_CRATE_GUI_MAIN_EGG_LORE(
+            "gui.pet-crate.main.select-egg.lore",
+            "&7Select the egg you want for the crate!",
+            ""
+    ),
+    PET_CRATE_GUI_MAIN_PARTICLE_NAME(
+            "gui.pet-crate.main.select-particle.name",
+            "&cCrate Particle",
+            ""
+    ),
+    PET_CRATE_GUI_MAIN_PARTICLE_LORE(
+            "gui.pet-crate.main.select-particle.lore",
+            "&7Select the idle particle effect you want!",
+            ""
+    ),
+    // Egg
+    PET_CRATE_GUI_EGG_TITLE(
+            "gui.pet-crate.egg.title",
+            "&lSelect color",
+            ""
+    ),
+    PET_CRATE_GUI_EGG_BACK_NAME(
+            "gui.pet-crate.egg.back.name",
+            "&cBack",
+            ""
+    ),
+    PET_CRATE_GUI_EGG_BACK_LORE(
+            "gui.pet-crate.egg.back.lore",
+            "&7Goes to the previous menu!",
+            ""
+    ),
+    PET_CRATE_GUI_EGG_EGG_NAME(
+            "gui.pet-crate.egg.egg.name",
+            "&c{egg} egg",
+            ""
+    ),
+    PET_CRATE_GUI_EGG_EGG_LORE(
+            "gui.pet-crate.egg.egg.lore",
+            "&7Click to select this egg!",
+            ""
+    );
 
     /**
      * Get's the message in that language

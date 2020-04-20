@@ -7,25 +7,36 @@ import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.mfgui.gui.guis.Gui
 import me.mattstudios.mfgui.gui.guis.GuiItem
+import me.mattstudios.triumphpets.crate.componetents.CrateEffect
+import me.mattstudios.triumphpets.crate.componetents.CrateEgg
+import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.util.Items
 import me.mattstudios.triumphpets.util.Utils.playClickSound
-import org.bukkit.Material
+import org.apache.commons.lang.StringUtils
 import org.bukkit.entity.Player
+import org.bukkit.inventory.ItemStack
 
 /**
  * @author Matt
  */
-class CrateOptionsGui(plugin: MattPlugin, private val player: Player) {
+class CrateOptionsGui(
+        plugin: MattPlugin,
+        private val player: Player,
+        private var crateEgg: CrateEgg = CrateEgg.BLUE,
+        private val crateEffect: CrateEffect = CrateEffect.NONE
+) {
 
-    private val gui = Gui(plugin, 5, color("&lPet crate options"))
-    private val colorGui = Gui(plugin, 3, color("&lSelect color"))
+    constructor(plugin: MattPlugin, player: Player, crateEffect: CrateEffect) : this(plugin, player, CrateEgg.BLUE, crateEffect)
+
+    private val locale = plugin.locale
+
+    private val gui = Gui(plugin, 5, locale.getMessage(Message.PET_CRATE_GUI_MAIN_TITLE))
+    private val eggGui = Gui(plugin, 3, locale.getMessage(Message.PET_CRATE_GUI_EGG_TITLE))
     private val particleGui = Gui(plugin, 5, color("&lSelect particle"))
-
-    private val fillItem = GuiItem(ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()).setName("").build())
 
     init {
         setupGui()
-        setupColorGui()
+        setupEggGui()
         setupParticleGui()
 
         gui.open(player)
@@ -37,24 +48,14 @@ class CrateOptionsGui(plugin: MattPlugin, private val player: Player) {
     private fun setupGui() {
         gui.setDefaultClickAction { it.isCancelled = true }
 
-        gui.filler.fill(GuiItem(ItemBuilder(XMaterial.BLACK_STAINED_GLASS_PANE.parseItem()).build()))
+        gui.filler.fill(GuiItem(Items.FILL_ITEM.getItem()))
 
-        val crateColorItem = ItemBuilder(Items.CRATE_ITEM_BLUE.getItem())
-                .setName("Crate Color")
-                .setLore(listOf("Testing"))
-                .build()
-
-        val particle = ItemBuilder(XMaterial.BLAZE_POWDER.parseItem())
-                .setName("Crate Particle")
-                .setLore(listOf("Testing"))
-                .build()
-
-        gui.setItem(2, 3, GuiItem(crateColorItem, GuiAction {
+        gui.setItem(2, 3, GuiItem(getSelectEggItem(), GuiAction {
             playClickSound(player)
-            colorGui.open(player)
+            eggGui.open(player)
         }))
 
-        gui.setItem(2, 7, GuiItem(particle, GuiAction {
+        gui.setItem(2, 7, GuiItem(getSelectParticleItem(), GuiAction {
             playClickSound(player)
             particleGui.open(player)
         }))
@@ -64,24 +65,40 @@ class CrateOptionsGui(plugin: MattPlugin, private val player: Player) {
     }
 
     /**
-     * Sets up the color choose GUI
+     * Sets up the egg choose GUI
      */
-    private fun setupColorGui() {
-        colorGui.setDefaultClickAction { it.isCancelled = true }
-        colorGui.setOutsideClickAction {
-            playClickSound(player)
-            gui.open(player)
+    private fun setupEggGui() {
+        eggGui.setDefaultClickAction { it.isCancelled = true }
+        eggGui.setOutsideClickAction { back() }
+
+        eggGui.filler.fill(GuiItem(Items.FILL_ITEM.getItem()))
+
+
+        // Cycles through all the eggs and sets them
+        var slot = 3
+        for (egg in CrateEgg.values()) {
+
+            eggGui.setItem(2, slot, GuiItem(
+                    ItemBuilder(egg.getItem())
+                            .setName(StringUtils.replace(locale.getMessage(Message.PET_CRATE_GUI_EGG_EGG_NAME), "{egg}", egg.eggName))
+                            .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EGG_EGG_LORE)))
+                            .build()
+            ) {
+                crateEgg = egg
+                back()
+            })
+
+            slot++
         }
 
-        colorGui.filler.fill(fillItem)
+        // Back button
+        eggGui.setItem(3, 1, GuiItem(
+                ItemBuilder(XMaterial.PAPER.parseItem())
+                        .setName(locale.getMessage(Message.PET_CRATE_GUI_EGG_BACK_NAME))
+                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EGG_BACK_LORE)))
+                        .build()
+        ) { back() })
 
-        colorGui.setItem(2, 3, GuiItem(ItemBuilder(Items.CRATE_ITEM_BLUE.getItem()).build()))
-        colorGui.setItem(2, 4, GuiItem(ItemBuilder(Items.CRATE_ITEM_PURPLE.getItem()).build()))
-        colorGui.setItem(2, 5, GuiItem(ItemBuilder(Items.CRATE_ITEM_RED.getItem()).build()))
-        colorGui.setItem(2, 6, GuiItem(ItemBuilder(Items.CRATE_ITEM_YELLOW.getItem()).build()))
-        colorGui.setItem(2, 7, GuiItem(ItemBuilder(Items.CRATE_ITEM_GREEN.getItem()).build()))
-
-        colorGui.setItem(3, 1, GuiItem(ItemBuilder(Material.PAPER).build()))
     }
 
     /**
@@ -89,12 +106,38 @@ class CrateOptionsGui(plugin: MattPlugin, private val player: Player) {
      */
     private fun setupParticleGui() {
         particleGui.setDefaultClickAction { it.isCancelled = true }
-        particleGui.setOutsideClickAction {
-            playClickSound(player)
-            gui.open(player)
-        }
+        particleGui.setOutsideClickAction { back() }
 
-        particleGui.filler.fill(fillItem)
+        particleGui.filler.fill(GuiItem(Items.FILL_ITEM.getItem()))
+    }
+
+    /**
+     * Back button action
+     */
+    private fun back() {
+        playClickSound(player)
+        gui.updateItem(2, 3, getSelectEggItem())
+        gui.open(player)
+    }
+
+    /**
+     * Gets the select egg item for easy updating
+     */
+    private fun getSelectEggItem(): ItemStack {
+        return ItemBuilder(crateEgg.getItem())
+                .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_EGG_NAME))
+                .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_EGG_LORE)))
+                .build()
+    }
+
+    /**
+     * Gets the select particle item for easy updating
+     */
+    private fun getSelectParticleItem(): ItemStack {
+        return ItemBuilder(XMaterial.BLAZE_POWDER.parseItem())
+                .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_PARTICLE_NAME))
+                .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_PARTICLE_LORE)))
+                .build()
     }
 
 }

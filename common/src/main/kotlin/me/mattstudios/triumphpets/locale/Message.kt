@@ -18,24 +18,24 @@ object Message : SettingsHolder {
      */
 
     @JvmField
-    val STARTUP_VERSION: Property<String> = newProperty(Defaults.STARTUP_VERSION.getPath(),
-                                                        Defaults.STARTUP_VERSION.get(PetUtils.LOCALE))
+    val STARTUP_VERSION: Property<String> = newProperty(Defaults.STARTUP_VERSION.path,
+            Defaults.STARTUP_VERSION.get(PetUtils.LOCALE))
 
     @JvmField
-    val STARTUP_CREATE_DATABASE_SUCCESS: Property<String> = newProperty(Defaults.STARTUP_CREATE_DATABASE_SUCCESS.getPath(),
-                                                                        Defaults.STARTUP_CREATE_DATABASE_SUCCESS.get(PetUtils.LOCALE))
+    val STARTUP_CREATE_DATABASE_SUCCESS: Property<String> = newProperty(Defaults.STARTUP_CREATE_DATABASE_SUCCESS.path,
+            Defaults.STARTUP_CREATE_DATABASE_SUCCESS.get(PetUtils.LOCALE))
 
     @JvmField
-    val STARTUP_CREATE_DATABASE_ERROR: Property<String> = newProperty(Defaults.STARTUP_CREATE_DATABASE_ERROR.getPath(),
-                                                                      Defaults.STARTUP_CREATE_DATABASE_ERROR.get(PetUtils.LOCALE))
+    val STARTUP_CREATE_DATABASE_ERROR: Property<String> = newProperty(Defaults.STARTUP_CREATE_DATABASE_ERROR.path,
+            Defaults.STARTUP_CREATE_DATABASE_ERROR.get(PetUtils.LOCALE))
 
     @JvmField
-    val STARTUP_CREATE_TABLES_ERROR: Property<String> = newProperty(Defaults.STARTUP_CREATE_TABLES_ERROR.getPath(),
-                                                                    Defaults.STARTUP_CREATE_TABLES_ERROR.get(PetUtils.LOCALE))
+    val STARTUP_CREATE_TABLES_ERROR: Property<String> = newProperty(Defaults.STARTUP_CREATE_TABLES_ERROR.path,
+            Defaults.STARTUP_CREATE_TABLES_ERROR.get(PetUtils.LOCALE))
 
     @JvmField
-    val STARTUP_CACHE_PETS_ERROR: Property<String> = newProperty(Defaults.STARTUP_CACHE_PETS_ERROR.getPath(),
-                                                                 Defaults.STARTUP_CACHE_PETS_ERROR.get(PetUtils.LOCALE))
+    val STARTUP_CACHE_PETS_ERROR: Property<String> = newProperty(Defaults.STARTUP_CACHE_PETS_ERROR.path,
+            Defaults.STARTUP_CACHE_PETS_ERROR.get(PetUtils.LOCALE))
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -44,16 +44,16 @@ object Message : SettingsHolder {
      */
 
     @JvmField
-    val COMMAND_GIVE_NO_PLAYER: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PLAYER.getPath(),
-                                                               Defaults.COMMAND_GIVE_NO_PLAYER.get(PetUtils.LOCALE))
+    val COMMAND_GIVE_NO_PLAYER: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PLAYER.path,
+            Defaults.COMMAND_GIVE_NO_PLAYER.get(PetUtils.LOCALE))
 
     @JvmField
-    val COMMAND_GIVE_NO_PET: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PET.getPath(),
-                                                            Defaults.COMMAND_GIVE_NO_PET.get(PetUtils.LOCALE))
+    val COMMAND_GIVE_NO_PET: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PET.path,
+            Defaults.COMMAND_GIVE_NO_PET.get(PetUtils.LOCALE))
 
     @JvmField
-    val COMMAND_GIVE_SUCCESS: Property<String> = newProperty(Defaults.COMMAND_GIVE_SUCCESS.getPath(),
-                                                             Defaults.COMMAND_GIVE_SUCCESS.get(PetUtils.LOCALE))
+    val COMMAND_GIVE_SUCCESS: Property<String> = newProperty(Defaults.COMMAND_GIVE_SUCCESS.path,
+            Defaults.COMMAND_GIVE_SUCCESS.get(PetUtils.LOCALE))
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -62,24 +62,24 @@ object Message : SettingsHolder {
      */
 
     @JvmField
-    val PET_DATA_DISPLAY_TITLE: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_TITLE.getPath(),
-                                                               Defaults.PET_DATA_DISPLAY_TITLE.get(PetUtils.LOCALE))
+    val PET_DATA_DISPLAY_TITLE: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_TITLE.path,
+            Defaults.PET_DATA_DISPLAY_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_DATA_DISPLAY_LORE: Property<List<String>> = newListProperty(Defaults.PET_DATA_DISPLAY_LORE.getPath(),
-                                                                        Defaults.PET_DATA_DISPLAY_LORE.get(PetUtils.LOCALE).split("\n"))
+    val PET_DATA_DISPLAY_LORE: Property<List<String>> = newListProperty(Defaults.PET_DATA_DISPLAY_LORE.path,
+            Defaults.PET_DATA_DISPLAY_LORE.get(PetUtils.LOCALE).split("\n"))
 
     @JvmField
-    val PET_DATA_DISPLAY_ACTION_SPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.getPath(),
-                                                                      Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.get(PetUtils.LOCALE))
+    val PET_DATA_DISPLAY_ACTION_SPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.path,
+            Defaults.PET_DATA_DISPLAY_ACTION_SPAWN.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_DATA_DISPLAY_ACTION_DESPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.getPath(),
-                                                                        Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.get(PetUtils.LOCALE))
+    val PET_DATA_DISPLAY_ACTION_DESPAWN: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.path,
+            Defaults.PET_DATA_DISPLAY_ACTION_DESPAWN.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_DATA_DISPLAY_ACTION_OPTIONS: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.getPath(),
-                                                                        Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.get(PetUtils.LOCALE))
+    val PET_DATA_DISPLAY_ACTION_OPTIONS: Property<String> = newProperty(Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.path,
+            Defaults.PET_DATA_DISPLAY_ACTION_OPTIONS.get(PetUtils.LOCALE))
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -88,32 +88,32 @@ object Message : SettingsHolder {
      */
 
     @JvmField
-    val PET_LIST_GUI_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_TITLE.getPath(),
-                                                           Defaults.PET_LIST_GUI_TITLE.get(PetUtils.LOCALE))
+    val PET_LIST_GUI_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_TITLE.path,
+            Defaults.PET_LIST_GUI_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_LIST_GUI_NO_PET_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_NO_PET_TITLE.getPath(),
-                                                                  Defaults.PET_LIST_GUI_NO_PET_TITLE.get(PetUtils.LOCALE))
+    val PET_LIST_GUI_NO_PET_TITLE: Property<String> = newProperty(Defaults.PET_LIST_GUI_NO_PET_TITLE.path,
+            Defaults.PET_LIST_GUI_NO_PET_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_LIST_GUI_NO_PET_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_NO_PET_LORE.getPath(),
-                                                                           Defaults.PET_LIST_GUI_NO_PET_LORE.get(PetUtils.LOCALE))
+    val PET_LIST_GUI_NO_PET_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_NO_PET_LORE.path,
+            Defaults.PET_LIST_GUI_NO_PET_LORE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_LIST_GUI_PREVIOUS: Property<String> = newProperty(Defaults.PET_LIST_GUI_PREVIOUS.getPath(),
-                                                              Defaults.PET_LIST_GUI_PREVIOUS.get(PetUtils.LOCALE))
+    val PET_LIST_GUI_PREVIOUS: Property<String> = newProperty(Defaults.PET_LIST_GUI_PREVIOUS.path,
+            Defaults.PET_LIST_GUI_PREVIOUS.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_LIST_GUI_PREVIOUS_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_PREVIOUS_LORE.getPath(),
-                                                                             Defaults.PET_LIST_GUI_PREVIOUS_LORE.get(PetUtils.LOCALE).split("\n"))
+    val PET_LIST_GUI_PREVIOUS_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_PREVIOUS_LORE.path,
+            Defaults.PET_LIST_GUI_PREVIOUS_LORE.get(PetUtils.LOCALE).split("\n"))
 
     @JvmField
-    val PET_LIST_GUI_NEXT: Property<String> = newProperty(Defaults.PET_LIST_GUI_NEXT.getPath(),
-                                                          Defaults.PET_LIST_GUI_NEXT.get(PetUtils.LOCALE))
+    val PET_LIST_GUI_NEXT: Property<String> = newProperty(Defaults.PET_LIST_GUI_NEXT.path,
+            Defaults.PET_LIST_GUI_NEXT.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_LIST_GUI_NEXT_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_NEXT_LORE.getPath(),
-                                                                         Defaults.PET_LIST_GUI_NEXT_LORE.get(PetUtils.LOCALE).split("\n"))
+    val PET_LIST_GUI_NEXT_LORE: Property<List<String>> = newListProperty(Defaults.PET_LIST_GUI_NEXT_LORE.path,
+            Defaults.PET_LIST_GUI_NEXT_LORE.get(PetUtils.LOCALE).split("\n"))
 
     // ------------------------------------------------------------------------------------------------- //
 
@@ -122,17 +122,66 @@ object Message : SettingsHolder {
      */
 
     @JvmField
-    val PET_GUI_TITLE: Property<String> = newProperty(Defaults.PET_GUI_TITLE.getPath(),
-                                                      Defaults.PET_GUI_TITLE.get(PetUtils.LOCALE))
+    val PET_GUI_TITLE: Property<String> = newProperty(Defaults.PET_GUI_TITLE.path,
+            Defaults.PET_GUI_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_GUI_FILTER_NAME: Property<String> = newProperty(Defaults.PET_GUI_FILTER_NAME.getPath(),
-                                                            Defaults.PET_GUI_FILTER_NAME.get(PetUtils.LOCALE))
+    val PET_GUI_FILTER_NAME: Property<String> = newProperty(Defaults.PET_GUI_FILTER_NAME.path,
+            Defaults.PET_GUI_FILTER_NAME.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_GUI_OPTIONS_NAME: Property<String> = newProperty(Defaults.PET_GUI_OPTIONS_NAME.getPath(),
-                                                             Defaults.PET_GUI_OPTIONS_NAME.get(PetUtils.LOCALE))
+    val PET_GUI_OPTIONS_NAME: Property<String> = newProperty(Defaults.PET_GUI_OPTIONS_NAME.path,
+            Defaults.PET_GUI_OPTIONS_NAME.get(PetUtils.LOCALE))
 
+    // ------------------------------------------------------------------------------------------------- //
+
+    /**
+     * Pet crate GUI messages
+     */
+
+    // Main
+    @JvmField
+    val PET_CRATE_GUI_MAIN_TITLE: Property<String> = newProperty(Defaults.PET_CRATE_GUI_MAIN_TITLE.path,
+            Defaults.PET_CRATE_GUI_MAIN_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_MAIN_EGG_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_MAIN_EGG_NAME.path,
+            Defaults.PET_CRATE_GUI_MAIN_EGG_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_MAIN_EGG_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_MAIN_EGG_LORE.path,
+            Defaults.PET_CRATE_GUI_MAIN_EGG_LORE.get(PetUtils.LOCALE).split("\n"))
+
+    @JvmField
+    val PET_CRATE_GUI_MAIN_PARTICLE_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_MAIN_PARTICLE_NAME.path,
+            Defaults.PET_CRATE_GUI_MAIN_PARTICLE_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_MAIN_PARTICLE_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_MAIN_PARTICLE_LORE.path,
+            Defaults.PET_CRATE_GUI_MAIN_PARTICLE_LORE.get(PetUtils.LOCALE).split("\n"))
+
+    // Egg
+    @JvmField
+    val PET_CRATE_GUI_EGG_TITLE: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_TITLE.path,
+            Defaults.PET_CRATE_GUI_EGG_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_EGG_BACK_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_BACK_NAME.path,
+            Defaults.PET_CRATE_GUI_EGG_BACK_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_EGG_BACK_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_EGG_BACK_LORE.path,
+            Defaults.PET_CRATE_GUI_EGG_BACK_LORE.get(PetUtils.LOCALE).split("\n"))
+
+    @JvmField
+    val PET_CRATE_GUI_EGG_EGG_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_EGG_NAME.path,
+            Defaults.PET_CRATE_GUI_EGG_EGG_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_EGG_EGG_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_EGG_EGG_LORE.path,
+            Defaults.PET_CRATE_GUI_EGG_EGG_LORE.get(PetUtils.LOCALE).split("\n"))
+
+    // ------------------------------------------------------------------------------------------------- //
 
     /**
      * Registers the commands for the locale file

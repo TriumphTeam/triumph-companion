@@ -1,7 +1,9 @@
 package me.mattstudios.triumphpets.crate
 
+import me.mattstudios.triumphpets.crate.componetents.CrateEffect
+import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import org.bukkit.Location
-import org.bukkit.block.BlockFace
+import org.bukkit.block.Block
 import java.util.UUID
 
 
@@ -11,7 +13,9 @@ import java.util.UUID
 data class Crate(
         val uuid: UUID,
         val location: Location,
-        val face: BlockFace
+        val crateEgg: CrateEgg,
+        val crateEffect: CrateEffect,
+        val blockUnder: Block
 ) {
 
     /**
