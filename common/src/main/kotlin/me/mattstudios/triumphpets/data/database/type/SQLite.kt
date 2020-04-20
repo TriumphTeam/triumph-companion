@@ -5,6 +5,8 @@ import me.mattstudios.mattcore.utils.MessageUtils.info
 import me.mattstudios.mattcore.utils.Task.async
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.crate.Crate
+import me.mattstudios.triumphpets.crate.componetents.CrateEffect
+import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_CRATES
@@ -18,8 +20,8 @@ import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SEL
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PLAYERS
 import me.mattstudios.triumphpets.locale.Message
-import me.mattstudios.triumphpets.manager.CrateManager
-import me.mattstudios.triumphpets.manager.DataManager
+import me.mattstudios.triumphpets.managers.CrateManager
+import me.mattstudios.triumphpets.managers.DataManager
 import me.mattstudios.triumphpets.pet.PetPlayer
 import me.mattstudios.triumphpets.pet.components.FilterType
 import me.mattstudios.triumphpets.pet.components.PetExperience
@@ -27,7 +29,6 @@ import me.mattstudios.triumphpets.pet.components.PetMemory
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.util.Utils.blockLocationToString
 import me.mattstudios.triumphpets.util.Utils.stringToBlockLocation
-import org.bukkit.block.BlockFace
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
@@ -143,16 +144,16 @@ class SQLite(private val plugin: MattPlugin) : Database {
             while (resultSet.next()) {
                 val uuid = UUID.fromString(resultSet.getString("uuid"))
                 val location = stringToBlockLocation(resultSet.getString("location"))
-                // Not using value of to not throw errors and instead get null
-                val face = BlockFace.values().find { it.name == resultSet.getString("face") }
+                val crateEgg = CrateEgg.valueOf(resultSet.getString("crate_egg"))
+                val crateEffect = CrateEffect.valueOf(resultSet.getString("crate_effect"))
 
                 // Errors if any of those are null
-                if (location == null || face == null) {
+                if (location == null) {
                     info("Error loading this crate")
                     continue
                 }
 
-                val crate = Crate(uuid, location, face)
+                val crate = Crate(uuid, location, crateEgg, crateEffect, null)
                 crateManager.loadCrate(crate)
             }
 
@@ -239,7 +240,8 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
                 statement.setString(1, crate.uuid.toString())
                 statement.setString(2, blockLocationToString(crate.location))
-                statement.setString(3, crate.face.name)
+                statement.setString(3, crate.crateEgg.name)
+                statement.setString(4, crate.crateEffect.name)
 
                 statement.executeUpdate()
             } catch (e: SQLException) {

@@ -19,7 +19,7 @@ import me.mattstudios.triumphpets.listeners.CrateListeners
 import me.mattstudios.triumphpets.listeners.PetListeners
 import me.mattstudios.triumphpets.listeners.PlayerListeners
 import me.mattstudios.triumphpets.locale.Message
-import me.mattstudios.triumphpets.manager.PetManager
+import me.mattstudios.triumphpets.managers.PetManager
 import me.mattstudios.triumphpets.pet.utils.Experience
 import me.mattstudios.triumphpets.pet.utils.PetType
 import me.mattstudios.triumphpets.pet.utils.PetUtils

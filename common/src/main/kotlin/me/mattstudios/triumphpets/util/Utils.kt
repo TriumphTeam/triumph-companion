@@ -139,7 +139,7 @@ object Utils {
     /**
      * Sets the crate block back to normal
      */
-    fun setSkullBlock(location: Location, face: BlockFace, texture: String) {
+    fun setSkullBlock(location: Location, texture: String) {
         val crateBlock = location.block
 
         crateBlock.type = Material.PLAYER_HEAD
@@ -153,7 +153,7 @@ object Utils {
 
         // Sets the rotation of the block
         val data = crateBlock.blockData as Rotatable
-        data.rotation = face
+        data.rotation = BlockFace.NORTH_WEST
         crateBlock.blockData = data
         crateBlock.state.update(true)
     }

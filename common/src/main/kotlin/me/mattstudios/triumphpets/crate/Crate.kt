@@ -15,7 +15,8 @@ data class Crate(
         val location: Location,
         val crateEgg: CrateEgg,
         val crateEffect: CrateEffect,
-        val blockUnder: Block
+        // TODO Temporary
+        val blockUnder: Block? = null
 ) {
 
     /**

@@ -2,8 +2,7 @@ package me.mattstudios.triumphpets.crate
 
 import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.utils.Task.later
-import me.mattstudios.triumphpets.manager.CrateManager
-import me.mattstudios.triumphpets.util.Items
+import me.mattstudios.triumphpets.managers.CrateManager
 import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
@@ -30,7 +29,7 @@ class CrateAnimation(
         it.isVisible = false
         it.headPose = EulerAngle(0.0, 45.0, 0.0)
         it.isSmall = true
-        it.equipment?.helmet = Items.CRATE_ITEM_RED.getItem()
+        it.equipment?.helmet = crate.crateEgg.getItem()
         it.isMarker = true
         it.setGravity(false)
 
@@ -64,7 +63,7 @@ class CrateAnimation(
             in 15..19 -> {
                 wobble()
                 // Add first crack
-                if (controller == 19) crack(Items.CRATE_ITEM_RED_CRACK_FIRST.getItem())
+                if (controller == 19) crack(crate.crateEgg.firstCrackItem)
             }
 
             // Back to the beginning
@@ -77,7 +76,7 @@ class CrateAnimation(
             in 45..49 -> {
                 returnWobble()
                 // Second crack
-                if (controller == 49) crack(Items.CRATE_ITEM_RED_CRACK_SECOND.getItem())
+                if (controller == 49) crack(crate.crateEgg.secondCrackItem)
             }
 
             // Back to the beginning
@@ -90,7 +89,7 @@ class CrateAnimation(
             in 75..79 -> {
                 wobble()
                 // Add first crack
-                if (controller == 79) crack(Items.CRATE_ITEM_RED_CRACK_THIRD.getItem())
+                if (controller == 79) crack(crate.crateEgg.thirdCrackItem)
             }
 
             // Back to the beginning

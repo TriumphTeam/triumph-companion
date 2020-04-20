@@ -1,15 +1,15 @@
-package me.mattstudios.triumphpets.manager
+package me.mattstudios.triumphpets.managers
 
 import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
+import me.mattstudios.triumphpets.crate.componetents.CrateEffect
+import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import me.mattstudios.triumphpets.data.database.Database
-import me.mattstudios.triumphpets.util.Items
 import me.mattstudios.triumphpets.util.Utils.setSkullBlock
 import org.bukkit.Location
 import org.bukkit.Material
-import org.bukkit.block.BlockFace
 import java.util.UUID
 
 /**
@@ -30,8 +30,9 @@ class CrateManager(private val crateController: CrateController, private val dat
     /**
      * Sets the crate location and initializes it
      */
-    fun createCrate(location: Location, face: BlockFace) {
-        val crate = Crate(UUID.randomUUID(), location, face)
+    fun createCrate(location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
+        val crate = Crate(UUID.randomUUID(), location, crateEgg, crateEffect)
+        setSkullBlock(location, crateEgg.blockTexture)
         database.insertCrate(crate)
         loadCrate(crate)
     }
@@ -64,7 +65,7 @@ class CrateManager(private val crateController: CrateController, private val dat
      * Shows the crate block / holograms back
      */
     fun showCrate(crate: Crate) {
-        setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM_RED.texture)
+        setSkullBlock(crate.location, crate.crateEgg.blockTexture)
         crateController.show(crate)
     }
 
@@ -92,7 +93,7 @@ class CrateManager(private val crateController: CrateController, private val dat
 
             if (crateBlock.type == XMaterial.PLAYER_HEAD.parseMaterial()) continue
 
-            setSkullBlock(crate.location, crate.face, Items.CRATE_ITEM_BLUE.texture)
+            setSkullBlock(crate.location, crate.crateEgg.blockTexture)
         }
     }
 

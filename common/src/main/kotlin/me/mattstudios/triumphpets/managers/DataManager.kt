@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.manager
+package me.mattstudios.triumphpets.managers
 
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.data.PetData

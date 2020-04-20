@@ -89,7 +89,7 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        val crateOptionsGui = CrateOptionsGui(plugin, player)
+        val crateOptionsGui = CrateOptionsGui(plugin, crateManager, crateBlock.location, player)
 
         /*setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
 

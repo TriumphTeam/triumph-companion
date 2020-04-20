@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.manager
+package me.mattstudios.triumphpets.managers
 
 import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.triumphpets.TriumphPets

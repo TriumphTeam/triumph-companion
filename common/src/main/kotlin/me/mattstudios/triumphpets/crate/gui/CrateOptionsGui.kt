@@ -10,9 +10,11 @@ import me.mattstudios.mfgui.gui.guis.GuiItem
 import me.mattstudios.triumphpets.crate.componetents.CrateEffect
 import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import me.mattstudios.triumphpets.locale.Message
+import me.mattstudios.triumphpets.managers.CrateManager
 import me.mattstudios.triumphpets.util.Items
 import me.mattstudios.triumphpets.util.Utils.playClickSound
 import org.apache.commons.lang.StringUtils
+import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 
@@ -21,12 +23,14 @@ import org.bukkit.inventory.ItemStack
  */
 class CrateOptionsGui(
         plugin: MattPlugin,
+        private val crateManager: CrateManager,
+        private val crateLocation: Location,
         private val player: Player,
         private var crateEgg: CrateEgg = CrateEgg.BLUE,
         private val crateEffect: CrateEffect = CrateEffect.NONE
 ) {
 
-    constructor(plugin: MattPlugin, player: Player, crateEffect: CrateEffect) : this(plugin, player, CrateEgg.BLUE, crateEffect)
+    constructor(plugin: MattPlugin, crateManager: CrateManager, crateLocation: Location, player: Player, crateEffect: CrateEffect) : this(plugin, crateManager, crateLocation, player, CrateEgg.BLUE, crateEffect)
 
     private val locale = plugin.locale
 
@@ -60,7 +64,9 @@ class CrateOptionsGui(
             particleGui.open(player)
         }))
 
-        gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()))
+        gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()) {
+            crateManager.createCrate(crateLocation, crateEgg, crateEffect)
+        })
 
     }
 

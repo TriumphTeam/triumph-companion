@@ -2,8 +2,8 @@ package me.mattstudios.triumphpets.data.database
 
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.data.PetData
-import me.mattstudios.triumphpets.manager.CrateManager
-import me.mattstudios.triumphpets.manager.DataManager
+import me.mattstudios.triumphpets.managers.CrateManager
+import me.mattstudios.triumphpets.managers.DataManager
 import me.mattstudios.triumphpets.pet.PetPlayer
 
 /**
