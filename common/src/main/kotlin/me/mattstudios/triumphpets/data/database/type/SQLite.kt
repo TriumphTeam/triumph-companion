@@ -44,6 +44,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
 
     private lateinit var dataSource: SQLiteDataSource
 
+
     /**
      * Initializes everything and caches it
      */
@@ -134,6 +135,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
     /**
      * Caches the player's data
      */
+    // TODO CHANGES
     override fun cacheCrates(crateManager: CrateManager) {
         var connection: Connection? = null
 

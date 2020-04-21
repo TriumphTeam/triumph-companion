@@ -43,7 +43,7 @@ allprojects {
         implementation "me.rayzr522:jsonmessage:1.2.0"
 
         // X Series
-        compile "com.github.cryptomorin:XSeries:5.3.1"
+        implementation "com.github.cryptomorin:XSeries:5.3.1"
 
         // Kotlin
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"

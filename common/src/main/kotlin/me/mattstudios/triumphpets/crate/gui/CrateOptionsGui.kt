@@ -65,7 +65,10 @@ class CrateOptionsGui(
         }))
 
         gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()) {
+            playClickSound(player)
+            gui.close(player)
             crateManager.createCrate(crateLocation, crateEgg, crateEffect)
+            player.sendMessage(locale.getMessage(Message.COMMAND_CRATE_SET_SUCCESS))
         })
 
     }

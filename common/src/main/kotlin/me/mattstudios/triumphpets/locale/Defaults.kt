@@ -44,6 +44,17 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
             "&7Pet was given to &a{player} &7successfully!",
             ""
     ),
+    COMMAND_CRATE_SET_SUCCESS(
+            "command.admin.success.crate-set",
+            "&7The crate was set successfully!",
+            ""
+    ),
+    COMMAND_CRATE_UNSET_SUCCESS(
+            "command.admin.success.crate-unset",
+            "&7The crate was removed successfully!",
+            ""
+    ),
+
     COMMAND_GIVE_NO_PLAYER(
             "command.admin.error.give-no-player",
             "&cThe selected player doesn't exist or is not online!",
@@ -67,13 +78,13 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
     PET_DATA_DISPLAY_LORE(
             "gui.pet-data.lore",
             "&8• &7Level: &c{level}&7/&c{max_level}\n" +
-                    "\n" +
-                    "&8• &7Age: &c{age} Days\n" +
-                    "&8• &7Type: &c{type}\n" +
-                    "\n" +
-                    "{action}\n" +
-                    "\n" +
-                    "{xp_bar} &8{xp}/{level_xp}xp",
+            "\n" +
+            "&8• &7Age: &c{age} Days\n" +
+            "&8• &7Type: &c{type}\n" +
+            "\n" +
+            "{action}\n" +
+            "\n" +
+            "{xp_bar} &8{xp}/{level_xp}xp",
             ""
     ),
     PET_DATA_DISPLAY_ACTION_SPAWN(
@@ -182,6 +193,7 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
             "&7Select the idle particle effect you want!",
             ""
     ),
+
     // Egg
     PET_CRATE_GUI_EGG_TITLE(
             "gui.pet-crate.egg.title",

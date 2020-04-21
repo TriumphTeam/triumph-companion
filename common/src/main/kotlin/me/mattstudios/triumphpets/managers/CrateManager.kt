@@ -56,6 +56,7 @@ class CrateManager(private val crateController: CrateController, private val dat
      */
     fun hideCrate(crate: Crate) {
         later(2) {
+            crate.effect.stop()
             crate.location.block.type = Material.AIR
             crateController.hide(crate)
         }
@@ -76,6 +77,7 @@ class CrateManager(private val crateController: CrateController, private val dat
         val crate = getCrate(location) ?: return
 
         // Removes the crate's
+        crate.effect.stop()
         crateController.remove(crate)
         database.removeCrate(crate)
         crates.remove(crate)

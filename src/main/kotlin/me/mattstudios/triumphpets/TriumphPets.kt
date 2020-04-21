@@ -47,12 +47,12 @@ class TriumphPets : MattPlugin() {
 
         startUpMessage()
 
+        Experience.load(config)
+
         petManager = PetManager(this)
 
         setupCommands()
         setupListeners()
-
-        Experience.load(config)
     }
 
     /**
@@ -111,7 +111,7 @@ class TriumphPets : MattPlugin() {
                 CrateCommand(this),
 
                 PetsCommand(this)
-        )
+                        )
     }
 
     /**
@@ -122,7 +122,7 @@ class TriumphPets : MattPlugin() {
                 PetListeners(this),
                 PlayerListeners(this),
                 CrateListeners(this)
-        )
+                         )
     }
 
     /**
@@ -133,7 +133,7 @@ class TriumphPets : MattPlugin() {
                 "",
                 getPluginStartup(),
                 "${locale.getMessageRaw(Message.STARTUP_VERSION)} &c${description.version} &8(&c${PetUtils.LOCALE}&8)"
-        ).forEach { info(color(it)) }
+                 ).forEach { info(color(it)) }
     }
 
 }

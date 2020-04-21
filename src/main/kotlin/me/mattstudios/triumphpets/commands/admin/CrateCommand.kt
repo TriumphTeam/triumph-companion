@@ -2,7 +2,6 @@ package me.mattstudios.triumphpets.commands.admin
 
 import me.mattstudios.mf.annotations.Command
 import me.mattstudios.mf.annotations.CompleteFor
-import me.mattstudios.mf.annotations.Optional
 import me.mattstudios.mf.annotations.SubCommand
 import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
@@ -27,22 +26,19 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      * Crate command that handles both Set and Unset of the Pet crate
      */
     @SubCommand("crate")
-    fun crateSet(player: Player, @Values("#crate-type") type: String?, @Optional face: String?) {
+    fun crateSet(player: Player, @Values("#crate-type") type: String?) {
 
         // TODO errors in this fun
 
         if (type == null) {
-            player.sendMessage("Error here")
+            sendMessage("cmd.wrong.usage", player)
             return
         }
 
         val lookingBlock = getLookingBlock(player)
 
         if (type == "set") {
-            val faceExists = !BlockFace.values().toList().map { it.name }.contains(face?.toUpperCase())
-            val blockFace = if (face == null || faceExists) BlockFace.WEST_SOUTH_WEST else BlockFace.valueOf(face.toUpperCase())
-
-            setCrate(lookingBlock, player, blockFace)
+            setCrate(lookingBlock, player)
             return
         }
 
@@ -71,7 +67,7 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
     /**
      * Sets the crate to the block
      */
-    private fun setCrate(block: Block?, player: Player, face: BlockFace) {
+    private fun setCrate(block: Block?, player: Player) {
         if (block == null) {
             player.sendMessage("Temp message saying error")
             return
@@ -84,17 +80,8 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
 
         val crateBlock = player.world.getBlockAt(block.location.clone().add(.0, 1.0, .0))
 
-        if (crateBlock.type != Material.AIR) {
-            player.sendMessage("Another error")
-            return
-        }
-
-        val crateOptionsGui = CrateOptionsGui(plugin, crateManager, crateBlock.location, player)
-
-        /*setSkullBlock(crateBlock.location, face, Items.CRATE_ITEM.texture)
-
-        crateManager.createCrate(crateBlock.location, face)
-        player.sendMessage("Crate created")*/
+        // Opens crate options
+        CrateOptionsGui(plugin, crateManager, crateBlock.location, player)
     }
 
     /**
