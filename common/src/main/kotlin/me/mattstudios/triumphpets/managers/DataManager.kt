@@ -24,7 +24,10 @@ class DataManager(private val database: Database, val petConfig: PetConfig) {
      * Adds the player to the database and the list
      */
     fun addPlayer(petPlayer: PetPlayer) {
-        database.insertPlayer(petPlayer)
+        if (!database.insertPlayer(petPlayer)) {
+            // TODO INSERT PLAYER ERROR
+            return
+        }
         petPlayers.add(petPlayer)
     }
 

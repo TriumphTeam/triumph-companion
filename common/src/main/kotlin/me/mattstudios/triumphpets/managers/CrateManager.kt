@@ -1,5 +1,6 @@
 package me.mattstudios.triumphpets.managers
 
+import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
@@ -7,15 +8,21 @@ import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.crate.componetents.CrateEffect
 import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import me.mattstudios.triumphpets.data.database.Database
+import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.util.Utils.setSkullBlock
 import org.bukkit.Location
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import java.util.UUID
 
 /**
  * @author Matt
  */
-class CrateManager(private val crateController: CrateController, private val database: Database) {
+class CrateManager(
+        private val plugin: MattPlugin,
+        private val crateController: CrateController,
+        private val database: Database
+                  ) {
 
     private val crates = mutableSetOf<Crate>()
 
@@ -30,11 +37,17 @@ class CrateManager(private val crateController: CrateController, private val dat
     /**
      * Sets the crate location and initializes it
      */
-    fun createCrate(location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
+    fun createCrate(player: Player, location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
         val crate = Crate(UUID.randomUUID(), location, crateEgg, crateEffect)
+
+        if (!database.insertCrate(crate)) {
+            // TODO INSERT CRATE ERROR
+            return
+        }
+
         setSkullBlock(location, crateEgg.blockTexture)
-        database.insertCrate(crate)
         loadCrate(crate)
+        plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_SUCCESS)
     }
 
     /**
@@ -109,6 +122,7 @@ class CrateManager(private val crateController: CrateController, private val dat
      * Initializes the crate
      */
     private fun initCrate(crate: Crate) {
+        crate.effect.start()
         crateController.spawnCrateEntities(crate, listOf("&3Pet &cCrate", "&7Click to open!"))
     }
 }

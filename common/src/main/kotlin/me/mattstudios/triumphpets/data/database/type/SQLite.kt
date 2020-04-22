@@ -19,6 +19,7 @@ import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_REM
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_CRATES
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_SELECT_PLAYERS
+import me.mattstudios.triumphpets.data.database.util.DatabaseUtils.tryRun
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.managers.CrateManager
 import me.mattstudios.triumphpets.managers.DataManager
@@ -32,8 +33,6 @@ import me.mattstudios.triumphpets.util.Utils.stringToBlockLocation
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
-import java.sql.Connection
-import java.sql.SQLException
 import java.util.UUID
 
 
@@ -42,8 +41,8 @@ import java.util.UUID
  */
 class SQLite(private val plugin: MattPlugin) : Database {
 
+    private val locale = plugin.locale
     private lateinit var dataSource: SQLiteDataSource
-
 
     /**
      * Initializes everything and caches it
@@ -69,8 +68,8 @@ class SQLite(private val plugin: MattPlugin) : Database {
             val dbFile = File(plugin.dataFolder, "pets.db")
 
             if (!dbFile.exists()) {
-                if (dbFile.createNewFile()) plugin.locale.sendMessage(Message.STARTUP_CREATE_DATABASE_SUCCESS)
-                else plugin.locale.sendMessage(Message.STARTUP_CREATE_DATABASE_ERROR)
+                if (dbFile.createNewFile()) locale.sendMessage(Message.STARTUP_CREATE_DATABASE_SUCCESS)
+                else locale.sendMessage(Message.STARTUP_CREATE_DATABASE_ERROR)
             }
 
             connect()
@@ -83,20 +82,10 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Creates all the default tables
      */
     private fun createTables() {
-        var connection: Connection? = null
-        try {
-            connection = dataSource.connection
-
+        dataSource.connection.tryRun(locale.getMessage(Message.STARTUP_CREATE_TABLES_ERROR)) { connection ->
             connection.prepareStatement(SQLITE_CREATE_PETS).execute()
             connection.prepareStatement(SQLITE_CREATE_PLAYERS).execute()
             connection.prepareStatement(SQLITE_CREATE_CRATES).execute()
-        } catch (e: SQLException) {
-            plugin.locale.sendMessage(Message.STARTUP_CREATE_TABLES_ERROR)
-            e.printStackTrace()
-        } finally {
-            if (connection != null && !connection.isClosed) {
-                connection.close()
-            }
         }
     }
 
@@ -104,30 +93,17 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Caches the player's data
      */
     override fun cachePlayers(dataManager: DataManager) {
-        var connection: Connection? = null
+        dataSource.connection.tryRun(locale.getMessage(Message.STARTUP_CACHE_PETS_ERROR)) { connection ->
+            connection.createStatement().executeQuery(SQLITE_SELECT_PLAYERS).use { resultSet ->
+                while (resultSet.next()) {
+                    val uuid = UUID.fromString(resultSet.getString("uuid"))
+                    val activePet = resultSet.getString("active_pet")
+                    val activePetUUID: UUID? = if (activePet != "null") UUID.fromString(activePet) else null
 
-        try {
-            connection = dataSource.connection
-            val resultSet = connection.createStatement().executeQuery(SQLITE_SELECT_PLAYERS)
-
-            while (resultSet.next()) {
-                val uuid = UUID.fromString(resultSet.getString("uuid"))
-                val activePet = resultSet.getString("active_pet")
-                val activePetUUID: UUID? = if (activePet != "null") UUID.fromString(activePet) else null
-
-                val petPlayer = PetPlayer(uuid, activePetUUID)
-                cachePets(petPlayer, dataManager.petConfig)
-                dataManager.loadPlayer(petPlayer)
-            }
-
-            resultSet.close()
-        } catch (e: SQLException) {
-            // TODO change this for player
-            plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
-            e.printStackTrace()
-        } finally {
-            if (connection != null && !connection.isClosed) {
-                connection.close()
+                    val petPlayer = PetPlayer(uuid, activePetUUID)
+                    cachePets(petPlayer, dataManager.petConfig)
+                    dataManager.loadPlayer(petPlayer)
+                }
             }
         }
     }
@@ -137,36 +113,23 @@ class SQLite(private val plugin: MattPlugin) : Database {
      */
     // TODO CHANGES
     override fun cacheCrates(crateManager: CrateManager) {
-        var connection: Connection? = null
+        dataSource.connection.tryRun(locale.getMessage(Message.STARTUP_CACHE_PETS_ERROR)) { connection ->
+            connection.createStatement().executeQuery(SQLITE_SELECT_CRATES).use { resultSet ->
+                while (resultSet.next()) {
+                    val uuid = UUID.fromString(resultSet.getString("uuid"))
+                    val location = stringToBlockLocation(resultSet.getString("location"))
+                    val crateEgg = CrateEgg.valueOf(resultSet.getString("crate_egg"))
+                    val crateEffect = CrateEffect.valueOf(resultSet.getString("crate_effect"))
 
-        try {
-            connection = dataSource.connection
-            val resultSet = connection.createStatement().executeQuery(SQLITE_SELECT_CRATES)
+                    // Errors if any of those are null
+                    if (location == null) {
+                        info("Error loading this crate")
+                        continue
+                    }
 
-            while (resultSet.next()) {
-                val uuid = UUID.fromString(resultSet.getString("uuid"))
-                val location = stringToBlockLocation(resultSet.getString("location"))
-                val crateEgg = CrateEgg.valueOf(resultSet.getString("crate_egg"))
-                val crateEffect = CrateEffect.valueOf(resultSet.getString("crate_effect"))
-
-                // Errors if any of those are null
-                if (location == null) {
-                    info("Error loading this crate")
-                    continue
+                    val crate = Crate(uuid, location, crateEgg, crateEffect, null)
+                    crateManager.loadCrate(crate)
                 }
-
-                val crate = Crate(uuid, location, crateEgg, crateEffect, null)
-                crateManager.loadCrate(crate)
-            }
-
-            resultSet.close()
-        } catch (e: SQLException) {
-            // TODO change this for player
-            plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
-            e.printStackTrace()
-        } finally {
-            if (connection != null && !connection.isClosed) {
-                connection.close()
             }
         }
     }
@@ -175,56 +138,20 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Caches the pet's data
      */
     private fun cachePets(petPlayer: PetPlayer, petConfig: PetConfig) {
-        var connection: Connection? = null
-
-        try {
-            connection = dataSource.connection
+        dataSource.connection.tryRun(locale.getMessage(Message.STARTUP_CACHE_PETS_ERROR)) { connection ->
             val statement = connection.prepareStatement(SQLITE_SELECT_PETS)
             statement.setString(1, petPlayer.player.uniqueId.toString())
 
-            val resultSet = statement.executeQuery()
+            statement.executeQuery().use { resultSet ->
+                while (resultSet.next()) {
+                    val uuid = UUID.fromString(resultSet.getString("uuid"))
+                    val petType = PetType.valueOf(resultSet.getString("type"))
+                    val name = resultSet.getString("name")
+                    val petExperience = PetExperience(resultSet.getInt("experience"))
 
-            while (resultSet.next()) {
-                val uuid = UUID.fromString(resultSet.getString("uuid"))
-                val petType = PetType.valueOf(resultSet.getString("type"))
-                val name = resultSet.getString("name")
-                val petExperience = PetExperience(resultSet.getInt("experience"))
+                    val petMemory = PetMemory(plugin, petConfig, FilterType.BLACK_LIST, petExperience)
 
-                val petMemory = PetMemory(plugin, petConfig, FilterType.BLACK_LIST, petExperience)
-
-                petPlayer.addPet(PetData(plugin, uuid, petType, name, petMemory, petPlayer.player))
-            }
-
-            resultSet.close()
-        } catch (e: SQLException) {
-            plugin.locale.sendMessage(Message.STARTUP_CACHE_PETS_ERROR)
-            e.printStackTrace()
-        } finally {
-            if (connection != null && !connection.isClosed) {
-                connection.close()
-            }
-        }
-    }
-
-    /**
-     * Inserts the player in the database
-     */
-    override fun insertPlayer(petPlayer: PetPlayer) {
-        async {
-            var connection: Connection? = null
-
-            try {
-                connection = dataSource.connection
-                val statement = connection.prepareStatement(SQLITE_INSERT_PLAYER)
-                statement.setString(1, petPlayer.player.uniqueId.toString())
-                statement.setString(2, petPlayer.activePetUUID.toString())
-
-                statement.executeUpdate()
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                if (connection != null && !connection.isClosed) {
-                    connection.close()
+                    petPlayer.addPet(PetData(plugin, uuid, petType, name, petMemory, petPlayer.player))
                 }
             }
         }
@@ -233,12 +160,33 @@ class SQLite(private val plugin: MattPlugin) : Database {
     /**
      * Inserts the player in the database
      */
-    override fun insertCrate(crate: Crate) {
-        async {
-            var connection: Connection? = null
+    override fun insertPlayer(petPlayer: PetPlayer): Boolean {
+        var inserted = false
 
-            try {
-                connection = dataSource.connection
+        async {
+            // TODO error message
+            dataSource.connection.tryRun { connection ->
+                val statement = connection.prepareStatement(SQLITE_INSERT_PLAYER)
+                statement.setString(1, petPlayer.player.uniqueId.toString())
+                statement.setString(2, petPlayer.activePetUUID.toString())
+
+                statement.executeUpdate()
+                inserted = true
+            }
+        }
+
+        return inserted
+    }
+
+    /**
+     * Inserts the player in the database
+     */
+    override fun insertCrate(crate: Crate): Boolean {
+        var inserted = false
+
+        async {
+            // TODO error message
+            dataSource.connection.tryRun("&aFuck me") { connection ->
                 val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
                 statement.setString(1, crate.uuid.toString())
                 statement.setString(2, blockLocationToString(crate.location))
@@ -246,14 +194,11 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 statement.setString(4, crate.crateEffect.name)
 
                 statement.executeUpdate()
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                if (connection != null && !connection.isClosed) {
-                    connection.close()
-                }
+                inserted = true
             }
         }
+
+        return inserted
     }
 
     /**
@@ -261,10 +206,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
      */
     override fun insertPet(petPlayer: PetPlayer, petData: PetData) {
         async {
-            var connection: Connection? = null
-
-            try {
-                connection = dataSource.connection
+            dataSource.connection.tryRun { connection ->
                 val statement = connection.prepareStatement(SQLITE_INSERT_PET)
                 statement.setString(1, petData.uuid.toString())
                 statement.setString(2, petPlayer.player.uniqueId.toString())
@@ -273,12 +215,6 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 statement.setInt(5, petData.petMemory.petExperience.xp)
 
                 statement.executeUpdate()
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                if (connection != null && !connection.isClosed) {
-                    connection.close()
-                }
             }
         }
     }
@@ -288,19 +224,10 @@ class SQLite(private val plugin: MattPlugin) : Database {
      */
     override fun removeCrate(crate: Crate) {
         async {
-            var connection: Connection? = null
-
-            try {
-                connection = dataSource.connection
+            dataSource.connection.tryRun { connection ->
                 val statement = connection.prepareStatement(SQLITE_REMOVE_CRATE)
                 statement.setString(1, crate.uuid.toString())
                 statement.executeUpdate()
-            } catch (e: SQLException) {
-                e.printStackTrace()
-            } finally {
-                if (connection != null && !connection.isClosed) {
-                    connection.close()
-                }
             }
         }
     }

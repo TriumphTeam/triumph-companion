@@ -20,11 +20,7 @@ data class Crate(
         val blockUnder: Block? = null
 ) {
 
-    val effect = EffectFactory.createEffect(CrateEffect.SPIRAL, location)
-
-    init {
-        effect.start()
-    }
+    val effect = EffectFactory.createEffect(CrateEffect.RINGS, location)
 
     /**
      * Checks whether or not the location is a crate

@@ -8,6 +8,7 @@ enum class CrateEffect {
     NONE,
     SPARKLE,
     SHIMMER,
-    SPIRAL;
+    SPIRAL,
+    RINGS;
 
 }

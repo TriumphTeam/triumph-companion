@@ -28,7 +28,7 @@ class CrateOptionsGui(
         private val player: Player,
         private var crateEgg: CrateEgg = CrateEgg.BLUE,
         private val crateEffect: CrateEffect = CrateEffect.NONE
-) {
+                     ) {
 
     constructor(plugin: MattPlugin, crateManager: CrateManager, crateLocation: Location, player: Player, crateEffect: CrateEffect) : this(plugin, crateManager, crateLocation, player, CrateEgg.BLUE, crateEffect)
 
@@ -67,8 +67,7 @@ class CrateOptionsGui(
         gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()) {
             playClickSound(player)
             gui.close(player)
-            crateManager.createCrate(crateLocation, crateEgg, crateEffect)
-            player.sendMessage(locale.getMessage(Message.COMMAND_CRATE_SET_SUCCESS))
+            crateManager.createCrate(player, crateLocation, crateEgg, crateEffect)
         })
 
     }
@@ -92,7 +91,7 @@ class CrateOptionsGui(
                             .setName(StringUtils.replace(locale.getMessage(Message.PET_CRATE_GUI_EGG_EGG_NAME), "{egg}", egg.eggName))
                             .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EGG_EGG_LORE)))
                             .build()
-            ) {
+                                           ) {
                 crateEgg = egg
                 back()
             })
@@ -106,7 +105,7 @@ class CrateOptionsGui(
                         .setName(locale.getMessage(Message.PET_CRATE_GUI_EGG_BACK_NAME))
                         .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EGG_BACK_LORE)))
                         .build()
-        ) { back() })
+                                    ) { back() })
 
     }
 
