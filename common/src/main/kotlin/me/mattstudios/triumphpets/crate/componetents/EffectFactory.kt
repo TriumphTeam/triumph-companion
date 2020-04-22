@@ -3,6 +3,7 @@ package me.mattstudios.triumphpets.crate.componetents
 import me.mattstudios.triumphpets.crate.effects.None
 import me.mattstudios.triumphpets.crate.effects.Shimmer
 import me.mattstudios.triumphpets.crate.effects.Sparkle
+import me.mattstudios.triumphpets.crate.effects.Spiral
 import org.bukkit.Location
 
 object EffectFactory {
@@ -15,6 +16,7 @@ object EffectFactory {
         return when(crateEffect) {
             CrateEffect.SPARKLE -> Sparkle(location)
             CrateEffect.SHIMMER -> Shimmer(location)
+            CrateEffect.SPIRAL -> Spiral(location)
             else -> None()
         }
 
