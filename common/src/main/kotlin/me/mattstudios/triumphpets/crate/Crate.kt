@@ -20,7 +20,7 @@ data class Crate(
         val blockUnder: Block? = null
 ) {
 
-    val effect = EffectFactory.createEffect(CrateEffect.SPARKLE, location)
+    val effect = EffectFactory.createEffect(CrateEffect.SHIMMER, location)
 
     init {
         effect.start()

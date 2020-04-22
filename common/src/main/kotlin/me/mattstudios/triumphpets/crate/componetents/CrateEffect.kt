@@ -6,6 +6,7 @@ package me.mattstudios.triumphpets.crate.componetents
 enum class CrateEffect {
 
     NONE,
-    SPARKLE;
+    SPARKLE,
+    SHIMMER;
 
 }
