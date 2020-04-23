@@ -1,7 +1,7 @@
 package me.mattstudios.triumphpets.crate.componetents
 
 import me.mattstudios.triumphpets.crate.effects.None
-import me.mattstudios.triumphpets.crate.effects.Rings
+import me.mattstudios.triumphpets.crate.effects.Orbit
 import me.mattstudios.triumphpets.crate.effects.Shimmer
 import me.mattstudios.triumphpets.crate.effects.Sparkle
 import me.mattstudios.triumphpets.crate.effects.Spiral
@@ -18,7 +18,7 @@ object EffectFactory {
             CrateEffect.SPARKLE -> Sparkle(location)
             CrateEffect.SHIMMER -> Shimmer(location)
             CrateEffect.SPIRAL -> Spiral(location)
-            CrateEffect.RINGS -> Rings(location)
+            CrateEffect.ORBIT -> Orbit(location)
             else -> None()
         }
 

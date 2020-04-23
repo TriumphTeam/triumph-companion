@@ -174,14 +174,6 @@ object Message : SettingsHolder {
                                                                 Defaults.PET_CRATE_GUI_EGG_TITLE.get(PetUtils.LOCALE))
 
     @JvmField
-    val PET_CRATE_GUI_EGG_BACK_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_BACK_NAME.path,
-                                                                    Defaults.PET_CRATE_GUI_EGG_BACK_NAME.get(PetUtils.LOCALE))
-
-    @JvmField
-    val PET_CRATE_GUI_EGG_BACK_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_EGG_BACK_LORE.path,
-                                                                              Defaults.PET_CRATE_GUI_EGG_BACK_LORE.get(PetUtils.LOCALE).split("\n"))
-
-    @JvmField
     val PET_CRATE_GUI_EGG_EGG_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_EGG_NAME.path,
                                                                    Defaults.PET_CRATE_GUI_EGG_EGG_NAME.get(PetUtils.LOCALE))
 
@@ -189,6 +181,28 @@ object Message : SettingsHolder {
     val PET_CRATE_GUI_EGG_EGG_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_EGG_EGG_LORE.path,
                                                                              Defaults.PET_CRATE_GUI_EGG_EGG_LORE.get(PetUtils.LOCALE).split("\n"))
 
+    // Effect
+    @JvmField
+    val PET_CRATE_GUI_EFFECT_TITLE: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EFFECT_TITLE.path,
+                                                                Defaults.PET_CRATE_GUI_EFFECT_TITLE.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_EFFECT_EFFECT_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EFFECT_EFFECT_NAME.path,
+                                                                   Defaults.PET_CRATE_GUI_EFFECT_EFFECT_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_EFFECT_EFFECT_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_EFFECT_EFFECT_LORE.path,
+                                                                             Defaults.PET_CRATE_GUI_EFFECT_EFFECT_LORE.get(PetUtils.LOCALE).split("\n"))
+
+
+    // Common
+    @JvmField
+    val PET_CRATE_GUI_COMMON_BACK_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_COMMON_BACK_NAME.path,
+                                                                       Defaults.PET_CRATE_GUI_COMMON_BACK_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_COMMON_BACK_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_COMMON_BACK_LORE.path,
+                                                                                 Defaults.PET_CRATE_GUI_COMMON_BACK_LORE.get(PetUtils.LOCALE).split("\n"))
     // ------------------------------------------------------------------------------------------------- //
 
     /**

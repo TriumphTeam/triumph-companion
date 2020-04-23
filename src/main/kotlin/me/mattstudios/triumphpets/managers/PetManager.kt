@@ -43,7 +43,7 @@ class PetManager(private val plugin: TriumphPets) {
 
         // Initializes the data and crate managers
         dataManager = DataManager(database, plugin.petConfig)
-        crateManager = CrateManager(crateController, database)
+        crateManager = CrateManager(plugin, crateController, database)
 
         // Caches all the data
         database.cachePlayers(dataManager)

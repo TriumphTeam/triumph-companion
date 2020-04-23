@@ -15,7 +15,7 @@ interface Database {
 
     fun cacheCrates(crateManager: CrateManager)
 
-    fun insertPlayer(petPlayer: PetPlayer): Boolean
+    fun insertPlayer(petPlayer: PetPlayer)
 
     fun insertPet(petPlayer: PetPlayer, petData: PetData)
 

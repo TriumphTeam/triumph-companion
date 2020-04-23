@@ -160,9 +160,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
     /**
      * Inserts the player in the database
      */
-    override fun insertPlayer(petPlayer: PetPlayer): Boolean {
-        var inserted = false
-
+    override fun insertPlayer(petPlayer: PetPlayer) {
         async {
             // TODO error message
             dataSource.connection.tryRun { connection ->
@@ -171,11 +169,8 @@ class SQLite(private val plugin: MattPlugin) : Database {
                 statement.setString(2, petPlayer.activePetUUID.toString())
 
                 statement.executeUpdate()
-                inserted = true
             }
         }
-
-        return inserted
     }
 
     /**
@@ -184,18 +179,16 @@ class SQLite(private val plugin: MattPlugin) : Database {
     override fun insertCrate(crate: Crate): Boolean {
         var inserted = false
 
-        async {
-            // TODO error message
-            dataSource.connection.tryRun("&aFuck me") { connection ->
-                val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
-                statement.setString(1, crate.uuid.toString())
-                statement.setString(2, blockLocationToString(crate.location))
-                statement.setString(3, crate.crateEgg.name)
-                statement.setString(4, crate.crateEffect.name)
+        // TODO error message
+        dataSource.connection.tryRun("&aFuck me") { connection ->
+            val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
+            statement.setString(1, crate.uuid.toString())
+            statement.setString(2, blockLocationToString(crate.location))
+            statement.setString(3, crate.crateEgg.name)
+            statement.setString(4, crate.crateEffect.name)
 
-                statement.executeUpdate()
-                inserted = true
-            }
+            statement.executeUpdate()
+            inserted = true
         }
 
         return inserted

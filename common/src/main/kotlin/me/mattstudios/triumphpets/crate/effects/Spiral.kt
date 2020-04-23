@@ -25,12 +25,13 @@ class Spiral(location: Location) : BaseEffect(1) {
     override fun run() {
         if (world == null) return
 
+        position += PI / 10
+
         val x = cos(position) * radius
         val z = sin(position) * radius
 
         world.spawnParticle(Particle.FIREWORKS_SPARK, crateLocation.clone().add(x, .0, z), 1, .0, .0, .0, .0)
 
-        position += PI / 10
         if (position >= PI * 2) position = 0.0
     }
 

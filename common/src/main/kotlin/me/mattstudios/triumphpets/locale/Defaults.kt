@@ -185,7 +185,7 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
     ),
     PET_CRATE_GUI_MAIN_PARTICLE_NAME(
             "gui.pet-crate.main.select-particle.name",
-            "&cCrate Particle",
+            "&cCrate effect",
             ""
     ),
     PET_CRATE_GUI_MAIN_PARTICLE_LORE(
@@ -197,17 +197,7 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
     // Egg
     PET_CRATE_GUI_EGG_TITLE(
             "gui.pet-crate.egg.title",
-            "&lSelect color",
-            ""
-    ),
-    PET_CRATE_GUI_EGG_BACK_NAME(
-            "gui.pet-crate.egg.back.name",
-            "&cBack",
-            ""
-    ),
-    PET_CRATE_GUI_EGG_BACK_LORE(
-            "gui.pet-crate.egg.back.lore",
-            "&7Goes to the previous menu!",
+            "&lSelect egg",
             ""
     ),
     PET_CRATE_GUI_EGG_EGG_NAME(
@@ -218,6 +208,35 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
     PET_CRATE_GUI_EGG_EGG_LORE(
             "gui.pet-crate.egg.egg.lore",
             "&7Click to select this egg!",
+            ""
+    ),
+
+    // Effect
+    PET_CRATE_GUI_EFFECT_TITLE(
+            "gui.pet-crate.effect.title",
+            "&lSelect effect",
+            ""
+    ),
+    PET_CRATE_GUI_EFFECT_EFFECT_NAME(
+            "gui.pet-crate.effect.effect.name",
+            "&c{effect}",
+            ""
+    ),
+    PET_CRATE_GUI_EFFECT_EFFECT_LORE(
+            "gui.pet-crate.effect.effect.lore",
+            "&7Click to select this effect!",
+            ""
+    ),
+
+    // Common
+    PET_CRATE_GUI_COMMON_BACK_NAME(
+            "gui.pet-crate.common.back.name",
+            "&cBack",
+            ""
+    ),
+    PET_CRATE_GUI_COMMON_BACK_LORE(
+            "gui.pet-crate.common.back.lore",
+            "&7Goes to the previous menu!",
             ""
     );
 

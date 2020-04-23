@@ -20,7 +20,7 @@ data class Crate(
         val blockUnder: Block? = null
 ) {
 
-    val effect = EffectFactory.createEffect(CrateEffect.RINGS, location)
+    val effect = EffectFactory.createEffect(crateEffect, location)
 
     /**
      * Checks whether or not the location is a crate

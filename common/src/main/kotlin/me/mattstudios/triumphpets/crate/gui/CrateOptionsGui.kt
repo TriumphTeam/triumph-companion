@@ -27,7 +27,7 @@ class CrateOptionsGui(
         private val crateLocation: Location,
         private val player: Player,
         private var crateEgg: CrateEgg = CrateEgg.BLUE,
-        private val crateEffect: CrateEffect = CrateEffect.NONE
+        private var crateEffect: CrateEffect = CrateEffect.NONE
                      ) {
 
     constructor(plugin: MattPlugin, crateManager: CrateManager, crateLocation: Location, player: Player, crateEffect: CrateEffect) : this(plugin, crateManager, crateLocation, player, CrateEgg.BLUE, crateEffect)
@@ -36,7 +36,7 @@ class CrateOptionsGui(
 
     private val gui = Gui(plugin, 5, locale.getMessage(Message.PET_CRATE_GUI_MAIN_TITLE))
     private val eggGui = Gui(plugin, 3, locale.getMessage(Message.PET_CRATE_GUI_EGG_TITLE))
-    private val particleGui = Gui(plugin, 5, color("&lSelect particle"))
+    private val particleGui = Gui(plugin, 3, locale.getMessage(Message.PET_CRATE_GUI_EFFECT_TITLE))
 
     init {
         setupGui()
@@ -102,8 +102,8 @@ class CrateOptionsGui(
         // Back button
         eggGui.setItem(3, 1, GuiItem(
                 ItemBuilder(XMaterial.PAPER.parseItem())
-                        .setName(locale.getMessage(Message.PET_CRATE_GUI_EGG_BACK_NAME))
-                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EGG_BACK_LORE)))
+                        .setName(locale.getMessage(Message.PET_CRATE_GUI_COMMON_BACK_NAME))
+                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_COMMON_BACK_LORE)))
                         .build()
                                     ) { back() })
 
@@ -117,6 +117,32 @@ class CrateOptionsGui(
         particleGui.setOutsideClickAction { back() }
 
         particleGui.filler.fill(GuiItem(Items.FILL_ITEM.getItem()))
+
+
+        // Cycles through all the eggs and sets them
+        var slot = 3
+        for (effect in CrateEffect.values()) {
+
+            particleGui.setItem(2, slot, GuiItem(
+                    ItemBuilder(effect.material)
+                            .setName(StringUtils.replace(locale.getMessage(Message.PET_CRATE_GUI_EFFECT_EFFECT_NAME), "{effect}", effect.effectName))
+                            .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_EFFECT_EFFECT_LORE)))
+                            .build()
+                                           ) {
+                crateEffect = effect
+                back()
+            })
+
+            slot++
+        }
+
+        // Back button
+        particleGui.setItem(3, 1, GuiItem(
+                ItemBuilder(XMaterial.PAPER.parseItem())
+                        .setName(locale.getMessage(Message.PET_CRATE_GUI_COMMON_BACK_NAME))
+                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_COMMON_BACK_LORE)))
+                        .build()
+                                    ) { back() })
     }
 
     /**
@@ -125,6 +151,7 @@ class CrateOptionsGui(
     private fun back() {
         playClickSound(player)
         gui.updateItem(2, 3, getSelectEggItem())
+        gui.updateItem(2, 7, getSelectParticleItem())
         gui.open(player)
     }
 
@@ -142,7 +169,7 @@ class CrateOptionsGui(
      * Gets the select particle item for easy updating
      */
     private fun getSelectParticleItem(): ItemStack {
-        return ItemBuilder(XMaterial.BLAZE_POWDER.parseItem())
+        return ItemBuilder(crateEffect.material)
                 .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_PARTICLE_NAME))
                 .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_PARTICLE_LORE)))
                 .build()
