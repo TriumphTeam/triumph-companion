@@ -104,7 +104,7 @@ class TriumphPets : MattPlugin() {
             return@CompletionResolver PetType.values().toList().filter { it.version <= version }.map { it.name }
         })
 
-        registerCompletion("#crate-type") { listOf("set", "unset") }
+        registerCompletion("#crate-type") { listOf("set", "edit", "unset") }
 
         registerCommands(
                 PetGiveCommand(this),

@@ -1,7 +1,6 @@
 package me.mattstudios.triumphpets.commands.admin
 
 import me.mattstudios.mf.annotations.Command
-import me.mattstudios.mf.annotations.CompleteFor
 import me.mattstudios.mf.annotations.SubCommand
 import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
@@ -37,31 +36,20 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
 
         val lookingBlock = getLookingBlock(player)
 
-        if (type == "set") {
-            setCrate(lookingBlock, player)
-            return
+        when (type) {
+            "set" -> {
+                setCrate(lookingBlock, player)
+                return
+            }
+
+            "edit" -> {
+                editCrate(lookingBlock, player)
+                return
+            }
+
+            else -> unsetCrate(lookingBlock, player)
         }
 
-        unsetCrate(lookingBlock, player)
-    }
-
-    /**
-     * Completes the values for the crate command, adding values if player is setting and removing if unsetting
-     */
-    @CompleteFor("crate")
-    fun complete(arguments: List<String>): List<String> {
-        // Completes with the normal options
-        if (arguments.size == 1) {
-            return getTabValues(listOf("set", "unset"), arguments[0])
-        }
-
-        // Completes with the block face enum
-        if (arguments.size == 2 && arguments[0] == "set") {
-            return getTabValues(blockStateValues, arguments[1])
-        }
-
-        // In case no real value was introduced
-        return emptyList()
     }
 
     /**
@@ -82,6 +70,26 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
 
         // Opens crate options
         CrateOptionsGui(plugin, crateManager, crateBlock.location, player)
+    }
+
+    /**
+     * Sets the crate to the block
+     */
+    private fun editCrate(block: Block?, player: Player) {
+        if (block == null) {
+            player.sendMessage("Temp message saying error")
+            return
+        }
+
+        val crate = crateManager.getCrate(block.location)
+
+        if (crate == null) {
+            player.sendMessage("Temp message saying error")
+            return
+        }
+
+        // Opens crate options
+        CrateOptionsGui(plugin, crateManager, crate.location, player, crate.crateEgg, crate.crateEffect)
     }
 
     /**
