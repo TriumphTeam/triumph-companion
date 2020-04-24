@@ -1,7 +1,8 @@
-package me.mattstudios.triumphpets.crate
+package me.mattstudios.triumphpets.crate.componetents
 
 import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.utils.Task.later
+import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.managers.CrateManager
 import org.bukkit.Color
 import org.bukkit.Material
@@ -24,7 +25,9 @@ class CrateAnimation(
         private val crateManager: CrateManager
 ) : BukkitRunnable() {
 
-    private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.70, .5), ArmorStand::class.java) {
+    private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.75, .5), ArmorStand::class.java) {
+        it.fireTicks = 500
+
         it.isSilent = true
         it.isVisible = false
         it.headPose = EulerAngle(0.0, 45.0, 0.0)
@@ -32,7 +35,6 @@ class CrateAnimation(
         it.equipment?.helmet = crate.crateEgg.getItem()
         it.isMarker = true
         it.setGravity(false)
-
         it.customName = "crate-animation-stand"
         it.isCustomNameVisible = false
     }
@@ -46,7 +48,7 @@ class CrateAnimation(
 
     init {
         crateManager.hideCrate(crate)
-        player.world.spawnParticle(Particle.REDSTONE, crate.location.clone().add(.5, .15, .5), 50, .25, .25, .25, .0, Particle.DustOptions(Color.WHITE, 1F))
+        player.world.spawnParticle(Particle.REDSTONE, crate.location.clone().add(.5, .15, .5), 50, .25, .25, .25, .001, Particle.DustOptions(Color.WHITE, 1.2F))
         XSound.ENTITY_ITEM_FRAME_REMOVE_ITEM.playSound(crate.location.clone().add(.5, .5, .5))
     }
 

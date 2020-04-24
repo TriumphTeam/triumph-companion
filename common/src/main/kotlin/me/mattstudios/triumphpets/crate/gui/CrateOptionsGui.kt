@@ -103,12 +103,7 @@ class CrateOptionsGui(
         }
 
         // Back button
-        eggGui.setItem(3, 1, GuiItem(
-                ItemBuilder(XMaterial.PAPER.parseItem())
-                        .setName(locale.getMessage(Message.PET_CRATE_GUI_COMMON_BACK_NAME))
-                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_COMMON_BACK_LORE)))
-                        .build()
-        ) { back() })
+        eggGui.setItem(3, 1, GuiItem(getBackItem()) { back() })
 
     }
 
@@ -140,12 +135,7 @@ class CrateOptionsGui(
         }
 
         // Back button
-        particleGui.setItem(3, 1, GuiItem(
-                ItemBuilder(XMaterial.PAPER.parseItem())
-                        .setName(locale.getMessage(Message.PET_CRATE_GUI_COMMON_BACK_NAME))
-                        .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_COMMON_BACK_LORE)))
-                        .build()
-        ) { back() })
+        particleGui.setItem(3, 1, GuiItem(getBackItem()) { back() })
     }
 
     /**
@@ -182,10 +172,20 @@ class CrateOptionsGui(
      * Gets the item for the complete button
      */
     private fun getCompleteItem(): ItemStack {
-       return ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem())
-               .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_COMPLETE_NAME))
-               .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_COMPLETE_LORE)))
-               .build()
+        return ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem())
+                .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_COMPLETE_NAME))
+                .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_COMPLETE_LORE)))
+                .build()
+    }
+
+    /**
+     * Gets the item for the back button
+     */
+    private fun getBackItem(): ItemStack {
+        return ItemBuilder(XMaterial.PAPER.parseItem())
+                .setName(locale.getMessage(Message.PET_CRATE_GUI_COMMON_BACK_NAME))
+                .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_COMMON_BACK_LORE)))
+                .build()
     }
 
 }

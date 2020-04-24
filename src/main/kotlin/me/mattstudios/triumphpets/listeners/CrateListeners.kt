@@ -2,7 +2,7 @@ package me.mattstudios.triumphpets.listeners
 
 import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.triumphpets.TriumphPets
-import me.mattstudios.triumphpets.crate.CrateAnimation
+import me.mattstudios.triumphpets.crate.componetents.CrateAnimation
 import org.bukkit.entity.EntityType
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener

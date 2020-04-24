@@ -29,6 +29,9 @@ data class Crate(
         return this.location == location
     }
 
+    /**
+     * Updates the crate effect
+     */
     fun updateEffect(crateEffect: CrateEffect) {
         if (crateEffect == this.crateEffect) return
 
