@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.crate.componetents
+package me.mattstudios.triumphpets.crate.components
 
 import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mfgui.gui.components.ItemBuilder

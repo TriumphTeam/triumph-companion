@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.crate.componetents
+package me.mattstudios.triumphpets.crate.components
 
 import me.mattstudios.triumphpets.crate.effects.None
 import me.mattstudios.triumphpets.crate.effects.Orbit

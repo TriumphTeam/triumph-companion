@@ -5,8 +5,8 @@ import me.mattstudios.mattcore.utils.MessageUtils.log
 import me.mattstudios.mattcore.utils.Task.async
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.crate.Crate
-import me.mattstudios.triumphpets.crate.componetents.CrateEffect
-import me.mattstudios.triumphpets.crate.componetents.CrateEgg
+import me.mattstudios.triumphpets.crate.components.CrateEffect
+import me.mattstudios.triumphpets.crate.components.CrateEgg
 import me.mattstudios.triumphpets.data.PetData
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_CRATES

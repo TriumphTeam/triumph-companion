@@ -5,8 +5,8 @@ import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.Task.later
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
-import me.mattstudios.triumphpets.crate.componetents.CrateEffect
-import me.mattstudios.triumphpets.crate.componetents.CrateEgg
+import me.mattstudios.triumphpets.crate.components.CrateEffect
+import me.mattstudios.triumphpets.crate.components.CrateEgg
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.util.Utils.setSkullBlock

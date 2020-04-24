@@ -1,7 +1,7 @@
 package me.mattstudios.triumphpets.crate.effects.base
 
 import me.mattstudios.mattcore.utils.Task.timer
-import me.mattstudios.triumphpets.crate.componetents.Effect
+import me.mattstudios.triumphpets.crate.components.Effect
 import org.bukkit.Bukkit
 
 /**

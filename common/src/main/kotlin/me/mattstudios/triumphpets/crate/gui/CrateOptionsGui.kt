@@ -8,8 +8,8 @@ import me.mattstudios.mfgui.gui.components.ItemBuilder
 import me.mattstudios.mfgui.gui.guis.Gui
 import me.mattstudios.mfgui.gui.guis.GuiItem
 import me.mattstudios.triumphpets.crate.Crate
-import me.mattstudios.triumphpets.crate.componetents.CrateEffect
-import me.mattstudios.triumphpets.crate.componetents.CrateEgg
+import me.mattstudios.triumphpets.crate.components.CrateEffect
+import me.mattstudios.triumphpets.crate.components.CrateEgg
 import me.mattstudios.triumphpets.locale.Message
 import me.mattstudios.triumphpets.managers.CrateManager
 import me.mattstudios.triumphpets.util.Items

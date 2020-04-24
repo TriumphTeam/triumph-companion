@@ -1,4 +1,4 @@
-package me.mattstudios.triumphpets.crate.componetents
+package me.mattstudios.triumphpets.crate.components
 
 import com.cryptomorin.xseries.XSound
 import me.mattstudios.mattcore.utils.Task.later
