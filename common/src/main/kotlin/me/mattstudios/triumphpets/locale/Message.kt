@@ -168,6 +168,14 @@ object Message : SettingsHolder {
     val PET_CRATE_GUI_MAIN_PARTICLE_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_MAIN_PARTICLE_LORE.path,
                                                                                    Defaults.PET_CRATE_GUI_MAIN_PARTICLE_LORE.get(PetUtils.LOCALE).split("\n"))
 
+    @JvmField
+    val PET_CRATE_GUI_MAIN_COMPLETE_NAME: Property<String> = newProperty(Defaults.PET_CRATE_GUI_MAIN_COMPLETE_NAME.path,
+                                                                         Defaults.PET_CRATE_GUI_MAIN_COMPLETE_NAME.get(PetUtils.LOCALE))
+
+    @JvmField
+    val PET_CRATE_GUI_MAIN_COMPLETE_LORE: Property<List<String>> = newListProperty(Defaults.PET_CRATE_GUI_MAIN_COMPLETE_LORE.path,
+                                                                                   Defaults.PET_CRATE_GUI_MAIN_COMPLETE_LORE.get(PetUtils.LOCALE).split("\n"))
+
     // Egg
     @JvmField
     val PET_CRATE_GUI_EGG_TITLE: Property<String> = newProperty(Defaults.PET_CRATE_GUI_EGG_TITLE.path,

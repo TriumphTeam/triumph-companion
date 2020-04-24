@@ -193,6 +193,16 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
             "&7Select the idle particle effect you want!",
             ""
     ),
+    PET_CRATE_GUI_MAIN_COMPLETE_NAME(
+            "gui.pet-crate.main.complete.name",
+            "&cComplete",
+            ""
+    ),
+    PET_CRATE_GUI_MAIN_COMPLETE_LORE(
+            "gui.pet-crate.main.complete.lore",
+            "&7Create/Edit the crate!",
+            ""
+    ),
 
     // Egg
     PET_CRATE_GUI_EGG_TITLE(

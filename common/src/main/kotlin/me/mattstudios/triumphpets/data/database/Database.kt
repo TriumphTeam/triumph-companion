@@ -21,5 +21,7 @@ interface Database {
 
     fun insertCrate(crate: Crate): Boolean
 
+    fun editCrate(crate: Crate)
+
     fun removeCrate(crate: Crate)
 }

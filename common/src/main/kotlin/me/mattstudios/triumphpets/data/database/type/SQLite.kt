@@ -1,7 +1,7 @@
 package me.mattstudios.triumphpets.data.database.type
 
 import me.mattstudios.mattcore.MattPlugin
-import me.mattstudios.mattcore.utils.MessageUtils.info
+import me.mattstudios.mattcore.utils.MessageUtils.log
 import me.mattstudios.mattcore.utils.Task.async
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.crate.Crate
@@ -12,6 +12,7 @@ import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_CRATES
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PETS
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_CREATE_PLAYERS
+import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_EDIT_CRATE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_CRATE
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PET
 import me.mattstudios.triumphpets.data.database.queries.SQLiteQueries.SQLITE_INSERT_PLAYER
@@ -123,7 +124,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
 
                     // Errors if any of those are null
                     if (location == null) {
-                        info("Error loading this crate")
+                        log("Error loading this crate")
                         continue
                     }
 
@@ -195,6 +196,21 @@ class SQLite(private val plugin: MattPlugin) : Database {
     }
 
     /**
+     * Edits the crate
+     */
+    override fun editCrate(crate: Crate) {
+        // TODO error message
+        dataSource.connection.tryRun("&aFuck me") { connection ->
+            val statement = connection.prepareStatement(SQLITE_EDIT_CRATE)
+            statement.setString(1, crate.crateEgg.name)
+            statement.setString(2, crate.crateEffect.name)
+            statement.setString(3, crate.uuid.toString())
+
+            statement.executeUpdate()
+        }
+    }
+
+    /**
      * Inserts the pet in the database
      */
     override fun insertPet(petPlayer: PetPlayer, petData: PetData) {
@@ -216,12 +232,10 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Inserts the pet in the database
      */
     override fun removeCrate(crate: Crate) {
-        async {
-            dataSource.connection.tryRun { connection ->
-                val statement = connection.prepareStatement(SQLITE_REMOVE_CRATE)
-                statement.setString(1, crate.uuid.toString())
-                statement.executeUpdate()
-            }
+        dataSource.connection.tryRun { connection ->
+            val statement = connection.prepareStatement(SQLITE_REMOVE_CRATE)
+            statement.setString(1, crate.uuid.toString())
+            statement.executeUpdate()
         }
     }
 

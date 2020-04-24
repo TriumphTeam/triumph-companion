@@ -250,7 +250,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
             if (petMemory.isFiltered(cursor.type)) return@GuiAction
 
             // Adds the Material to the filter
-            val filterItem = ItemBuilder(cursor.type).glow().build()
+            val filterItem = ItemBuilder(cursor.type).glow(true).build()
             petMemory.filter(cursor.type)
             filterGui.updateItem(slot, filterItem)
             xpHighSound()

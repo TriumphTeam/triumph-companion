@@ -6,7 +6,6 @@ import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetUtils.getSafeY
 import net.minecraft.server.v1_15_R1.EntityInsentient
 import net.minecraft.server.v1_15_R1.PathfinderGoal
-import java.util.SplittableRandom
 
 
 /**
@@ -21,7 +20,6 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
 
     private val chance = petConfig[PetProperty.WALK_AROUND_CHANCE]
     private var controller = 0
-    private val random = SplittableRandom()
 
     /**
      * Path
@@ -30,7 +28,7 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
         // Makes it run only once every 2 second
         if (!shouldRun()) return true
         if (petMemory.isTracking || petInventory.isOpened()) return true
-        if (randomize(1, 100) >= chance) return true
+        if ((1..100).random() >= chance) return true
 
         moveAround()
 
@@ -41,8 +39,8 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
      * Moves to a location between 10 and -10 blocks away from current location.
      */
     private fun moveAround() {
-        val x = randomize(-10, 10).toDouble()
-        val z = randomize(-10, 10).toDouble()
+        val x = (-10..10).random().toDouble()
+        val z = (-10..10).random().toDouble()
 
         val location = pet.getEntity().location.clone().add(x, 0.0, z)
         navigation.a(location.x, getSafeY(location.x, location.z, pet.getEntity().world).toDouble(), location.z, MOVEMENT_SPEED)
@@ -59,13 +57,6 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
 
         controller = 0
         return true
-    }
-
-    /**
-     * Randomizes a number between min and max
-     */
-    private fun randomize(min: Int, max: Int): Int {
-        return random.nextInt(min, max)
     }
 
 }

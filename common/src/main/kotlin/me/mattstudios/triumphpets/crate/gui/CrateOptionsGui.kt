@@ -1,12 +1,13 @@
 package me.mattstudios.triumphpets.crate.gui
 
+import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
 import me.mattstudios.mfgui.gui.components.GuiAction
 import me.mattstudios.mfgui.gui.components.ItemBuilder
-import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.mfgui.gui.guis.Gui
 import me.mattstudios.mfgui.gui.guis.GuiItem
+import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.componetents.CrateEffect
 import me.mattstudios.triumphpets.crate.componetents.CrateEgg
 import me.mattstudios.triumphpets.locale.Message
@@ -27,8 +28,11 @@ class CrateOptionsGui(
         private val crateLocation: Location,
         private val player: Player,
         private var crateEgg: CrateEgg = CrateEgg.BLUE,
-        private var crateEffect: CrateEffect = CrateEffect.NONE
+        private var crateEffect: CrateEffect = CrateEffect.NONE,
+        private val edit: Boolean = false
 ) {
+
+    constructor(plugin: MattPlugin, crateManager: CrateManager, player: Player, crate: Crate) : this(plugin, crateManager, crate.location, player, crate.crateEgg, crate.crateEffect, true)
 
     private val locale = plugin.locale
 
@@ -62,10 +66,11 @@ class CrateOptionsGui(
             particleGui.open(player)
         }))
 
-        gui.setItem(4, 5, GuiItem(ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem()).build()) {
+        gui.setItem(4, 5, GuiItem(getCompleteItem()) {
             playClickSound(player)
             gui.close(player)
-            crateManager.createCrate(player, crateLocation, crateEgg, crateEffect)
+            if (edit) crateManager.editCrate(crateLocation, crateEgg, crateEffect)
+            else crateManager.createCrate(player, crateLocation, crateEgg, crateEffect)
         })
 
     }
@@ -171,6 +176,16 @@ class CrateOptionsGui(
                 .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_PARTICLE_NAME))
                 .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_PARTICLE_LORE)))
                 .build()
+    }
+
+    /**
+     * Gets the item for the complete button
+     */
+    private fun getCompleteItem(): ItemStack {
+       return ItemBuilder(XMaterial.EMERALD_BLOCK.parseItem())
+               .setName(locale.getMessage(Message.PET_CRATE_GUI_MAIN_COMPLETE_NAME))
+               .setLore(color(locale.getMessageRaw(Message.PET_CRATE_GUI_MAIN_COMPLETE_LORE)))
+               .build()
     }
 
 }

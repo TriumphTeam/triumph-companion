@@ -61,12 +61,12 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        if (crateManager.isCrate(block.location)) {
+        val crateBlock = block.getRelative(BlockFace.UP)
+
+        if (crateManager.isCrate(block.location) || crateManager.isCrate(crateBlock.location)) {
             player.sendMessage("You already have a crate set!")
             return
         }
-
-        val crateBlock = player.world.getBlockAt(block.location.clone().add(.0, 1.0, .0))
 
         // Opens crate options
         CrateOptionsGui(plugin, crateManager, crateBlock.location, player)
@@ -89,7 +89,7 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
         }
 
         // Opens crate options
-        CrateOptionsGui(plugin, crateManager, crate.location, player, crate.crateEgg, crate.crateEffect)
+        CrateOptionsGui(plugin, crateManager, player, crate)
     }
 
     /**

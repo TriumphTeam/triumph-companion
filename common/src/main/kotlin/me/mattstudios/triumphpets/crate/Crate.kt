@@ -14,19 +14,28 @@ import java.util.UUID
 data class Crate(
         val uuid: UUID,
         val location: Location,
-        val crateEgg: CrateEgg,
-        val crateEffect: CrateEffect,
+        var crateEgg: CrateEgg,
+        var crateEffect: CrateEffect,
         // TODO Temporary
-        val blockUnder: Block? = null
+        var blockUnder: Block? = null
 ) {
 
-    val effect = EffectFactory.createEffect(crateEffect, location)
+    var effect = EffectFactory.createEffect(crateEffect, location)
 
     /**
      * Checks whether or not the location is a crate
      */
     fun isCrate(location: Location): Boolean {
         return this.location == location
+    }
+
+    fun updateEffect(crateEffect: CrateEffect) {
+        if (crateEffect == this.crateEffect) return
+
+        this.crateEffect = crateEffect
+        effect.stop()
+        effect = EffectFactory.createEffect(crateEffect, location)
+        effect.start()
     }
 
 }

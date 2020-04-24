@@ -33,6 +33,8 @@ class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, pr
 
         if (!shouldRun()) return true
 
+        petInsentient.bukkitEntity
+
         // Allows the player to search from a little further
         followDistance = if (petMemory.isTracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
 

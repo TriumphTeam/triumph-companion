@@ -55,6 +55,12 @@ object SQLiteQueries {
     const val SQLITE_INSERT_CRATE = "INSERT INTO `crates` VALUES(?, ?, ?, ?)"
 
     /**
+     * Update queries
+     */
+
+    const val SQLITE_EDIT_CRATE = "UPDATE `crates` SET `crate_egg` = ?, `crate_effect` = ? WHERE `uuid` = ?"
+
+    /**
      * Remove queries
      */
 

@@ -3,7 +3,7 @@ package me.mattstudios.triumphpets
 import com.google.common.primitives.Ints
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.MessageUtils.color
-import me.mattstudios.mattcore.utils.MessageUtils.info
+import me.mattstudios.mattcore.utils.MessageUtils.log
 import me.mattstudios.mattcore.utils.NmsUtils.getServerVersion
 import me.mattstudios.mf.base.components.CompletionResolver
 import me.mattstudios.mf.base.components.ParameterResolver
@@ -111,7 +111,7 @@ class TriumphPets : MattPlugin() {
                 CrateCommand(this),
 
                 PetsCommand(this)
-                        )
+        )
     }
 
     /**
@@ -122,7 +122,7 @@ class TriumphPets : MattPlugin() {
                 PetListeners(this),
                 PlayerListeners(this),
                 CrateListeners(this)
-                         )
+        )
     }
 
     /**
@@ -133,7 +133,7 @@ class TriumphPets : MattPlugin() {
                 "",
                 getPluginStartup(),
                 "${locale.getMessageRaw(Message.STARTUP_VERSION)} &c${description.version} &8(&c${PetUtils.LOCALE}&8)"
-                 ).forEach { info(color(it)) }
+        ).forEach { log(color(it)) }
     }
 
 }

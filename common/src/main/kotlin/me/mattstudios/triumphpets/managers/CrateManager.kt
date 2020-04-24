@@ -1,8 +1,8 @@
 package me.mattstudios.triumphpets.managers
 
+import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.mattcore.utils.Task.later
-import me.mattstudios.mfgui.gui.components.XMaterial
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.crate.componetents.CrateEffect
@@ -22,7 +22,7 @@ class CrateManager(
         private val plugin: MattPlugin,
         private val crateController: CrateController,
         private val database: Database
-                  ) {
+) {
 
     private val crates = mutableSetOf<Crate>()
 
@@ -48,6 +48,21 @@ class CrateManager(
         setSkullBlock(location, crateEgg.blockTexture)
         loadCrate(crate)
         plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_SUCCESS)
+    }
+
+    /**
+     * Edits the given crate's particles / egg
+     */
+    fun editCrate(location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
+        val crate = crates.find { it.isCrate(location) } ?: return
+
+        if (crate.crateEgg != crateEgg) {
+            crate.crateEgg = crateEgg
+            setSkullBlock(location, crateEgg.blockTexture)
+        }
+
+        crate.updateEffect(crateEffect)
+        database.editCrate(crate)
     }
 
     /**
@@ -88,10 +103,11 @@ class CrateManager(
     fun remove(location: Location) {
         val crate = getCrate(location) ?: return
 
+        database.removeCrate(crate)
+
         // Removes the crate's
         crate.effect.stop()
         crateController.remove(crate)
-        database.removeCrate(crate)
         crates.remove(crate)
 
         // Removes the player head

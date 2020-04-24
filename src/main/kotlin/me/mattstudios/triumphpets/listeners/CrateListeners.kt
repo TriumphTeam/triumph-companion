@@ -1,6 +1,6 @@
 package me.mattstudios.triumphpets.listeners
 
-import me.mattstudios.mfgui.gui.components.XMaterial
+import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.crate.CrateAnimation
 import org.bukkit.entity.EntityType
