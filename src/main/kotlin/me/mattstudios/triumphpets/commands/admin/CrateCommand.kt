@@ -27,8 +27,6 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
     @SubCommand("crate")
     fun crateSet(player: Player, @Values("#crate-type") type: String?) {
 
-        // TODO errors in this fun
-
         if (type == null) {
             sendMessage("cmd.wrong.usage", player)
             return
@@ -57,14 +55,14 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun setCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("Temp message saying error")
+            player.sendMessage("&cYou must be looking at a block to set the crate!")
             return
         }
 
         val crateBlock = block.getRelative(BlockFace.UP)
 
         if (crateManager.isCrate(block.location) || crateManager.isCrate(crateBlock.location)) {
-            player.sendMessage("You already have a crate set!")
+            player.sendMessage("&cThe block you are looking at is already a crate!")
             return
         }
 
@@ -77,14 +75,14 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun editCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("Temp message saying error")
+            player.sendMessage("&cYou must be looking at a crate to edit it!")
             return
         }
 
         val crate = crateManager.getCrate(block.location)
 
         if (crate == null) {
-            player.sendMessage("Temp message saying error")
+            player.sendMessage("&cYou must be looking at a crate to edit it!")
             return
         }
 
@@ -97,12 +95,12 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun unsetCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("Temp message saying error")
+            player.sendMessage("&cYou must be looking at a crate to remove it!")
             return
         }
 
         if (!crateManager.isCrate(block.location)) {
-            player.sendMessage("Temp message saying error")
+            player.sendMessage("&cYou must be looking at a crate to edit it!")
             return
         }
 

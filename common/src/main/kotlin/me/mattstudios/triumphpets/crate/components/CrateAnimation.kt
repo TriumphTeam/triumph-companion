@@ -8,7 +8,6 @@ import org.bukkit.Color
 import org.bukkit.Material
 import org.bukkit.Particle
 import org.bukkit.entity.ArmorStand
-import org.bukkit.entity.Fox
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import org.bukkit.scheduler.BukkitRunnable
@@ -109,11 +108,11 @@ class CrateAnimation(
 
                     XSound.ENTITY_BLAZE_SHOOT.playSound(crate.location.clone().add(.5, .5, .5), .5f, .5f)
 
-                    val pet = player.world.spawn(crate.location.clone().add(.5, .0, .5), Fox::class.java) {
+                    /*val pet = player.world.spawn(crate.location.clone().add(.5, .0, .5), Fox::class.java) {
                         it.setAI(true)
                         it.setGravity(false)
                         it.setBaby()
-                    }
+                    }*/
                 }
             }
         }

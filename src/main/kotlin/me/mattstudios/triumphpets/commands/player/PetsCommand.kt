@@ -17,7 +17,6 @@ import org.apache.commons.lang.StringUtils.replace
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemFlag
 import org.bukkit.inventory.ItemStack
-import kotlin.math.ceil
 
 /**
  * @author Matt
@@ -67,7 +66,8 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
                 .setLore(color(locale.getMessageRaw(Message.PET_LIST_GUI_NO_PET_LORE)))
                 .build()
 
-        val petItem = activePet?.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_DESPAWN)) ?: despawnItem
+        val petItem = activePet?.getPetItem(locale, locale.getMessageRaw(Message.PET_DATA_DISPLAY_ACTION_DESPAWN))
+                      ?: despawnItem
 
         // Sets the item for the despawning of the Pet
         gui.setItem(rows * 9 - 5, GuiItem(petItem, GuiAction {
@@ -94,6 +94,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
             }))
         }
 
+
         gui.open(player)
     }
 
@@ -116,24 +117,24 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
 
         // Sets the pagination item for previous page
         gui.setItem(lastRow - 7, GuiItem(prevPageItem, GuiAction {
-            gui.prevPage()
             // Updates the item with the current page number
             updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
             updateLore(nextPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_NEXT_LORE), gui.currentPageNum)
 
             gui.updateItem(lastRow - 3, nextPageItem)
             gui.updateItem(lastRow - 7, prevPageItem)
+            gui.prevPage()
         }))
 
         // Sets the pagination item for next page
         gui.setItem(lastRow - 3, GuiItem(nextPageItem, GuiAction {
-            gui.nextPage()
             // Updates the item with the current page number
             updateLore(prevPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_PREVIOUS_LORE), gui.currentPageNum)
             updateLore(nextPageItem, locale.getMessageRaw(Message.PET_LIST_GUI_NEXT_LORE), gui.currentPageNum)
 
             gui.updateItem(lastRow - 3, nextPageItem)
             gui.updateItem(lastRow - 7, prevPageItem)
+            gui.nextPage()
         }))
     }
 
@@ -149,7 +150,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      * Gets the correct rows based on how many the player has
      */
     private fun rows(size: Int): Int {
-        return 3.coerceAtLeast(ceil(size / 9.0 + 2).toInt())
+        return 6//3.coerceAtLeast(ceil(size / 9.0 + 2).toInt())
     }
 
     /**
@@ -157,7 +158,7 @@ class PetsCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun updateLore(itemStack: ItemStack, lore: List<String>, pageNumber: Int) {
         val itemMeta = itemStack.itemMeta
-        itemMeta?.lore = color(lore.map { replace(it, "{page}", pageNumber.toString())})
+        itemMeta?.lore = color(lore.map { replace(it, "{page}", pageNumber.toString()) })
         itemStack.itemMeta = itemMeta
     }
 

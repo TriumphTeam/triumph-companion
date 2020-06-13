@@ -54,6 +54,11 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
             "&7The crate was removed successfully!",
             ""
     ),
+    COMMAND_CRATE_SET_ERROR(
+            "command.admin.error.crate-set",
+            "&cAn error occurred while setting the crate, please check your console!",
+            ""
+    ),
 
     COMMAND_GIVE_NO_PLAYER(
             "command.admin.error.give-no-player",

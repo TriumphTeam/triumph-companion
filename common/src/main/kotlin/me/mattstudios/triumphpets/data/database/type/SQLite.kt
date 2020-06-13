@@ -83,7 +83,7 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Creates all the default tables
      */
     private fun createTables() {
-        dataSource.connection.tryRun(locale.getMessage(Message.STARTUP_CREATE_TABLES_ERROR)) { connection ->
+        dataSource.connection.tryRun { connection ->
             connection.prepareStatement(SQLITE_CREATE_PETS).execute()
             connection.prepareStatement(SQLITE_CREATE_PLAYERS).execute()
             connection.prepareStatement(SQLITE_CREATE_CRATES).execute()
@@ -178,10 +178,8 @@ class SQLite(private val plugin: MattPlugin) : Database {
      * Inserts the player in the database
      */
     override fun insertCrate(crate: Crate): Boolean {
-        var inserted = false
-
         // TODO error message
-        dataSource.connection.tryRun("&aFuck me") { connection ->
+        dataSource.connection.tryRun { connection ->
             val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
             statement.setString(1, crate.uuid.toString())
             statement.setString(2, blockLocationToString(crate.location))
@@ -189,10 +187,11 @@ class SQLite(private val plugin: MattPlugin) : Database {
             statement.setString(4, crate.crateEffect.name)
 
             statement.executeUpdate()
-            inserted = true
+
+            return true
         }
 
-        return inserted
+        return false
     }
 
     /**

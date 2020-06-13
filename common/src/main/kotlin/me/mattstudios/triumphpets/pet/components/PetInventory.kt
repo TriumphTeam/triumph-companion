@@ -138,7 +138,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
         // Fills everything with glass
         filterGui.filler.fill(GuiItem(getFillItem()))
 
-        val air = XMaterial.AIR.parseItem()
+        val air = ItemStack(Material.AIR)
 
         // Opens the slots in the middle for filtering
         filterGui.setItem(10, GuiItem(air))
@@ -148,13 +148,6 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
         filterGui.setItem(14, GuiItem(air))
         filterGui.setItem(15, GuiItem(air))
         filterGui.setItem(16, GuiItem(air))
-
-        // Adds the close item
-        /*filterGui.setItem(22, GuiItem(getCloseItem(), GuiAction {
-            playClickSound(owner)
-            // Runs 1 tick later to prevent from being stolen from the GUI
-            Bukkit.getScheduler().runTaskLater(plugin, Runnable { owner.closeInventory() }, 1L)
-        }))*/
 
         // Adds the back item
         filterGui.setItem(20, GuiItem(ItemStack(Material.PAPER), GuiAction {

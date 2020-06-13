@@ -8,10 +8,13 @@ import me.mattstudios.triumphpets.pet.PetPlayer
 import me.mattstudios.triumphpets.pet.components.NameEntity
 import me.mattstudios.triumphpets.pet.v1_15.pets.PetFox
 import net.minecraft.server.v1_15_R1.EntityFox
+import net.minecraft.server.v1_15_R1.EntityLiving
+import net.minecraft.server.v1_15_R1.EnumItemSlot
 import org.bukkit.Bukkit
 import org.bukkit.NamespacedKey
 import org.bukkit.craftbukkit.v1_15_R1.CraftWorld
 import org.bukkit.craftbukkit.v1_15_R1.entity.CraftEntity
+import org.bukkit.entity.ArmorStand
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
@@ -57,6 +60,7 @@ class EntityController(private val plugin: MattPlugin) : PetController {
         petPlayer.activePetUUID = petData.uuid
 
         spawnedPets.add(petFox)
+
     }
 
     /**
@@ -83,19 +87,21 @@ class EntityController(private val plugin: MattPlugin) : PetController {
     override fun removeCrash() {
         var removed = 0
 
-        for (world in Bukkit.getWorlds()) {
-            for (entity in world.entities) {
-                val nbt = entity.persistentDataContainer
+        for (world in Bukkit.getWorlds()) for (entity in world.entities) {
+            val nbt = entity.persistentDataContainer
+            println("Checking?")
+            if (entity is EntityLiving) println(entity.getEquipment(EnumItemSlot.HEAD))
+            if (entity is ArmorStand) println(entity.equipment?.helmet)
 
-                // Checks for the NBTs
-                if (nbt.get(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE) == null &&
-                    nbt.get(NamespacedKey(plugin, "pet-crate"), PersistentDataType.BYTE) == null) {
-                    continue
-                }
-
-                entity.remove()
-                removed++
+            // Checks for the NBTs
+            if (nbt.get(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE) == null &&
+                nbt.get(NamespacedKey(plugin, "pet-crate"), PersistentDataType.BYTE) == null) {
+                continue
             }
+
+            entity.remove()
+            removed++
+
         }
 
         if (removed > 0) println("Removed $removed entities due to crash!")

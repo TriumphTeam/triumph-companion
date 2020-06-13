@@ -2,7 +2,9 @@ package me.mattstudios.triumphpets.managers
 
 import com.cryptomorin.xseries.XMaterial
 import me.mattstudios.mattcore.MattPlugin
+import me.mattstudios.mattcore.utils.Task.async
 import me.mattstudios.mattcore.utils.Task.later
+import me.mattstudios.mattcore.utils.Task.queue
 import me.mattstudios.triumphpets.crate.Crate
 import me.mattstudios.triumphpets.crate.CrateController
 import me.mattstudios.triumphpets.crate.components.CrateEffect
@@ -40,14 +42,19 @@ class CrateManager(
     fun createCrate(player: Player, location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
         val crate = Crate(UUID.randomUUID(), location, crateEgg, crateEffect)
 
-        if (!database.insertCrate(crate)) {
-            // TODO INSERT CRATE ERROR
-            return
+        async {
+            if (!database.insertCrate(crate)) {
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_ERROR)
+                return@async
+            }
+
+            queue {
+                setSkullBlock(location, crateEgg.blockTexture)
+                loadCrate(crate)
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_SUCCESS)
+            }
         }
 
-        setSkullBlock(location, crateEgg.blockTexture)
-        loadCrate(crate)
-        plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_SUCCESS)
     }
 
     /**

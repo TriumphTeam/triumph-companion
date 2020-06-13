@@ -96,14 +96,14 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
         if (!shouldRun()) return
         if (petInventory.isOpened()) return
 
-
         var itemToTrack: Item? = null
 
         for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 7.5, searchDistance)) {
             if (foundEntity !is Item) continue
-            if (petInventory.isFull(foundEntity.itemStack)) continue
-            if (petMemory.isForgotten(foundEntity)) continue
             if (petMemory.isFiltered(foundEntity.itemStack.type)) continue
+            if (petMemory.isForgotten(foundEntity)) continue
+
+            if (petInventory.isFull(foundEntity.itemStack)) continue
 
             if (itemToTrack == null || itemToTrack.isDead) {
                 if (cantPath(foundEntity)) continue
