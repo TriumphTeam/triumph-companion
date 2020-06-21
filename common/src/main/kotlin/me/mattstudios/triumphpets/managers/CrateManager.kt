@@ -11,7 +11,7 @@ import me.mattstudios.triumphpets.crate.components.CrateEffect
 import me.mattstudios.triumphpets.crate.components.CrateEgg
 import me.mattstudios.triumphpets.data.database.Database
 import me.mattstudios.triumphpets.locale.Message
-import me.mattstudios.triumphpets.util.Utils.setSkullBlock
+import me.mattstudios.triumphpets.util.Utils.setBlockTexture
 import org.bukkit.Location
 import org.bukkit.Material
 import org.bukkit.entity.Player
@@ -49,7 +49,7 @@ class CrateManager(
             }
 
             queue {
-                setSkullBlock(location, crateEgg.blockTexture)
+                location.setBlockTexture(crateEgg.blockTexture)
                 loadCrate(crate)
                 plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_SUCCESS)
             }
@@ -60,16 +60,24 @@ class CrateManager(
     /**
      * Edits the given crate's particles / egg
      */
-    fun editCrate(location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
+    fun editCrate(player: Player, location: Location, crateEgg: CrateEgg, crateEffect: CrateEffect) {
         val crate = crates.find { it.isCrate(location) } ?: return
 
-        if (crate.crateEgg != crateEgg) {
-            crate.crateEgg = crateEgg
-            setSkullBlock(location, crateEgg.blockTexture)
-        }
+        async {
+            if (!database.editCrate(crate)) {
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_ERROR)
+                return@async
+            }
 
-        crate.updateEffect(crateEffect)
-        database.editCrate(crate)
+            queue {
+                if (crate.crateEgg != crateEgg) {
+                    crate.crateEgg = crateEgg
+                    location.setBlockTexture(crateEgg.blockTexture)
+                }
+
+                crate.updateEffect(crateEffect)
+            }
+        }
     }
 
     /**
@@ -100,25 +108,34 @@ class CrateManager(
      * Shows the crate block / holograms back
      */
     fun showCrate(crate: Crate) {
-        setSkullBlock(crate.location, crate.crateEgg.blockTexture)
+        crate.location.setBlockTexture(crate.crateEgg.blockTexture)
         crateController.show(crate)
     }
 
     /**
      * Removes the crate
      */
-    fun remove(location: Location) {
+    fun remove(player: Player, location: Location) {
         val crate = getCrate(location) ?: return
 
-        database.removeCrate(crate)
+        async {
 
-        // Removes the crate's
-        crate.effect.stop()
-        crateController.remove(crate)
-        crates.remove(crate)
+            if (!database.removeCrate(crate)) {
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_ERROR)
+                return@async
+            }
 
-        // Removes the player head
-        location.block.type = Material.AIR
+            queue {
+                crate.effect.stop()
+                crateController.remove(crate)
+                crates.remove(crate)
+
+                // Removes the player head
+                location.block.type = Material.AIR
+            }
+
+        }
+
     }
 
     /**
@@ -130,7 +147,7 @@ class CrateManager(
 
             if (crateBlock.type == XMaterial.PLAYER_HEAD.parseMaterial()) continue
 
-            setSkullBlock(crate.location, crate.crateEgg.blockTexture)
+            crate.location.setBlockTexture(crate.crateEgg.blockTexture)
         }
     }
 

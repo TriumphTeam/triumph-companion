@@ -34,6 +34,7 @@ import me.mattstudios.triumphpets.util.Utils.stringToBlockLocation
 import org.sqlite.SQLiteDataSource
 import java.io.File
 import java.io.IOException
+import java.sql.SQLException
 import java.util.UUID
 
 
@@ -177,9 +178,9 @@ class SQLite(private val plugin: MattPlugin) : Database {
     /**
      * Inserts the player in the database
      */
+    @Throws(SQLException::class)
     override fun insertCrate(crate: Crate): Boolean {
-        // TODO error message
-        dataSource.connection.tryRun { connection ->
+        return dataSource.connection.tryRun { connection ->
             val statement = connection.prepareStatement(SQLITE_INSERT_CRATE)
             statement.setString(1, crate.uuid.toString())
             statement.setString(2, blockLocationToString(crate.location))
@@ -187,19 +188,14 @@ class SQLite(private val plugin: MattPlugin) : Database {
             statement.setString(4, crate.crateEffect.name)
 
             statement.executeUpdate()
-
-            return true
         }
-
-        return false
     }
 
     /**
      * Edits the crate
      */
-    override fun editCrate(crate: Crate) {
-        // TODO error message
-        dataSource.connection.tryRun("&aFuck me") { connection ->
+    override fun editCrate(crate: Crate): Boolean {
+        return dataSource.connection.tryRun { connection ->
             val statement = connection.prepareStatement(SQLITE_EDIT_CRATE)
             statement.setString(1, crate.crateEgg.name)
             statement.setString(2, crate.crateEffect.name)
@@ -230,8 +226,8 @@ class SQLite(private val plugin: MattPlugin) : Database {
     /**
      * Inserts the pet in the database
      */
-    override fun removeCrate(crate: Crate) {
-        dataSource.connection.tryRun { connection ->
+    override fun removeCrate(crate: Crate): Boolean {
+        return dataSource.connection.tryRun { connection ->
             val statement = connection.prepareStatement(SQLITE_REMOVE_CRATE)
             statement.setString(1, crate.uuid.toString())
             statement.executeUpdate()

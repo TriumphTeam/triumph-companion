@@ -38,7 +38,7 @@ allprojects {
         compileOnly "org.xerial:sqlite-jdbc:3.30.1"
 
         // My stuff
-        implementation "me.mattstudios.utils:matt-core:1.2.5"
+        implementation "me.mattstudios.utils:matt-core:1.2.7"
 
         implementation "me.rayzr522:jsonmessage:1.2.0"
 
@@ -70,6 +70,7 @@ allprojects {
 apply plugin: 'com.github.johnrengelman.shadow'
 
 shadowJar {
+    clean
     //minimize()
 
     relocate("me.mattstudios.mf", "me.mattstudios.triumphpets.mf")
@@ -78,8 +79,12 @@ shadowJar {
 
     archiveFileName = "TriumphPets-${project.version}.jar"
 
-    // Testing only
-    destinationDir file("T:/servers/spigot-1.15/plugins");
+    destinationDir file("C:/Users/xpsyk/Desktop/servers/spigot-1.15/plugins")
+}
+
+task buildToServer(type: Copy) {
+    from shadowJar
+    into "C:/Users/xpsyk/Desktop/servers/spigot-1.15/plugins"
 }
 
 dependencies {

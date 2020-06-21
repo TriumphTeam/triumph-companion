@@ -19,14 +19,13 @@ import org.bukkit.util.BlockIterator
 class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
 
     private val crateManager = plugin.petManager.crateManager
-    private val blockStateValues = BlockFace.values().toList().map { it.name }
 
     /**
      * Crate command that handles both Set and Unset of the Pet crate
      */
     @SubCommand("crate")
     fun crateSet(player: Player, @Values("#crate-type") type: String?) {
-
+        
         if (type == null) {
             sendMessage("cmd.wrong.usage", player)
             return
@@ -104,10 +103,7 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
             return
         }
 
-        player.sendMessage(block.location.toString())
-
-        crateManager.remove(block.location)
-        player.sendMessage("crate removed")
+        crateManager.remove(player, block.location)
     }
 
     /**

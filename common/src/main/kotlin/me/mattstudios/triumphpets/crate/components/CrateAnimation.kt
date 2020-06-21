@@ -24,7 +24,7 @@ class CrateAnimation(
         private val crateManager: CrateManager
 ) : BukkitRunnable() {
 
-    private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.75, .5), ArmorStand::class.java) {
+    private val armorStand: ArmorStand = player.world.spawn(crate.location.clone().add(.5, -.725, .5), ArmorStand::class.java) {
         it.fireTicks = 500
 
         it.isSilent = true

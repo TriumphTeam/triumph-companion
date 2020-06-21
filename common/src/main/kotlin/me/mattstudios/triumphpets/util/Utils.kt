@@ -139,11 +139,9 @@ object Utils {
     /**
      * Sets the crate block back to normal
      */
-    fun setSkullBlock(location: Location, texture: String) {
-        val crateBlock = location.block
-        println("before block")
+    fun Location.setBlockTexture(texture: String) {
+        val crateBlock = block
         crateBlock.type = Material.PLAYER_HEAD
-        println("after block")
 
         // Creates the game profile for the skull
         val profile = GameProfile(UUID.randomUUID(), null)
@@ -151,14 +149,12 @@ object Utils {
 
         // Sets the skull texture
         setSkullTexture(getSkullTile(crateBlock.world, crateBlock), profile)
-        println("after texture block")
 
         // Sets the rotation of the block
         val data = crateBlock.blockData as Rotatable
         data.rotation = BlockFace.NORTH_WEST
         crateBlock.blockData = data
         crateBlock.state.update(true)
-        println("Here?")
     }
 
     /**

@@ -69,7 +69,7 @@ class CrateOptionsGui(
         gui.setItem(4, 5, GuiItem(getCompleteItem()) {
             playClickSound(player)
             gui.close(player)
-            if (edit) crateManager.editCrate(crateLocation, crateEgg, crateEffect)
+            if (edit) crateManager.editCrate(player, crateLocation, crateEgg, crateEffect)
             else crateManager.createCrate(player, crateLocation, crateEgg, crateEffect)
         })
 
