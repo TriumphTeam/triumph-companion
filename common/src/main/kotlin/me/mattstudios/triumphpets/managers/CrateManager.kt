@@ -81,6 +81,33 @@ class CrateManager(
     }
 
     /**
+     * Removes the crate
+     */
+    fun remove(player: Player, location: Location) {
+        val crate = getCrate(location) ?: return
+
+        async {
+
+            if (!database.removeCrate(crate)) {
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_UNSET_ERROR)
+                return@async
+            }
+
+            queue {
+                crate.effect.stop()
+                crateController.remove(crate)
+                crates.remove(crate)
+
+                // Removes the player head
+                location.block.type = Material.AIR
+
+                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_UNSET_SUCCESS)
+            }
+
+        }
+    }
+
+    /**
      * Checks if the location is a crate of not
      */
     fun isCrate(location: Location): Boolean {
@@ -110,32 +137,6 @@ class CrateManager(
     fun showCrate(crate: Crate) {
         crate.location.setBlockTexture(crate.crateEgg.blockTexture)
         crateController.show(crate)
-    }
-
-    /**
-     * Removes the crate
-     */
-    fun remove(player: Player, location: Location) {
-        val crate = getCrate(location) ?: return
-
-        async {
-
-            if (!database.removeCrate(crate)) {
-                plugin.locale.sendMessage(player, Message.COMMAND_CRATE_SET_ERROR)
-                return@async
-            }
-
-            queue {
-                crate.effect.stop()
-                crateController.remove(crate)
-                crates.remove(crate)
-
-                // Removes the player head
-                location.block.type = Material.AIR
-            }
-
-        }
-
     }
 
     /**

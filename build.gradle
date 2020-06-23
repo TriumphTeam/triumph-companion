@@ -87,6 +87,10 @@ task buildToServer(type: Copy) {
     into "C:/Users/xpsyk/Desktop/servers/spigot-1.15/plugins"
 }
 
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+}
+
 dependencies {
     implementation project(":common")
     implementation project(":version1_15")

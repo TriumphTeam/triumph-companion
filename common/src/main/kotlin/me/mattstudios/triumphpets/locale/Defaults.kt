@@ -59,6 +59,21 @@ enum class Defaults(val path: String, private val en: String, private val pt: St
             "&cAn error occurred while setting the crate, please check your console!",
             ""
     ),
+    COMMAND_CRATE_NO_LOOK_BLOCK(
+            "command.admin.error.crate-no-look-block",
+            "&cYou must be looking at a block to set the crate!",
+            ""
+    ),
+    COMMAND_CRATE_NO_LOOK_CRATE(
+            "command.admin.error.crate-no-look-crate",
+            "&cYou must be looking at a crate to edit or remove it!",
+            ""
+    ),
+    COMMAND_BLOCK_ALREADY_CRATE(
+            "command.admin.error.block-already-crate",
+            "&cThe block you are looking at is already a crate!",
+            ""
+    ),
     COMMAND_CRATE_UNSET_ERROR(
             "command.admin.error.crate-unset",
             "&cAn error occurred while removing the crate, please check your console!",

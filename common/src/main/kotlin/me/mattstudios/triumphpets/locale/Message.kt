@@ -51,6 +51,18 @@ object Message : SettingsHolder {
     val COMMAND_CRATE_UNSET_SUCCESS: Property<String> = newProperty(Defaults.COMMAND_CRATE_UNSET_SUCCESS.path,
                                                                     Defaults.COMMAND_CRATE_UNSET_SUCCESS.get(PetUtils.LOCALE))
 
+    val COMMAND_CRATE_UNSET_ERROR: Property<String> = newProperty(Defaults.COMMAND_CRATE_UNSET_ERROR.path,
+                                                                    Defaults.COMMAND_CRATE_UNSET_ERROR.get(PetUtils.LOCALE))
+
+    val COMMAND_CRATE_NO_LOOK_BLOCK: Property<String> = newProperty(Defaults.COMMAND_CRATE_NO_LOOK_BLOCK.path,
+                                                                  Defaults.COMMAND_CRATE_NO_LOOK_BLOCK.get(PetUtils.LOCALE))
+
+    val COMMAND_CRATE_NO_LOOK_CRATE: Property<String> = newProperty(Defaults.COMMAND_CRATE_NO_LOOK_CRATE.path,
+                                                                    Defaults.COMMAND_CRATE_NO_LOOK_CRATE.get(PetUtils.LOCALE))
+
+    val COMMAND_BLOCK_ALREADY_CRATE: Property<String> = newProperty(Defaults.COMMAND_BLOCK_ALREADY_CRATE.path,
+                                                                    Defaults.COMMAND_BLOCK_ALREADY_CRATE.get(PetUtils.LOCALE))
+
     val COMMAND_GIVE_NO_PLAYER: Property<String> = newProperty(Defaults.COMMAND_GIVE_NO_PLAYER.path,
                                                                Defaults.COMMAND_GIVE_NO_PLAYER.get(PetUtils.LOCALE))
 

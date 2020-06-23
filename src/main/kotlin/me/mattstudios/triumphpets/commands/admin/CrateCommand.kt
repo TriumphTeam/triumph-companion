@@ -6,6 +6,7 @@ import me.mattstudios.mf.annotations.Values
 import me.mattstudios.mf.base.CommandBase
 import me.mattstudios.triumphpets.TriumphPets
 import me.mattstudios.triumphpets.crate.gui.CrateOptionsGui
+import me.mattstudios.triumphpets.locale.Message
 import org.bukkit.Material
 import org.bukkit.block.Block
 import org.bukkit.block.BlockFace
@@ -54,14 +55,14 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun setCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("&cYou must be looking at a block to set the crate!")
+            plugin.locale.sendMessage(player, Message.COMMAND_CRATE_NO_LOOK_BLOCK)
             return
         }
 
         val crateBlock = block.getRelative(BlockFace.UP)
 
         if (crateManager.isCrate(block.location) || crateManager.isCrate(crateBlock.location)) {
-            player.sendMessage("&cThe block you are looking at is already a crate!")
+            plugin.locale.sendMessage(player, Message.COMMAND_BLOCK_ALREADY_CRATE)
             return
         }
 
@@ -74,14 +75,14 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun editCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("&cYou must be looking at a crate to edit it!")
+            plugin.locale.sendMessage(player, Message.COMMAND_CRATE_NO_LOOK_CRATE)
             return
         }
 
         val crate = crateManager.getCrate(block.location)
 
         if (crate == null) {
-            player.sendMessage("&cYou must be looking at a crate to edit it!")
+            plugin.locale.sendMessage(player, Message.COMMAND_CRATE_NO_LOOK_CRATE)
             return
         }
 
@@ -94,12 +95,12 @@ class CrateCommand(private val plugin: TriumphPets) : CommandBase() {
      */
     private fun unsetCrate(block: Block?, player: Player) {
         if (block == null) {
-            player.sendMessage("&cYou must be looking at a crate to remove it!")
+            plugin.locale.sendMessage(player, Message.COMMAND_CRATE_NO_LOOK_CRATE)
             return
         }
 
         if (!crateManager.isCrate(block.location)) {
-            player.sendMessage("&cYou must be looking at a crate to edit it!")
+            plugin.locale.sendMessage(player, Message.COMMAND_CRATE_NO_LOOK_CRATE)
             return
         }
 
