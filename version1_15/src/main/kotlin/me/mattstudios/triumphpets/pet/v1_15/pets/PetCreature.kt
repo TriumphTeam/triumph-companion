@@ -6,6 +6,7 @@ import me.mattstudios.mattcore.utils.TimeUtils
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.v1_15.components.HologramEntity
+import me.mattstudios.triumphpets.pet.v1_15.goals.FarmGoal
 import me.mattstudios.triumphpets.pet.v1_15.goals.FollowPlayerGoal
 import me.mattstudios.triumphpets.pet.v1_15.goals.PickUpItemsGoal
 import me.mattstudios.triumphpets.pet.v1_15.goals.RandomWalkAroundGoal
@@ -54,7 +55,7 @@ internal class PetCreature(
         goalSelector.a(0, PickUpItemsGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
         goalSelector.a(1, FollowPlayerGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
         goalSelector.a(5, RandomWalkAroundGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
-        //goalSelector.a(6, FarmGoal(this, this, 1.5))
+        goalSelector.a(6, FarmGoal(petInsentient as Pet, petInsentient, 1.5))
 
         goalSelector.a(7, PathfinderGoalLookAtPlayer(petInsentient, EntityHuman::class.java, 5f))
         goalSelector.a(10, PathfinderGoalFloat(petInsentient))

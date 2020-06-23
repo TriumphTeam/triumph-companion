@@ -22,7 +22,12 @@ import org.bukkit.util.Vector
 /**
  * @author Matt
  */
-class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityInsentient, petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class PickUpItemsGoal(
+        private val pet: Pet,
+        private val petInsentient: EntityInsentient,
+        petConfig: PetConfig,
+        private val movementSpeed: Double
+) : PathfinderGoal() {
 
     private val navigation = petInsentient.navigation
     private val petInventory = pet.getInventory()
@@ -85,7 +90,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
 
         if (!petMemory.isTracking) startTracking()
 
-        navigation.a(asNmsEntity(currentTrackedItem), MOVEMENT_SPEED)
+        navigation.a(asNmsEntity(currentTrackedItem), movementSpeed)
     }
 
     /**
@@ -106,14 +111,14 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
             if (petInventory.isFull(foundEntity.itemStack)) continue
 
             if (itemToTrack == null || itemToTrack.isDead) {
-                if (cantPath(foundEntity)) continue
+                if (!canPath(foundEntity)) continue
 
                 itemToTrack = foundEntity
                 continue
             }
 
             if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(itemToTrack.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
-                if (cantPath(foundEntity)) continue
+                if (canPath(foundEntity)) continue
 
                 itemToTrack = foundEntity
             }
@@ -126,7 +131,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
     /**
      * Creates a path and checks if it is doable
      */
-    private fun cantPath(entity: Entity): Boolean {
+    private fun canPath(entity: Entity): Boolean {
         val path = navigation.a(asNmsEntity(entity), 1)
         return path != null && !path.h()
     }
@@ -139,6 +144,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
         val event = PetPickUpItemEvent(PetType.PET_SNOW_FOX_BABY, item.itemStack, pet.getPetOwner())
         Bukkit.getPluginManager().callEvent(event)
 
+        // Cancels the event
         if (event.isCancelled) {
             petMemory.forgetItem(item)
             return
