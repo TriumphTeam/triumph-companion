@@ -44,7 +44,7 @@ class PetFox(
         }
 
         // Adds NBT tag to identify the entity as pet
-        // TODO change this later
+        // TODO change this later, move to pet creature
         bukkitEntity.persistentDataContainer.set(NamespacedKey(plugin, "pet"), PersistentDataType.BYTE, 1)
     }
 

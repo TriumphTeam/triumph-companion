@@ -50,6 +50,7 @@ internal class PetCreature(
 
         val goalSelector = petInsentient.goalSelector
 
+        // Unsure about all the casting here, doesn't look right
         goalSelector.a(0, PickUpItemsGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
         goalSelector.a(1, FollowPlayerGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
         goalSelector.a(5, RandomWalkAroundGoal(petInsentient as Pet, petInsentient, petConfig, 1.5))
@@ -59,6 +60,9 @@ internal class PetCreature(
         goalSelector.a(10, PathfinderGoalFloat(petInsentient))
     }
 
+    /**
+     * Handles the ticking of the entity
+     */
     internal fun tick() {
         // Checks if the display name died and respawns it
         if (!displayName.isAlive) {
@@ -74,13 +78,16 @@ internal class PetCreature(
         petInsentient.customNameVisible = !owner.isSneaking
     }
 
+    /**
+     * Removes the entities from the world
+     */
     internal fun remove() {
         petInsentient.bukkitEntity.remove()
         displayName.bukkitEntity.remove()
     }
 
     /**
-     * Plays breed heart animation (just the particle)
+     * Plays breed heart animation (just the particle) and gives player a to do effect
      */
     internal fun pet() {
         if (petPetTime != 0L && TimeUtils.getSecondsDifference(petPetTime) < PET_COOLDOWN) return
