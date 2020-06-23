@@ -89,7 +89,7 @@ class EntityController(private val plugin: MattPlugin) : PetController {
 
         for (world in Bukkit.getWorlds()) for (entity in world.entities) {
             val nbt = entity.persistentDataContainer
-            println("Checking?")
+
             if (entity is EntityLiving) println(entity.getEquipment(EnumItemSlot.HEAD))
             if (entity is ArmorStand) println(entity.equipment?.helmet)
 

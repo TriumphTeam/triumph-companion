@@ -136,7 +136,7 @@ class PickUpItemsGoal(private val pet: Pet, private val petInsentient: EntityIns
      */
     private fun pickItem(item: Item) {
         // Calls event
-        val event = PetPickUpItemEvent(PetType.PET_SNOW_FOX_BABY, item.itemStack, pet.getOwner())
+        val event = PetPickUpItemEvent(PetType.PET_SNOW_FOX_BABY, item.itemStack, pet.getPetOwner())
         Bukkit.getPluginManager().callEvent(event)
 
         if (event.isCancelled) {

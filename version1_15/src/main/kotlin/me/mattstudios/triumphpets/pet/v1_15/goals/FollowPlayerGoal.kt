@@ -17,7 +17,7 @@ import org.bukkit.util.Vector
 class FollowPlayerGoal(pet: Pet, private val petInsentient: EntityInsentient, private val petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
 
     private val petMemory = pet.getMemory()
-    private val owner = pet.getOwner()
+    private val owner = pet.getPetOwner()
 
     private val navigation: NavigationAbstract = petInsentient.navigation
 

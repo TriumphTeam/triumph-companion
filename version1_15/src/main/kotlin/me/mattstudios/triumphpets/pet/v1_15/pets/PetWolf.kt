@@ -4,9 +4,9 @@ import me.mattstudios.mattcore.MattPlugin
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.components.PetInventory
 import me.mattstudios.triumphpets.pet.components.PetMemory
-import net.minecraft.server.v1_15_R1.EntityFox
 import net.minecraft.server.v1_15_R1.EntityHuman
 import net.minecraft.server.v1_15_R1.EntityTypes
+import net.minecraft.server.v1_15_R1.EntityWolf
 import net.minecraft.server.v1_15_R1.EnumHand
 import net.minecraft.server.v1_15_R1.World
 import org.bukkit.NamespacedKey
@@ -14,29 +14,26 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Player
 import org.bukkit.persistence.PersistentDataType
 
-
 /**
  * @author Matt
  */
-class PetFox(
+class PetWolf(
         private val plugin: MattPlugin,
         private val petMemory: PetMemory,
         private val petInventory: PetInventory,
         private val owner: Player,
         private val petName: String,
         baby: Boolean,
-        type: Type,
         world: World
-) : EntityFox(EntityTypes.FOX, world), Pet {
+) : EntityWolf(EntityTypes.WOLF, world), Pet {
 
     private val petConfig = petMemory.petConfig
 
     private val petCreature = PetCreature(plugin, this, petConfig, petName, owner)
 
     init {
-        // Fox specific properties
-        foxType = type
-        canPickUpLoot = false
+        // Wolf specific properties
+        isTamed = true
 
         if (baby) {
             age = -24000

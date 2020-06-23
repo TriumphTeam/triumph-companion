@@ -33,7 +33,7 @@ interface Pet {
     /**
      * Gets the pet owner
      */
-    fun getOwner(): Player
+    fun getPetOwner(): Player
 
     /**
      * Checks if the specific player is owner
