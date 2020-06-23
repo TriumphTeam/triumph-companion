@@ -11,10 +11,16 @@ import net.minecraft.server.v1_15_R1.PathfinderGoal
 /**
  * @author Matt
  */
-class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient, petConfig: PetConfig, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class RandomWalkAroundGoal(
+        petInsentient: EntityInsentient,
+        petConfig: PetConfig,
+        private val MOVEMENT_SPEED: Double
+) : PathfinderGoal() {
 
-    private val petMemory = pet.getMemory()
-    private val petInventory = pet.getInventory()
+    private val pet = petInsentient as Pet
+
+    private val petMemory = pet.petMemory
+    private val petInventory = pet.petInventory
 
     private val navigation = petInsentient.navigation
 
@@ -42,8 +48,8 @@ class RandomWalkAroundGoal(private val pet: Pet, petInsentient: EntityInsentient
         val x = (-10..10).random().toDouble()
         val z = (-10..10).random().toDouble()
 
-        val location = pet.getEntity().location.clone().add(x, 0.0, z)
-        navigation.a(location.x, getSafeY(location.x, location.z, pet.getEntity().world).toDouble(), location.z, MOVEMENT_SPEED)
+        val location = pet.entity.location.clone().add(x, 0.0, z)
+        navigation.a(location.x, getSafeY(location.x, location.z, pet.entity.world).toDouble(), location.z, MOVEMENT_SPEED)
     }
 
     /**

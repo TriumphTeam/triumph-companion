@@ -16,7 +16,12 @@ import kotlin.system.measureTimeMillis
 /**
  * @author Matt
  */
-class FarmGoal(private val pet: Pet, private val petInsentient: EntityInsentient, private val MOVEMENT_SPEED: Double) : PathfinderGoal() {
+class FarmGoal(
+        private val petInsentient: EntityInsentient,
+        private val MOVEMENT_SPEED: Double
+) : PathfinderGoal() {
+
+    private val pet = petInsentient as Pet
 
     private var controller = 0
 
@@ -74,10 +79,10 @@ class FarmGoal(private val pet: Pet, private val petInsentient: EntityInsentient
 
         petInsentient.navigation.a(block.x.toDouble(), block.y.toDouble(), block.z.toDouble(), MOVEMENT_SPEED)
 
-        val dist = distance(pet.getEntity().location.toVector(), block.location.toVector())
+        val dist = distance(pet.entity.location.toVector(), block.location.toVector())
         if (dist <= 2) {
             for (itemStack in block.drops) {
-                pet.getEntity().world.dropItemNaturally(block.location, itemStack)
+                pet.entity.world.dropItemNaturally(block.location, itemStack)
             }
 
             ageable.age = 0

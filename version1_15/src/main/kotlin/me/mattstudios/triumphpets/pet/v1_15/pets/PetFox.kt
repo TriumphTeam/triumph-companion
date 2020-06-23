@@ -20,18 +20,19 @@ import org.bukkit.persistence.PersistentDataType
  */
 class PetFox(
         private val plugin: MattPlugin,
-        private val petMemory: PetMemory,
-        private val petInventory: PetInventory,
-        private val owner: Player,
-        private val petName: String,
+        override val petMemory: PetMemory,
+        override val petInventory: PetInventory,
+        override val petOwner: Player,
+        override val petName: String,
         baby: Boolean,
         type: Type,
         world: World
 ) : EntityFox(EntityTypes.FOX, world), Pet {
 
-    private val petConfig = petMemory.petConfig
+    override val entity: Entity = bukkitEntity
+    override val level: Short = 1
 
-    private val petCreature = PetCreature(plugin, this, petConfig, petName, owner)
+    private val petCreature = PetCreature(plugin, this)
 
     init {
         // Fox specific properties
@@ -49,36 +50,9 @@ class PetFox(
     }
 
     /**
-     * TODO level
-     */
-    override fun getLevel(): Short = 1
-
-    override fun getName() = petName
-
-    /**
-     * Gets the bukkit entity of the pet
-     */
-    override fun getEntity(): Entity = bukkitEntity
-
-    /**
-     * Gets the inventory
-     */
-    override fun getInventory() = petInventory
-
-    /**
-     * Gets the pets memory
-     */
-    override fun getMemory() = petMemory
-
-    /**
-     * Gets the pet's owner
-     */
-    override fun getPetOwner() = owner
-
-    /**
      * Checks if the given player is owner
      */
-    override fun isOwner(player: Player) = owner.uniqueId == player.uniqueId
+    override fun isOwner(player: Player) = petOwner.uniqueId == player.uniqueId
 
     /**
      * Removes the entity from the world
@@ -97,8 +71,8 @@ class PetFox(
      * Detects the right click on the entity
      */
     override fun a(entity: EntityHuman, enumhand: EnumHand): Boolean {
-        if (enumhand == EnumHand.MAIN_HAND && entity.bukkitEntity == owner) {
-            if (owner.isSneaking) petCreature.pet() else petInventory.open()
+        if (enumhand == EnumHand.MAIN_HAND && entity.bukkitEntity == petOwner) {
+            if (petOwner.isSneaking) petCreature.pet() else petInventory.open()
         }
 
         return super.a(entity, enumhand)

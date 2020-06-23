@@ -13,27 +13,27 @@ interface Pet {
     /**
      * Gets the pet's name
      */
-    fun getName(): String
+    val petName: String
 
     /**
      * Gets the pet's level
      */
-    fun getLevel(): Short
+    val level: Short
 
     /**
      * Gets the pet memory
      */
-    fun getMemory(): PetMemory
+    val petMemory: PetMemory
 
     /**
      * Gets the pet inventory
      */
-    fun getInventory(): PetInventory
+    val petInventory: PetInventory
 
     /**
      * Gets the pet owner
      */
-    fun getPetOwner(): Player
+    val petOwner: Player
 
     /**
      * Checks if the specific player is owner
@@ -43,7 +43,7 @@ interface Pet {
     /**
      * Gets the pet bukkit entity
      */
-    fun getEntity(): Entity
+    val entity: Entity
 
     /*fun getXp(): Int
 

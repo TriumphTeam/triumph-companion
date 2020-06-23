@@ -18,20 +18,23 @@ import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
 import org.bukkit.util.Vector
 
+import net.minecraft.server.v1_15_R1.Entity as NmsEntity
+
 
 /**
  * @author Matt
  */
 class PickUpItemsGoal(
-        private val pet: Pet,
         private val petInsentient: EntityInsentient,
         petConfig: PetConfig,
         private val movementSpeed: Double
 ) : PathfinderGoal() {
 
+    private val pet = petInsentient as Pet
+
     private val navigation = petInsentient.navigation
-    private val petInventory = pet.getInventory()
-    private val petMemory = pet.getMemory()
+    private val petInventory = pet.petInventory
+    private val petMemory = pet.petMemory
 
     private var target: Item? = null
     private var startTime: Long = 0
@@ -64,7 +67,7 @@ class PickUpItemsGoal(
     private fun pickCloseItem() {
         if (!shouldPickUp()) return
 
-        for (foundEntity in pet.getEntity().getNearbyEntities(pickDistance, pickDistance, pickDistance)) {
+        for (foundEntity in pet.entity.getNearbyEntities(pickDistance, pickDistance, pickDistance)) {
             if (foundEntity !is Item) continue
             pickItem(foundEntity)
         }
@@ -85,7 +88,7 @@ class PickUpItemsGoal(
 
         if (petMemory.isTracking && startTime != 0L && getSecondsDifference(startTime) >= forgetTime) {
             petMemory.forgetItem(currentTrackedItem)
-            pet.getEntity().world.spawnParticle(Particle.SMOKE_NORMAL, pet.getEntity().location.x, pet.getEntity().location.y, pet.getEntity().location.z, 50, .5, .5, .5, 0.0)
+            pet.entity.world.spawnParticle(Particle.SMOKE_NORMAL, pet.entity.location.x, pet.entity.location.y, pet.entity.location.z, 50, .5, .5, .5, 0.0)
         }
 
         if (!petMemory.isTracking) startTracking()
@@ -103,7 +106,7 @@ class PickUpItemsGoal(
 
         var itemToTrack: Item? = null
 
-        for (foundEntity in pet.getEntity().getNearbyEntities(searchDistance, 7.5, searchDistance)) {
+        for (foundEntity in pet.entity.getNearbyEntities(searchDistance, 7.5, searchDistance)) {
             if (foundEntity !is Item) continue
             if (petMemory.isFiltered(foundEntity.itemStack.type)) continue
             if (petMemory.isForgotten(foundEntity)) continue
@@ -141,7 +144,7 @@ class PickUpItemsGoal(
      */
     private fun pickItem(item: Item) {
         // Calls event
-        val event = PetPickUpItemEvent(PetType.PET_SNOW_FOX_BABY, item.itemStack, pet.getPetOwner())
+        val event = PetPickUpItemEvent(PetType.PET_SNOW_FOX_BABY, item.itemStack, pet.petOwner)
         Bukkit.getPluginManager().callEvent(event)
 
         // Cancels the event
@@ -171,9 +174,7 @@ class PickUpItemsGoal(
     /**
      * Gets the NMS entity out of the bukkit one
      */
-    private fun asNmsEntity(entity: Entity): net.minecraft.server.v1_15_R1.Entity {
-        return (entity as CraftEntity).handle
-    }
+    private fun asNmsEntity(entity: Entity): NmsEntity = (entity as CraftEntity).handle
 
     /***
      * Sets the target the pet should follow
