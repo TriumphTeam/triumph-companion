@@ -28,8 +28,7 @@ allprojects {
     dependencies {
 
         // Spigot
-        compileOnly "org.spigotmc:spigot-api:1.15.2-R0.1-SNAPSHOT"
-        compileOnly "org.spigotmc:spigot:1.15.2-R0.1-SNAPSHOT"
+        compileOnly "org.spigotmc:spigot-api:1.16.1-R0.1-SNAPSHOT"
 
         // Mojang Auth
         compileOnly "com.mojang:authlib:1.5.21"
@@ -47,6 +46,8 @@ allprojects {
 
         // Kotlin
         implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+
+        implementation "commons-codec:commons-codec:1.14"
 
     }
 
@@ -79,7 +80,7 @@ shadowJar {
 
     archiveFileName = "TriumphPets-${project.version}.jar"
 
-    destinationDir file("C:/Users/xpsyk/Desktop/servers/spigot-1.15/plugins")
+    destinationDir file("C:/Users/xpsyk/Desktop/servers/spigot-1.16/plugins")
 }
 
 task buildToServer(type: Copy) {
@@ -93,6 +94,7 @@ tasks.withType(JavaCompile) {
 
 dependencies {
     implementation project(":common")
+    implementation project(":version1_16")
     implementation project(":version1_15")
 }
 

@@ -4,6 +4,7 @@ import com.cryptomorin.xseries.XSound
 import com.mojang.authlib.GameProfile
 import com.mojang.authlib.properties.Property
 import me.mattstudios.mattcore.utils.NmsUtils
+import org.apache.commons.codec.binary.Base64
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.Material
@@ -13,7 +14,6 @@ import org.bukkit.block.BlockFace
 import org.bukkit.block.data.Rotatable
 import org.bukkit.configuration.InvalidConfigurationException
 import org.bukkit.configuration.file.YamlConfiguration
-import org.bukkit.craftbukkit.libs.org.apache.commons.codec.binary.Base64
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack

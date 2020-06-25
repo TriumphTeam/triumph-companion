@@ -26,7 +26,13 @@ class PetManager(private val plugin: TriumphPets) {
     val dataManager: DataManager
 
     init {
+        println(getServerVersion())
         when (getServerVersion()) {
+            "v1_16_R1" -> {
+                petController = me.mattstudios.triumphpets.pet.v1_16.EntityController(plugin)
+                crateController = me.mattstudios.triumphpets.pet.v1_16.CrateEntityController(plugin)
+            }
+
             "v1_15_R1" -> {
                 petController = me.mattstudios.triumphpets.pet.v1_15.EntityController(plugin)
                 crateController = me.mattstudios.triumphpets.pet.v1_15.CrateEntityController(plugin)
