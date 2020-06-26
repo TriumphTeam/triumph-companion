@@ -17,7 +17,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class HologramEntity(plugin: MattPlugin, displayName: String, world: World, nbtValue: String = "pet") : EntityArmorStand(EntityTypes.ARMOR_STAND, world), NameEntity {
+internal class HologramEntity(plugin: MattPlugin, displayName: String, world: World, nbtValue: String = "pet") : EntityArmorStand(EntityTypes.ARMOR_STAND, world), NameEntity {
 
     init {
         isMarker = true

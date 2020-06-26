@@ -5,6 +5,7 @@ import me.mattstudios.mattcore.utils.MessageUtils
 import me.mattstudios.mattcore.utils.TimeUtils
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.v1_16.components.HologramEntity
+import me.mattstudios.triumphpets.pet.v1_16.func.addGoal
 import me.mattstudios.triumphpets.pet.v1_16.goals.FollowPlayerGoal
 import me.mattstudios.triumphpets.pet.v1_16.goals.PickUpItemsGoal
 import me.mattstudios.triumphpets.pet.v1_16.goals.RandomWalkAroundGoal
@@ -52,13 +53,13 @@ internal class PetCreature(
         val goalSelector = petInsentient.goalSelector
 
         // Unsure about all the casting here, doesn't look right
-        goalSelector.a(0, PickUpItemsGoal(petInsentient, petConfig, 1.5))
-        goalSelector.a(1, FollowPlayerGoal(petInsentient, petConfig, 1.5))
-        goalSelector.a(5, RandomWalkAroundGoal(petInsentient, petConfig, 1.5))
+        goalSelector.addGoal(0, PickUpItemsGoal(petInsentient, petConfig, 1.5))
+        goalSelector.addGoal(1, FollowPlayerGoal(petInsentient, petConfig, 1.5))
+        goalSelector.addGoal(5, RandomWalkAroundGoal(petInsentient, petConfig, 1.5))
         //goalSelector.a(6, FarmGoal(petInsentient, 1.5))
 
-        goalSelector.a(7, PathfinderGoalLookAtPlayer(petInsentient, EntityHuman::class.java, 5f))
-        goalSelector.a(10, PathfinderGoalFloat(petInsentient))
+        goalSelector.addGoal(7, PathfinderGoalLookAtPlayer(petInsentient, EntityHuman::class.java, 5f))
+        goalSelector.addGoal(10, PathfinderGoalFloat(petInsentient))
     }
 
     /**

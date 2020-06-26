@@ -88,7 +88,7 @@ class PetInventory(private val plugin: MattPlugin, private val petData: PetData,
     /**
      * Checks if the player is currently looking at the GUI
      */
-    fun isOpened(): Boolean {
+    fun isOpen(): Boolean {
         return petGui.inventory.viewers.contains(owner)
     }
 

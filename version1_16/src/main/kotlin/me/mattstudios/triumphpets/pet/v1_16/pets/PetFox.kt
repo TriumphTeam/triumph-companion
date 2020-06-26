@@ -19,7 +19,7 @@ import org.bukkit.persistence.PersistentDataType
 /**
  * @author Matt
  */
-class PetFox(
+internal class PetFox(
         private val plugin: MattPlugin,
         override val petMemory: PetMemory,
         override val petInventory: PetInventory,

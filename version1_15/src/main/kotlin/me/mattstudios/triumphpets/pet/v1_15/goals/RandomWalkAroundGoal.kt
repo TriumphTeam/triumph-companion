@@ -33,7 +33,7 @@ class RandomWalkAroundGoal(
     override fun a(): Boolean {
         // Makes it run only once every 2 second
         if (!shouldRun()) return true
-        if (petMemory.isTracking || petInventory.isOpened()) return true
+        if (petMemory.isTracking || petInventory.isOpen()) return true
         if ((1..100).random() >= chance) return true
 
         moveAround()

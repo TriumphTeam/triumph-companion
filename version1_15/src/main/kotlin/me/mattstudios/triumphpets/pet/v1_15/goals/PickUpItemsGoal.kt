@@ -102,7 +102,7 @@ class PickUpItemsGoal(
     private fun getItemToTrack() {
         // makes it run only once every second
         if (!shouldRun()) return
-        if (petInventory.isOpened()) return
+        if (petInventory.isOpen()) return
 
         var itemToTrack: Item? = null
 

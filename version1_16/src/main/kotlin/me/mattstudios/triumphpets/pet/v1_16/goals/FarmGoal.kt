@@ -16,7 +16,7 @@ import kotlin.system.measureTimeMillis
 /**
  * @author Matt
  */
-class FarmGoal(
+internal class FarmGoal(
         private val petInsentient: EntityInsentient,
         private val MOVEMENT_SPEED: Double
 ) : PathfinderGoal() {
@@ -27,7 +27,7 @@ class FarmGoal(
 
     private var start = 0L
 
-    var currentBlockPos: BlockPosition? = null
+    private var currentBlockPos: BlockPosition? = null
 
     override fun a(): Boolean {
         //if (!petInsentient.navigation.m()) return true

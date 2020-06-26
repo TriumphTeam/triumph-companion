@@ -4,6 +4,7 @@ import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetUtils.getSafeY
+import me.mattstudios.triumphpets.pet.v1_16.func.walkTo
 import net.minecraft.server.v1_16_R1.EntityInsentient
 import net.minecraft.server.v1_16_R1.PathfinderGoal
 
@@ -11,7 +12,7 @@ import net.minecraft.server.v1_16_R1.PathfinderGoal
 /**
  * @author Matt
  */
-class RandomWalkAroundGoal(
+internal class RandomWalkAroundGoal(
         petInsentient: EntityInsentient,
         petConfig: PetConfig,
         private val MOVEMENT_SPEED: Double
@@ -33,7 +34,7 @@ class RandomWalkAroundGoal(
     override fun a(): Boolean {
         // Makes it run only once every 2 second
         if (!shouldRun()) return true
-        if (petMemory.isTracking || petInventory.isOpened()) return true
+        if (petMemory.isTracking || petInventory.isOpen()) return true
         if ((1..100).random() >= chance) return true
 
         moveAround()
@@ -49,7 +50,7 @@ class RandomWalkAroundGoal(
         val z = (-10..10).random().toDouble()
 
         val location = pet.entity.location.clone().add(x, 0.0, z)
-        navigation.a(location.x, getSafeY(location.x, location.z, pet.entity.world).toDouble(), location.z, MOVEMENT_SPEED)
+        navigation.walkTo(location.x, getSafeY(location.x, location.z, pet.entity.world).toDouble(), location.z, MOVEMENT_SPEED)
     }
 
     /**

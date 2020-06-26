@@ -3,21 +3,19 @@ package me.mattstudios.triumphpets.pet.v1_16.goals
 import me.mattstudios.triumphpets.config.pet.PetConfig
 import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.pet.Pet
-import me.mattstudios.triumphpets.pet.utils.PetUtils.distance
+import me.mattstudios.triumphpets.pet.v1_16.func.distance
+import me.mattstudios.triumphpets.pet.v1_16.func.walkTo
 import net.minecraft.server.v1_16_R1.EntityInsentient
-import net.minecraft.server.v1_16_R1.NavigationAbstract
 import net.minecraft.server.v1_16_R1.PathfinderGoal
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftPlayer
-import org.bukkit.util.Vector
 
 
 /**
  * @author Matt
  */
-class FollowPlayerGoal(
+internal class FollowPlayerGoal(
         private val petInsentient: EntityInsentient,
         private val petConfig: PetConfig,
-        private val MOVEMENT_SPEED: Double
+        private val movementSpeed: Double
 ) : PathfinderGoal() {
 
     private val pet = petInsentient as Pet
@@ -25,7 +23,7 @@ class FollowPlayerGoal(
     private val petMemory = pet.petMemory
     private val owner = pet.petOwner
 
-    private val navigation: NavigationAbstract = petInsentient.navigation
+    private val navigation = petInsentient.navigation
 
     private var followDistance = petConfig[PetProperty.FOLLOW_DISTANCE]
     private val tpDistance = petConfig[PetProperty.TELEPORT_DISTANCE]
@@ -39,15 +37,12 @@ class FollowPlayerGoal(
 
         if (!shouldRun()) return true
 
-        petInsentient.bukkitEntity
-
         // Allows the player to search from a little further
         followDistance = if (petMemory.isTracking) followDistance + 8 else petConfig[PetProperty.FOLLOW_DISTANCE]
 
         // Gets the distance between the player and the pet
-        val location = owner.location.clone()
-        val petLocation = Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())
-        val distance: Double = distance(location.toVector(), petLocation)
+        val ownerLocation = owner.location.clone()
+        val distance = petInsentient.distance(ownerLocation)
 
         // Checks if distance is less than the follow distance
         if (distance < followDistance) return true
@@ -55,12 +50,12 @@ class FollowPlayerGoal(
         // Checks if distance is less than the tp distance
         if (distance < tpDistance) {
             // Walks to player
-            navigation.a((owner as CraftPlayer).handle, MOVEMENT_SPEED)
+            navigation.walkTo(owner, movementSpeed)
             return true
         }
 
         // Teleports to owner
-        petInsentient.setPosition(location.x, location.y, location.z)
+        petInsentient.setPosition(ownerLocation.x, ownerLocation.y, ownerLocation.z)
         // TODO despawn pet if player goes too high
         return true
 

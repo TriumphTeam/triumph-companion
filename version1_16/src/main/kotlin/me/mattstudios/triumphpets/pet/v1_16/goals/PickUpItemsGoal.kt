@@ -6,25 +6,23 @@ import me.mattstudios.triumphpets.config.pet.PetProperty
 import me.mattstudios.triumphpets.events.PetPickUpItemEvent
 import me.mattstudios.triumphpets.pet.Pet
 import me.mattstudios.triumphpets.pet.utils.PetType
-import me.mattstudios.triumphpets.pet.utils.PetUtils
+import me.mattstudios.triumphpets.pet.v1_16.func.asNmsEntity
+import me.mattstudios.triumphpets.pet.v1_16.func.distanceSquared
+import me.mattstudios.triumphpets.pet.v1_16.func.walkTo
 import net.minecraft.server.v1_16_R1.EntityInsentient
 import net.minecraft.server.v1_16_R1.PathfinderGoal
 import org.bukkit.Bukkit
 import org.bukkit.Particle
 import org.bukkit.Sound
 import org.bukkit.SoundCategory
-import org.bukkit.craftbukkit.v1_16_R1.entity.CraftEntity
 import org.bukkit.entity.Entity
 import org.bukkit.entity.Item
-import org.bukkit.util.Vector
-
-import net.minecraft.server.v1_16_R1.Entity as NmsEntity
 
 
 /**
  * @author Matt
  */
-class PickUpItemsGoal(
+internal class PickUpItemsGoal(
         private val petInsentient: EntityInsentient,
         petConfig: PetConfig,
         private val movementSpeed: Double
@@ -93,7 +91,7 @@ class PickUpItemsGoal(
 
         if (!petMemory.isTracking) startTracking()
 
-        navigation.a(asNmsEntity(currentTrackedItem), movementSpeed)
+        navigation.walkTo(currentTrackedItem, movementSpeed)
     }
 
     /**
@@ -102,7 +100,7 @@ class PickUpItemsGoal(
     private fun getItemToTrack() {
         // makes it run only once every second
         if (!shouldRun()) return
-        if (petInventory.isOpened()) return
+        if (petInventory.isOpen()) return
 
         var itemToTrack: Item? = null
 
@@ -121,8 +119,8 @@ class PickUpItemsGoal(
                 continue
             }
 
-            if (PetUtils.distance(foundEntity.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ())) < PetUtils.distance(itemToTrack.location.toVector(), Vector(petInsentient.locX(), petInsentient.locY(), petInsentient.locZ()))) {
-                if (canPath(foundEntity)) continue
+            if (petInsentient.distanceSquared(foundEntity) < petInsentient.distanceSquared(itemToTrack)) {
+                if (!canPath(foundEntity)) continue
 
                 itemToTrack = foundEntity
             }
@@ -136,7 +134,7 @@ class PickUpItemsGoal(
      * Creates a path and checks if it is doable
      */
     private fun canPath(entity: Entity): Boolean {
-        val path = navigation.a(asNmsEntity(entity), 1)
+        val path = navigation.a(entity.asNmsEntity(), 1)
         return path != null && path.i()
     }
 
@@ -171,11 +169,6 @@ class PickUpItemsGoal(
         petMemory.isTracking = true
         startTime = System.currentTimeMillis()
     }
-
-    /**
-     * Gets the NMS entity out of the bukkit one
-     */
-    private fun asNmsEntity(entity: Entity): NmsEntity = (entity as CraftEntity).handle
 
     /**
      * Resets the item tracker to track a new one
