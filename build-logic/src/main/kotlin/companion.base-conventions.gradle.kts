@@ -1,9 +1,24 @@
+import gradle.kotlin.dsl.accessors._cf989acd7c53d601699eb2d609b231d6.java
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     `java-library`
     id("com.github.hierynomus.license")
     kotlin("jvm")
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+license {
+    header = rootProject.file("LICENSE")
+    encoding = "UTF-8"
+    mapping("kotlin", "JAVADOC_STYLE")
+    mapping("java", "JAVADOC_STYLE")
+
+    include("**/*.kt")
+    include("**/*.java")
 }
 
 repositories {

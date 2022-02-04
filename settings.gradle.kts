@@ -3,6 +3,9 @@ dependencyResolutionManagement {
     repositories.gradlePluginPortal()
 }
 
-rootProject.name = "triumph-pets"
+rootProject.name = "triumph-companion"
+
+include("core")
+include("plugin")
 
 enableFeaturePreview("VERSION_CATALOGS")
