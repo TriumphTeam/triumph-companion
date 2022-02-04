@@ -1,0 +1,4 @@
+/*
+ * Copyright 2022-2022 TriumphTeam and contributors.
+ * Use of this source code is governed by the GPLv3 license that can be found in the LICENSE.txt file.
+ */
