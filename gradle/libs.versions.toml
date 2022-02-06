@@ -2,7 +2,15 @@
 # Minecraft
 spigot = "1.18.1-R0.1-SNAPSHOT"
 
+# Core
+core = "2.0.2"
 
 [libraries]
 # Minecraft
 spigot = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
+
+# Core
+core-bukkit = { module = "dev.triumphteam:triumph-core-bukkit", version.ref = "core" }
+feature-bukkit-cmds = { module = "dev.triumphteam:triumph-core-feature-bukkit-commands", version.ref = "core" }
+feature-config = { module = "dev.triumphteam:triumph-core-feature-config", version.ref = "core" }
+feature-locale = { module = "dev.triumphteam:triumph-core-feature-locale", version.ref = "core" }
