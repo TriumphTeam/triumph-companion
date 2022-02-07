@@ -8,8 +8,10 @@ core = "1.0.0-SNAPSHOT"
 # My libs
 cmds = "2.0.0-SNAPSHOT"
 
-# Other
+# Adeventure
 adventure = "4.9.3"
+platform = "4.0.1"
+
 
 [libraries]
 # Minecraft
@@ -22,8 +24,11 @@ commands = { module = "dev.triumphteam:triumph-cmd-core", version.ref = "cmds" }
 core = { module = "dev.triumphteam:triumph-core", version.ref = "core" }
 core-bukkit = { module = "dev.triumphteam:triumph-core-bukkit", version.ref = "core" }
 feature-bukkit-cmds = { module = "dev.triumphteam:triumph-core-feature-bukkit-commands", version.ref = "core" }
+feature-bukkit-listeners = { module = "dev.triumphteam:triumph-core-feature-bukkit-listeners", version.ref = "core" }
 feature-config = { module = "dev.triumphteam:triumph-core-feature-config", version.ref = "core" }
 feature-locale = { module = "dev.triumphteam:triumph-core-feature-locale", version.ref = "core" }
 
-# Other
+# Adventure
 adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
+adventure-platform = { module = "net.kyori:adventure-platform-api", version.ref = "platform" }
+adventure-bukkit = { module = "net.kyori:adventure-platform-bukkit", version.ref = "platform" }

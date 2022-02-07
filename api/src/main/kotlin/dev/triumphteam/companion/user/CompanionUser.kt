@@ -1,9 +1,11 @@
 package dev.triumphteam.companion.user
 
-import net.kyori.adventure.text.Component
+import net.kyori.adventure.audience.Audience
+import net.kyori.adventure.identity.Identified
+import java.util.UUID
 
-interface CompanionUser {
+interface CompanionUser : Audience, Identified {
 
-    fun sendMessage(message: Component)
+    val uuid: UUID
 
 }

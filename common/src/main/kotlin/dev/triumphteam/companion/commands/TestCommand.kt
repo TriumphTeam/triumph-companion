@@ -13,5 +13,4 @@ class TestCommand : BaseCommand() {
     fun CompanionUser.test() {
         sendMessage(Component.text("Hello!"))
     }
-
 }
