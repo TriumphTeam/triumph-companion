@@ -5,7 +5,7 @@ import dev.triumphteam.core.feature.ApplicationFeature
 import dev.triumphteam.core.feature.attribute.key
 import java.util.UUID
 
-class Users {
+class Users(val consoleUser: CompanionUser) {
 
     private val users = mutableMapOf<UUID, CompanionUser>()
 
@@ -13,12 +13,17 @@ class Users {
         TODO("Not yet implemented")
     }
 
-    companion object Feature : ApplicationFeature<TriumphApplication, Users, Users> {
+    class UsersConfiguration {
+        lateinit var consoleUser: ConsoleUser
+    }
+
+    companion object Feature : ApplicationFeature<TriumphApplication, UsersConfiguration, Users> {
 
         override val key = key<Users>("users")
 
-        override fun install(application: TriumphApplication, configure: Users.() -> Unit): Users {
-            return Users().apply(configure)
+        override fun install(application: TriumphApplication, configure: UsersConfiguration.() -> Unit): Users {
+            val consoleUser = UsersConfiguration().apply(configure).consoleUser
+            return Users(consoleUser)
         }
     }
 }

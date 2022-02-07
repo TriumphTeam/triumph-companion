@@ -16,7 +16,7 @@ import org.bukkit.entity.Player
 
 class Commands(plugin: TriumphCompanion, users: Users) : AbstractCommandWrapper<CompanionUser>(
     plugin = plugin,
-    mapper = { sender -> if (sender is Player) users.getUser(sender.uniqueId) else TODO("IMPLEMENT CONSOLE") },
+    mapper = { sender -> if (sender is Player) users.getUser(sender.uniqueId) else users.consoleUser },
     validator = CompanionSenderValidator()
 ) {
 

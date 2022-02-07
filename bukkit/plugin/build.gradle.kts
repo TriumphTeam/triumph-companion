@@ -8,6 +8,7 @@ dependencies {
     compileOnly(libs.spigot)
 
     implementation(project(":triumph-companion-common"))
+    api("net.kyori:adventure-text-serializer-legacy:4.9.3")
 
     //implementation(project(":paperweighttest", "reobf"))
 

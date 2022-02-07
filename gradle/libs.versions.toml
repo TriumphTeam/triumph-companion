@@ -8,6 +8,9 @@ core = "1.0.0-SNAPSHOT"
 # My libs
 cmds = "2.0.0-SNAPSHOT"
 
+# Other
+adventure = "4.9.3"
+
 [libraries]
 # Minecraft
 spigot = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
@@ -21,3 +24,6 @@ core-bukkit = { module = "dev.triumphteam:triumph-core-bukkit", version.ref = "c
 feature-bukkit-cmds = { module = "dev.triumphteam:triumph-core-feature-bukkit-commands", version.ref = "core" }
 feature-config = { module = "dev.triumphteam:triumph-core-feature-config", version.ref = "core" }
 feature-locale = { module = "dev.triumphteam:triumph-core-feature-locale", version.ref = "core" }
+
+# Other
+adventure-api = { module = "net.kyori:adventure-api", version.ref = "adventure" }
