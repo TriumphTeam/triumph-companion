@@ -14,8 +14,9 @@ rootProject.name = "triumph-companion"
 
 include("paperweighttest")
 
-sequenceOf("api", "common").forEach(::includeProject)
-sequenceOf("plugin").forEach(::includeBukkit)
+sequenceOf("api", "plugin").forEach(::includeProject)
+sequenceOf("v1_18").forEach(::includeProject)
+//sequenceOf("plugin").forEach(::includeBukkit)
 
 fun includeProject(name: String) {
     include(name) {

@@ -5,16 +5,15 @@ plugins {
 }
 
 dependencies {
+    // Modules
+    implementation(project(":triumph-companion-api"))
+    implementation(project(":triumph-companion-v1_18", "reobf"))
+
     // Spigot
     compileOnly(libs.spigot)
 
-    // Modules
-    implementation(project(":triumph-companion-common"))
-
     // TODO move this if needed
     api("net.kyori:adventure-text-serializer-legacy:4.9.3")
-
-    //implementation(project(":paperweighttest", "reobf"))
 
     // Adventure
     implementation(libs.adventure.bukkit)
