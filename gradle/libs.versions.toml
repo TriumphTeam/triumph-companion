@@ -3,13 +3,20 @@
 spigot = "1.18.1-R0.1-SNAPSHOT"
 
 # Core
-core = "2.0.2"
+core = "1.0.0-SNAPSHOT"
+
+# My libs
+cmds = "2.0.0-SNAPSHOT"
 
 [libraries]
 # Minecraft
 spigot = { module = "org.spigotmc:spigot-api", version.ref = "spigot" }
 
+# My libs
+commands = { module = "dev.triumphteam:triumph-cmd-core", version.ref = "cmds" }
+
 # Core
+core = { module = "dev.triumphteam:triumph-core", version.ref = "core" }
 core-bukkit = { module = "dev.triumphteam:triumph-core-bukkit", version.ref = "core" }
 feature-bukkit-cmds = { module = "dev.triumphteam:triumph-core-feature-bukkit-commands", version.ref = "core" }
 feature-config = { module = "dev.triumphteam:triumph-core-feature-config", version.ref = "core" }

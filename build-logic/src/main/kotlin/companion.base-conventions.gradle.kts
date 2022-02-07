@@ -7,8 +7,21 @@ plugins {
     kotlin("jvm")
 }
 
+repositories {
+    maven("https://repo.triumphteam.dev/releases/")
+    maven("https://repo.triumphteam.dev/snapshots/")
+}
+
 java {
     toolchain.languageVersion.set(JavaLanguageVersion.of(17))
+}
+
+kotlin {
+    jvmToolchain {
+        (this as JavaToolchainSpec).apply {
+            languageVersion.set(JavaLanguageVersion.of(17))
+        }
+    }
 }
 
 license {
@@ -34,7 +47,7 @@ tasks {
 
     withType<KotlinCompile> {
         kotlinOptions {
-            jvmTarget = "1.8"
+            jvmTarget = "17"
             javaParameters = true
         }
     }
