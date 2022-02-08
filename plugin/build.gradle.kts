@@ -7,7 +7,8 @@ plugins {
 dependencies {
     // Modules
     implementation(project(":triumph-companion-api"))
-    implementation(project(":triumph-companion-v1_18", "reobf"))
+
+    implementation(project(":triumph-companion-eighteen"))
 
     // Spigot
     compileOnly(libs.spigot)

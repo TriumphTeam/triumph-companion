@@ -5,11 +5,6 @@ plugins {
 
 dependencies {
     paperDevBundle("1.18.1-R0.1-SNAPSHOT")
-    // paperweightDevBundle("com.example.paperfork", "1.18.1-R0.1-SNAPSHOT")
-
-    // You will need to manually specify the full dependency if using the groovy gradle dsl
-    // (paperDevBundle and paperweightDevBundle functions do not work in groovy)
-    // paperweightDevelopmentBundle("io.papermc.paper:dev-bundle:1.18.1-R0.1-SNAPSHOT")
 }
 
 tasks {
@@ -33,12 +28,4 @@ tasks {
     processResources {
         filteringCharset = Charsets.UTF_8.name() // We want UTF-8 for everything
     }
-
-    /*
-    reobfJar {
-      // This is an example of how you might change the output location for reobfJar. It's recommended not to do this
-      // for a variety of reasons, however it's asked frequently enough that an example of how to do it is included here.
-      outputJar.set(layout.buildDirectory.file("libs/PaperweightTestPlugin-${project.version}.jar"))
-    }
-     */
 }

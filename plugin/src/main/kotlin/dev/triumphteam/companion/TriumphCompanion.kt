@@ -5,20 +5,20 @@ import dev.triumphteam.bukkit.commands.commands
 import dev.triumphteam.bukkit.listeners.listeners
 import dev.triumphteam.companion.commands.admin.TestSpawn
 import dev.triumphteam.companion.commands.tempSetupDefaults
+import dev.triumphteam.companion.features.Audiences
+import dev.triumphteam.companion.features.Controller
 import dev.triumphteam.companion.listeners.PlayerListener
 import dev.triumphteam.core.BukkitApplication
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
+import dev.triumphteam.core.feature.install
 
 @BukkitMain
-class CompanionBukkit : BukkitApplication() {
+class TriumphCompanion : BukkitApplication() {
     // To avoid doing `this@`.
     private val plugin = this
 
-    lateinit var audiences: BukkitAudiences
-        private set
-
     override fun onStart() {
-        audiences = BukkitAudiences.create(this)
+        install(Controller)
+        install(Audiences)
 
         commands {
             tempSetupDefaults()
@@ -35,3 +35,4 @@ class CompanionBukkit : BukkitApplication() {
         }
     }
 }
+

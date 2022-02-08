@@ -1,9 +1,9 @@
 package dev.triumphteam.companion.listeners
 
-import dev.triumphteam.companion.CompanionBukkit
+import dev.triumphteam.companion.TriumphCompanion
 import org.bukkit.event.Listener
 
-class PlayerListener(plugin: CompanionBukkit) : Listener {
+class PlayerListener(plugin: TriumphCompanion) : Listener {
 
 
 }

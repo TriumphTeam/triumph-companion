@@ -12,11 +12,8 @@ pluginManagement {
 
 rootProject.name = "triumph-companion"
 
-include("paperweighttest")
-
 sequenceOf("api", "plugin").forEach(::includeProject)
-sequenceOf("v1_18").forEach(::includeProject)
-//sequenceOf("plugin").forEach(::includeBukkit)
+sequenceOf("eighteen").forEach(::includeVersion)
 
 fun includeProject(name: String) {
     include(name) {
@@ -24,10 +21,10 @@ fun includeProject(name: String) {
     }
 }
 
-fun includeBukkit(name: String) {
+fun includeVersion(name: String) {
     include(name) {
-        this.name = "${rootProject.name}-bukkit-$name"
-        this.projectDir = file("bukkit/$name")
+        this.name = "${rootProject.name}-$name"
+        this.projectDir = file("versions/$name")
     }
 }
 
