@@ -8,7 +8,7 @@ dependencies {
     // Modules
     implementation(project(":triumph-companion-api"))
 
-    implementation(project(":triumph-companion-eighteen"))
+    implementation(project(":triumph-companion-bukkit-eighteen"))
 
     // Spigot
     compileOnly(libs.spigot)
