@@ -8,6 +8,7 @@ plugins {
 }
 
 repositories {
+    maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://repo.triumphteam.dev/releases/")
     maven("https://repo.triumphteam.dev/snapshots/")
 }
